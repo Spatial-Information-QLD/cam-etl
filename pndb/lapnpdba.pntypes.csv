@@ -1,0 +1,105 @@
+﻿placetype,descrpt
+COVE,"Cove, Inlet"
+FORD,Ford
+GULF,Gulf
+JUNC,Junction
+LAKE,Lake
+MTS,Range
+WTRH,Waterhole
+BANK,Bank - Marine
+BORE,Bore
+HBR,Harbour
+LOCB,Locality Bounded
+RAP,Rapids
+WELL,Well
+BRKW,Breakwater
+CAY,Cay
+PASG,Passage
+POCK,Pocket
+TANK,Water tank
+AF,Landing Area
+POPL,Population centre
+SCH,School
+CNR,Corner
+DRN,Drain
+LAGN,Lagoon
+REEF,Reef
+ANCH,Anchorage
+MT,Mountain
+PAN,Pan
+RSTA,Rail Station
+RSTX,Rail Station - Feature no longer exists
+DEEP,Marine
+DUNE,Dune
+FRST,State Forest
+LOCU,Locality Unbounded
+OSTN,Outstation
+PEAK,Peak
+PLN,Plain
+RCH,Reach
+RSID,Siding
+SHOL,Shoal
+SPUR,Spur
+SWP,Wetland
+WOOD,Forest
+BAY,Bay
+CRAT,Crater
+IS,Island
+ISG,Island group
+NBHD,Neighbourhood
+PORT,Port
+PT,Point
+RESV,Reserve
+RIDG,Ridge - Marine
+WEIR,Weir
+PAR,Park
+PARK,"National Park,Resources Reserve,Conservation Park"
+PEAX,Peak - Feature no longer exists
+PLNA,Place Name
+RH,Rockhole
+STRM,Watercourse
+BCH,Beach
+ISX,Island - feature appears absent
+LOOK,Lookout
+PEN,Peninsula
+ROCK,Rock
+CAVE,Cave
+CNTY,County
+INLT,Inlet
+PRSH,Parish
+SPRG,Spring
+STAT,State
+CHAN,Channel
+DSRT,Desert
+MTX,Mountain - Feature no longer exists
+RDGE,Ridge
+SHLF,Shelf - Marine
+SUB,Suburb
+VAL,Valley
+BAR,Bar
+CAPE,Cape
+DI,District
+HILL,Hill
+HMSD,Homestead
+PAST,Pastoral district
+PLAT,Plateau - Marine
+SCRB,Scrub
+SND,Sound
+CLIF,Cliff
+STR,Strait
+YD,Stockyard
+DAM,Dam wall
+ENTR,Entrance
+LNDG,Landing Place
+POPX,Population centre - feature appears absent
+RES,Reservoir
+SOAK,Soak
+SPIT,Spit
+WRFL,Waterfall
+GATE,Gate
+GORG,Gorge
+ISTH,Isthmus
+PASS,Pass
+PL,Plateau
+SITE,Historic Site
+Z,ignore - test record
