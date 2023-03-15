@@ -12,9 +12,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - run: |
+      - name: Create dist/ directory
+        run: |
           mkdir -p dist/
-          cp addressdb/ dist/
+          cp -R addressdb/ dist/
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
