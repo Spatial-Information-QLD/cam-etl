@@ -1,0 +1,32 @@
+Table pntypes {
+  placetype varchar [PK]
+  descrpt varchar
+}
+
+Table placenm {
+  ref_no int [PK]
+  placename varchar
+  placetype varchar [ref: > pntypes.placetype]
+  latcoord float
+  longcoord float
+  gaz_date float
+  gaz_page int
+  qpn_no int
+  ang_no int
+  approved_f varchar
+  current_f varchar
+  mod_date float
+}
+
+Table pncomment {
+  ref_no int [ref: > placenm.ref_no]
+  comments varchar
+  origin varchar
+  history varchar
+  links varchar
+}
+
+Table aliasnm {
+  ref_no int [ref: > placenm.ref_no]
+  placename varchar
+}
