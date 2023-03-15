@@ -30,7 +30,7 @@ if __name__ == "__main__":
         label = graph.value(concept, SKOS.prefLabel)
         name = str(label).lower()
         if name not in icsm_placenames:
-            not_found.append(name)
+            not_found.append(str(label))
 
     rich.print("Not found:")
     rich.print(sorted(not_found))
