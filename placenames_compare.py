@@ -1,3 +1,4 @@
+import rich
 import requests
 from pydantic import BaseModel, Field
 from rdflib import Graph
@@ -31,4 +32,5 @@ if __name__ == "__main__":
         if name not in icsm_placenames:
             not_found.append(name)
 
-    print(f"Not found: {sorted(not_found)}")
+    rich.print("Not found:")
+    rich.print(sorted(not_found))
