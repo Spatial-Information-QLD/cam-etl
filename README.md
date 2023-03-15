@@ -10,6 +10,10 @@ The dataset is several GBs zipped. We may put a subset of it in this repository 
 
 The place names source data is from PNDB. A dump of the files are in `pndb/`.
 
+Here is the schema of the tables of interest.
+
+![pndb/pndb-schema.png](pndb/pndb-schema.png)
+
 A set of the relevant tables are documented below.
 
 ### Place name type
