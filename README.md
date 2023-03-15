@@ -1,5 +1,11 @@
 # CAM ETL
 
+## Addressing DB
+
+See the schema documentation here: https://spatial-information-qld.github.io/cam-etl/addressdb/
+
+The dataset is several GBs zipped. We may put a subset of it in this repository in the future for demo purposes.
+
 ## Place names
 
 The place names source data is from PNDB. A dump of the files are in `pndb/`.
