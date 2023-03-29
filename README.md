@@ -6,6 +6,20 @@ See the schema documentation here: https://spatial-information-qld.github.io/cam
 
 The dataset is several GBs zipped. We may put a subset of it in this repository in the future for demo purposes.
 
+### Tables
+
+A bunch of tables were loaded in to a PostgreSQL database and a schema was created from the documentation provided.
+
+#### lalfpdba_lf_address
+
+The empty strings in the columns `level_type_code` and `unit_type_code` were converted to `NULL`.
+
+The column `geocode_id` was added as a foreign key to the `lalfpdba_lf_geocode` table.
+
+#### lalfpdba_sp_survey_point
+
+The column `wkt_literal` was added with values derived from the existing columns `centroid_lon` and `centroid_lat`.
+
 ## Place names
 
 The place names source data is from PNDB. A dump of the files are in `pndb/`.

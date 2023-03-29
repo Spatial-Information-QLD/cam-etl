@@ -1,0 +1,10 @@
+db_connection: postgresql://postgres:postgres@localhost:5432/address
+
+limit: 20
+
+tables:
+  - lalfdb.lalfpdba_lf_site
+  - lalfdb.lalfpdba_lf_address
+  - lalfdb.lalfpdba_lf_geocode
+  - lalfdb.lalfpdba_sp_survey_point
+  - lalfdb.lalfpdba_lf_status
