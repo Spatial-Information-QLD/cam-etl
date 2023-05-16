@@ -3,3 +3,6 @@ venv/
 __pycache__/
 postgresql.jar
 output/
+QRT_20230315.gdb
+QSC_Extracted_Data_20230509_124021395000-11104
+addressdb/
