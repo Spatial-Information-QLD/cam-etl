@@ -1,0 +1,77 @@
+version: "3.8"
+
+services:
+  postgres:
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+    command: >-
+      -c max_wal_size=4GB
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./QSC_Extracted_Data_20230509_104812401000-11104:/tmp/postgres-data/QSC
+    ports:
+      - 5432:5432
+    profiles:
+      - postgres
+
+  graphdb:
+    image: ontotext/graphdb:10.2.0
+    volumes:
+      - graphdb-data:/opt/graphdb/home
+    ports:
+      - 7200:7200
+    environment:
+      GDB_JAVA_OPTS: >-
+        -Xmx4g -Xms2g
+        -Dgraphdb.home=/opt/graphdb/home
+        -Dgraphdb.workbench.importDirectory=/opt/graphdb/home/graphdb-import
+        -Dgraphdb.workbench.cors.enable=true
+        -Denable-context-index=true
+        -Dentity-pool-implementation=transactional
+        -Dhealth.max.query.time.seconds=600
+        -Dgraphdb.append.request.id.headers=true
+        -Dreuse.vars.in.subselects=true
+    profiles:
+      - graphdb
+
+  preload:
+    container_name: graphdb-preload
+    image: ontotext/graphdb:10.2.0
+    entrypoint:
+      [
+        "/opt/graphdb/dist/bin/importrdf",
+        "preload",
+        "--force",
+        "--restart",
+        "--id",
+        "cam",
+        "/opt/graphdb/home/graphdb-import",
+      ]
+    environment:
+      GDB_JAVA_OPTS: >-
+        -Xmx4g -Xms2g
+        -Dgraphdb.home=/opt/graphdb/home
+        -Dgraphdb.workbench.importDirectory=/opt/graphdb/home/graphdb-import
+        -Dgraphdb.workbench.cors.enable=true
+        -Denable-context-index=true
+        -Dentity-pool-implementation=transactional
+        -Dhealth.max.query.time.seconds=600
+        -Dgraphdb.append.request.id.headers=true
+        -Dreuse.vars.in.subselects=true
+    volumes:
+      - graphdb-data:/opt/graphdb/home
+      - ./output:/opt/graphdb/home/graphdb-import
+    profiles:
+      - graphdb:preload
+
+volumes:
+  postgres-data:
+    name: cam-etl_devcontainer_postgres-data
+    external: true
+
+  graphdb-data:
