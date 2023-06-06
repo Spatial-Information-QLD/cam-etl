@@ -16,11 +16,13 @@ services:
       - ./QSC_Extracted_Data_20230509_104812401000-11104:/tmp/postgres-data/QSC
     ports:
       - 5432:5432
+    networks:
+      - postgres
     profiles:
       - postgres
 
   graphdb:
-    image: ontotext/graphdb:10.2.0
+    image: ghcr.io/kurrawong/graphdb-compound-naming:0.1.2
     volumes:
       - graphdb-data:/opt/graphdb/home
     ports:
@@ -36,6 +38,8 @@ services:
         -Dhealth.max.query.time.seconds=600
         -Dgraphdb.append.request.id.headers=true
         -Dreuse.vars.in.subselects=true
+    networks:
+      - graphdb
     profiles:
       - graphdb
 
@@ -66,6 +70,8 @@ services:
     volumes:
       - graphdb-data:/opt/graphdb/home
       - ./output:/opt/graphdb/home/graphdb-import
+    networks:
+      - preload
     profiles:
       - graphdb:preload
 
@@ -75,3 +81,8 @@ volumes:
     external: true
 
   graphdb-data:
+
+networks:
+  postgres:
+  graphdb:
+  preload:
