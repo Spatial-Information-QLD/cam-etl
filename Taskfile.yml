@@ -1,0 +1,65 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  postgres:driver:download:
+    desc: Download Postgres JDBC driver.
+    cmds:
+      - curl -o postgresql.jar https://jdbc.postgresql.org/download/postgresql-42.6.0.jar
+
+  postgres:up:
+    desc: Start Postgres Docker service.
+    cmds:
+      - docker-compose --profile postgres up -d
+
+  postgres:down:
+    desc: Stop Postgres Docker service.
+    cmds:
+      - docker-compose --profile postgres down
+
+  graphdb:up:
+    desc: Start GraphDB Docker service.
+    cmds:
+      - docker-compose --profile graphdb up -d
+
+  graphdb:preload:
+    desc: Preload data into GraphDB Docker service.
+    cmds:
+      - docker-compose --profile graphdb:preload up
+      - docker-compose --profile graphdb:preload down
+
+  graphdb:down:
+    desc: Stop GraphDB Docker service.
+    cmds:
+      - docker-compose --profile graphdb down
+
+  etl:
+    desc: Run the ETL.
+    cmds:
+      - OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES venv/bin/python main.py
+
+  etl:clean:
+    desc: Delete the files in output/ directory.
+    cmds:
+      - cmd: rm output/*.ttl
+        ignore_error: true
+
+  ontodia:
+    desc: Run ontodia server.
+    cmds:
+      - venv/bin/python -m http.server -d ontodia/
+
+  dev:
+    desc: Clear the locally produced data, recreate data, spin down GraphDB, load data, spin back up GraphDB.
+    cmds:
+      - task: etl:clean
+      - task: etl
+      - task: graphdb:down
+      - task: graphdb:preload
+      - task: graphdb:up
+
+  dev:no-load:
+    cmds:
+      - task: etl:clean
+      - task: etl
