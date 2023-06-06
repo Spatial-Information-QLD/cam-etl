@@ -11,7 +11,7 @@ class Table(ABC):
     table: str
     df: DataFrame
 
-    def __init__(self, spark: SparkSession, limit: int = None) -> None:
+    def __init__(self, spark: SparkSession) -> None:
         self.df = (
             spark.read.format("jdbc")
             .option(
@@ -23,9 +23,6 @@ class Table(ABC):
             .load()
         )
 
-        if limit is not None:
-            self.df = self.df.limit(limit)
-
     @staticmethod
     @abstractmethod
     def transform(rows: itertools.chain, graph: Graph, table_name: str):
@@ -36,4 +33,4 @@ class Table(ABC):
         output_dir = Path("output")
         output_dir.mkdir(exist_ok=True)
         filename = Path(table_name + "-" + str(os.getpid()) + ".ttl")
-        graph.serialize(output_dir / filename, format="turtle")
+        graph.serialize(output_dir / filename, format="longturtle")

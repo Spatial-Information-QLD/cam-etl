@@ -42,5 +42,6 @@ class ETLConfig(YamlModel):
 
 class Config(YamlModel):
     db_connection: str
+    debug: bool
     limit: int = None
     tables: list[str]

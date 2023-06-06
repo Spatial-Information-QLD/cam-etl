@@ -5,7 +5,7 @@ from pathlib import Path
 from rdflib import Graph, URIRef, Literal, Namespace, BNode
 from rdflib.namespace import RDF
 
-from etl_lib.config import Table, IRI, LITERAL
+from cam.config import Table, IRI, LITERAL
 
 
 def expand_curie(curie: str, prefixes: dict):

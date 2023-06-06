@@ -1,26 +1,33 @@
 import time
+from typing import Type
 
 import rich
 from pyspark.sql import SparkSession
 
-from etl_lib.config import Config
-from etl_lib.tables import (
+from cam.config import Config
+from cam.tables import (
     Table,
     lf_site,
     lf_address,
     lf_geocode,
     lf_sp_survey_point,
     lf_status,
+    locality,
+    qrt,
+    lf_address_history,
 )
-from etl_lib.graph import get_new_graph
+from cam.graph import create_graph
 
 
-table_module_mapping = {
+table_module_mapping: dict[str, Type[Table]] = {
     "lalfdb.lalfpdba_lf_site": lf_site.SiteTable,
     "lalfdb.lalfpdba_lf_address": lf_address.AddressTable,
     "lalfdb.lalfpdba_lf_geocode": lf_geocode.GeocodeTable,
     "lalfdb.lalfpdba_sp_survey_point": lf_sp_survey_point.SPSurveyPointTable,
     "lalfdb.lalfpdba_lf_status": lf_status.StatusTable,
+    "lalfdb.locality": locality.LocalityTable,
+    "lalfdb.qrt": qrt.QRTRoadsTable,
+    "lalfdb.lalfpdba_lf_address_history": lf_address_history.AddressHistoryTable,
 }
 
 
@@ -36,9 +43,11 @@ def main():
 
     for table in config.tables:
         database_table = table_module_mapping[table]
-        database_table_instance: Table = database_table(spark, limit=config.limit)
+        database_table_instance = database_table(
+            spark, "(1066374, 1075435, 2578313, 1724075, 33254, 1837741)"
+        )
 
-        graph = get_new_graph()
+        graph = create_graph()
         database_table_instance.df.foreachPartition(
             lambda rows: database_table.transform(rows, graph, table)
         )
