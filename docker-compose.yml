@@ -7,6 +7,7 @@ services:
       context: .
     command: >-
       -c max_wal_size=4GB
+    shm_size: '2gb'
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
