@@ -36,7 +36,7 @@ def main():
     rich.print(config)
 
     spark = (
-        SparkSession.builder.config("spark.driver.memory", "4g")
+        SparkSession.builder.config("spark.driver.memory", "8g")
         .config("spark.jars", "postgresql.jar")
         .getOrCreate()
     )
@@ -44,17 +44,20 @@ def main():
     for table in config.tables:
         database_table = table_module_mapping[table]
         database_table_instance = database_table(
-            spark, "(1066374, 1075435, 2578313, 1724075, 33254, 1837741)"
+            spark  # , "(1066374, 1075435, 2578313, 1724075, 33254, 1837741)"
         )
 
-        graph = create_graph()
+        # database_table_instance.df = database_table_instance.df.repartition(12)
         database_table_instance.df.foreachPartition(
-            lambda rows: database_table.transform(rows, graph, table)
+            lambda rows: database_table.transform(rows, table)
         )
 
 
 if __name__ == "__main__":
     start_time = time.time()
-    main()
-    processing_time = time.time() - start_time
-    print(f"Completed in {processing_time:0.2f} seconds")
+
+    try:
+        main()
+    finally:
+        processing_time = time.time() - start_time
+        print(f"Completed in {processing_time:0.2f} seconds")

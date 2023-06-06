@@ -1,11 +1,13 @@
 import itertools
+from pathlib import Path
 
-from rdflib import Graph, URIRef, Literal
+from rdflib import URIRef, Literal
 from rdflib.namespace import GEO
 from pyspark.sql import SparkSession
 from jinja2 import Template
 
 from cam.tables import Table
+from cam.graph import create_graph
 
 
 class SPSurveyPointTable(Table):
@@ -52,7 +54,10 @@ class SPSurveyPointTable(Table):
         )
 
     @staticmethod
-    def transform(rows: itertools.chain, graph: Graph, table_name: str):
+    def transform(rows: itertools.chain, table_name: str):
+        oxigraph_path = Path(f"oxigraph_data/{table_name}")
+        graph = create_graph(str(oxigraph_path))
+
         for row in rows:
             iri = SPSurveyPointTable.get_iri(row[SPSurveyPointTable.PID])
             graph.add(
@@ -67,3 +72,4 @@ class SPSurveyPointTable(Table):
             )
 
         Table.to_file(table_name, graph)
+        graph.close()

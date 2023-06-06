@@ -5,11 +5,11 @@ limit: 100
 debug: true
 
 tables:
-  - lalfdb.lalfpdba_lf_site
-  - lalfdb.lalfpdba_lf_address
-  - lalfdb.lalfpdba_lf_geocode
-  - lalfdb.lalfpdba_sp_survey_point
-  - lalfdb.lalfpdba_lf_status
-  - lalfdb.locality
-  - lalfdb.qrt
-  - lalfdb.lalfpdba_lf_address_history
+  # - lalfdb.lalfpdba_lf_site # ~3min
+  # - lalfdb.lalfpdba_lf_address # ~83min
+  # - lalfdb.lalfpdba_lf_geocode # ~6min
+  # - lalfdb.lalfpdba_sp_survey_point # ~3min
+  # - lalfdb.lalfpdba_lf_status # ~3sec
+  # - lalfdb.locality # ~4sec
+  # - lalfdb.qrt # ~17min
+  # - lalfdb.lalfpdba_lf_address_history # ~32min

@@ -1,4 +1,5 @@
 import itertools
+from pathlib import Path
 
 from rdflib import Graph, URIRef
 from rdflib.namespace import RDF, GEO
@@ -7,7 +8,7 @@ from jinja2 import Template
 
 from cam.tables import Table
 from cam.tables.lf_sp_survey_point import SPSurveyPointTable
-from cam.graph import ADDR
+from cam.graph import ADDR, create_graph
 
 
 class GeocodeTable(Table):
@@ -52,7 +53,10 @@ class GeocodeTable(Table):
         )
 
     @staticmethod
-    def transform(rows: itertools.chain, graph: Graph, table_name: str):
+    def transform(rows: itertools.chain, table_name: str):
+        oxigraph_path = Path(f"oxigraph_data/{table_name}")
+        graph = create_graph(str(oxigraph_path))
+
         for row in rows:
             iri = GeocodeTable.get_iri(row[GeocodeTable.GEOCODE_ID])
             graph.add((iri, RDF.type, ADDR.Geocode))
@@ -61,3 +65,4 @@ class GeocodeTable(Table):
             graph.add((iri, GEO.hasGeometry, point_iri))
 
         Table.to_file(table_name, graph)
+        graph.close()

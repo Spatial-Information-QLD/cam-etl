@@ -1,14 +1,15 @@
 import itertools
 from collections import defaultdict
+from pathlib import Path
 
-from rdflib import Graph, URIRef, Literal, BNode
+from rdflib import URIRef, Literal, BNode
 from rdflib.namespace import RDFS, TIME, DCTERMS, PROV
 from pyspark.sql import SparkSession
 from jinja2 import Template
 
 from cam.tables import Table
 from cam.tables.lf_address import AddressTable
-from cam.graph import LIFECYCLE, LST
+from cam.graph import LIFECYCLE, LST, create_graph
 
 
 class AddressHistoryTable(Table):
@@ -36,7 +37,7 @@ class AddressHistoryTable(Table):
                             cast(ah.version_no as integer) as version,
                             to_timestamp(cast(cast(ah.addr_create_date as numeric) as text), 'YYYYMMDDHH24MISS') as created,
                             to_timestamp(cast(cast(audit.date_modified as numeric) as text), 'YYYYMMDDHH24MISS') as modified,
-                            to_timestamp(cast(cast(ah.addr_data_source_date as numeric) as text), 'YYYYMMDDHH24MISS') as source,
+                            --to_timestamp(cast(cast(ah.addr_data_source_date as numeric) as text), 'YYYYMMDDHH24MISS') as source,
                             audit.audit_id,
                             audit.change_type as comment
                         from lalfdb.lalfpdba_lf_site s
@@ -61,7 +62,10 @@ class AddressHistoryTable(Table):
         )
 
     @staticmethod
-    def transform(rows: itertools.chain, graph: Graph, table_name: str):
+    def transform(rows: itertools.chain, table_name: str):
+        oxigraph_path = Path(f"oxigraph_data/{table_name}")
+        graph = create_graph(str(oxigraph_path))
+
         ADDR_ID = "addr_id"
         ADDR_HISTORY_ID = "addr_history_id"
         VERSION = "version"
@@ -164,3 +168,4 @@ class AddressHistoryTable(Table):
                     )
 
         Table.to_file(table_name, graph)
+        graph.close()

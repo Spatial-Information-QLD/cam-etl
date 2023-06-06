@@ -1,12 +1,13 @@
 import itertools
+from pathlib import Path
 
-from rdflib import Graph, URIRef, Literal
+from rdflib import URIRef, Literal
 from rdflib.namespace import RDF, RDFS, SDO
 from pyspark.sql import SparkSession
 from jinja2 import Template
 
 from cam.tables import Table
-from cam.graph import ADDR, ADDRCMPType
+from cam.graph import ADDR, ADDRCMPType, create_graph
 
 
 class LocalityTable(Table):
@@ -45,7 +46,10 @@ class LocalityTable(Table):
         )
 
     @staticmethod
-    def transform(rows: itertools.chain, graph: Graph, table_name: str):
+    def transform(rows: itertools.chain, table_name: str):
+        oxigraph_path = Path(f"oxigraph_data/{table_name}")
+        graph = create_graph(str(oxigraph_path))
+
         for row in rows:
             iri = LocalityTable.get_iri(row[LocalityTable.LOCALITY_NAME])
 
@@ -56,3 +60,4 @@ class LocalityTable(Table):
             graph.add((iri, RDF.value, Literal(row[LocalityTable.LOCALITY_NAME])))
 
         Table.to_file(table_name, graph)
+        graph.close()

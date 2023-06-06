@@ -1,12 +1,13 @@
 import itertools
 from datetime import datetime
+from pathlib import Path
 
-from rdflib import Graph, URIRef, Literal
+from rdflib import URIRef, Literal
 from rdflib.namespace import RDF, SKOS, DCTERMS, XSD
 from pyspark.sql import SparkSession
 
 from cam.tables import Table
-from cam.graph import ASTISO
+from cam.graph import ASTISO, create_graph
 
 anz_address_types = """
 PREFIX astiso: <http://def.isotc211.org/iso19160/-1/2015/Address/code/AnzAddressStatusTypes/>
@@ -62,7 +63,10 @@ class StatusTable(Table):
         return URIRef(f"https://linked.data.gov.au/def/qld-addr-status/{status_code}")
 
     @staticmethod
-    def transform(rows: itertools.chain, graph: Graph, table_name: str):
+    def transform(rows: itertools.chain, table_name: str):
+        oxigraph_path = Path(f"oxigraph_data/{table_name}")
+        graph = create_graph(str(oxigraph_path))
+
         concept_scheme = URIRef("https://linked.data.gov.au/def/qld-addr-status")
         graph.add((concept_scheme, RDF.type, SKOS.ConceptScheme))
         graph.add(
@@ -128,3 +132,4 @@ class StatusTable(Table):
         graph.add((concept_scheme, SKOS.hasTopConcept, ASTISO.unofficial))
 
         Table.to_file(table_name, graph)
+        graph.close()

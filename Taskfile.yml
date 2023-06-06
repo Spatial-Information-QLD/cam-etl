@@ -50,7 +50,7 @@ tasks:
     cmds:
       - venv/bin/python -m http.server -d ontodia/
 
-  dev:
+  dev:load-db:
     desc: Clear the locally produced data, recreate data, spin down GraphDB, load data, spin back up GraphDB.
     cmds:
       - task: etl:clean
@@ -59,7 +59,12 @@ tasks:
       - task: graphdb:preload
       - task: graphdb:up
 
-  dev:no-load:
+  dev:with-clean:
     cmds:
       - task: etl:clean
+      - task: etl
+
+  dev:
+    desc: Alias for etl task.
+    cmds:
       - task: etl

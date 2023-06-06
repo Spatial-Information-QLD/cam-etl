@@ -1,3 +1,6 @@
+import shutil
+from pathlib import Path
+
 from rdflib import Graph, URIRef
 from rdflib.namespace import (
     Namespace,
@@ -148,8 +151,14 @@ prefixes = {
 }
 
 
-def create_graph():
-    graph = Graph()
+def create_graph(path: str):
+    p = Path(path)
+    if p.exists():
+        shutil.rmtree(p)
+    p.mkdir(parents=True)
+
+    graph = Graph(store="Oxigraph")
+    graph.open(path)
 
     for key, val in prefixes.items():
         graph.bind(key, val)

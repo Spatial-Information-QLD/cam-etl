@@ -1,12 +1,13 @@
 import itertools
+from pathlib import Path
 
-from rdflib import Graph, URIRef, Literal, BNode
+from rdflib import URIRef, Literal, BNode
 from rdflib.namespace import RDF, SDO
 from pyspark.sql import SparkSession
 from jinja2 import Template
 
 from cam.tables import Table
-from cam.graph import ROADS, FL, RCT, CN
+from cam.graph import ROADS, RCT, CN, create_graph
 
 
 class QRTRoadsTable(Table):
@@ -69,7 +70,10 @@ class QRTRoadsTable(Table):
         )
 
     @staticmethod
-    def transform(rows: itertools.chain, graph: Graph, table_name: str):
+    def transform(rows: itertools.chain, table_name: str):
+        oxigraph_path = Path(f"oxigraph_data/{table_name}")
+        graph = create_graph(str(oxigraph_path))
+
         for row in rows:
             iri = QRTRoadsTable.get_iri(row[QRTRoadsTable.ROAD_ID])
             label_iri = QRTRoadsTable.get_label_iri(row[QRTRoadsTable.ROAD_ID])
@@ -138,3 +142,4 @@ class QRTRoadsTable(Table):
                 graph.add((bnode, RDF.value, Literal(road_suffix)))
 
         Table.to_file(table_name, graph)
+        graph.close()

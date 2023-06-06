@@ -1,12 +1,13 @@
 import itertools
+from pathlib import Path
 
-from rdflib import Graph, URIRef
+from rdflib import URIRef
 from rdflib.namespace import RDF
 from pyspark.sql import SparkSession
 from jinja2 import Template
 
 from cam.tables import Table
-from cam.graph import ADDR
+from cam.graph import ADDR, create_graph
 
 
 class SiteTable(Table):
@@ -52,9 +53,13 @@ class SiteTable(Table):
         return URIRef(f"https://linked.data.gov.au/dataset/qld-addr/addr-obj-{site_id}")
 
     @staticmethod
-    def transform(rows: itertools.chain, graph: Graph, table_name: str):
+    def transform(rows: itertools.chain, table_name: str):
+        oxigraph_path = Path(f"oxigraph_data/{table_name}")
+        graph = create_graph(str(oxigraph_path))
+
         for row in rows:
             iri = SiteTable.get_iri(row[SiteTable.SITE_ID])
             graph.add((iri, RDF.type, ADDR.AddressableObject))
 
         Table.to_file(table_name, graph)
+        graph.close()

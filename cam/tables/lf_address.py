@@ -1,4 +1,5 @@
 import itertools
+from pathlib import Path
 
 from rdflib import Graph, URIRef, BNode, Literal
 from rdflib.namespace import RDF, SDO, SKOS
@@ -10,7 +11,7 @@ from cam.tables.lf_site import SiteTable
 from cam.tables.lf_geocode import GeocodeTable
 from cam.tables.qrt import QRTRoadsTable
 from cam.tables.locality import LocalityTable
-from cam.graph import ADDR, ADDRCMPType, CN
+from cam.graph import ADDR, ADDRCMPType, CN, create_graph
 from cam.remote_concepts import get_remote_concepts
 
 
@@ -104,7 +105,10 @@ class AddressTable(Table):
         return URIRef(f"https://linked.data.gov.au/dataset/qld-addr/state-{state}")
 
     @staticmethod
-    def transform(rows: itertools.chain, graph: Graph, table_name: str):
+    def transform(rows: itertools.chain, table_name: str):
+        oxigraph_path = Path(f"oxigraph_data/{table_name}")
+        graph = create_graph(str(oxigraph_path))
+
         # Fetch FSDF vocabularies
         flat_type_codes = get_remote_concepts(
             FSDF_SPARQL_ENDPOINT,
@@ -266,3 +270,4 @@ class AddressTable(Table):
             )
 
         Table.to_file(table_name, graph)
+        graph.close()
