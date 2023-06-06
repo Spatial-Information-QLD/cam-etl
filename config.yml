@@ -1,6 +1,8 @@
 db_connection: postgresql://postgres:postgres@localhost:5432/address
 
-limit: 20
+# limit and debug are unused and to be removed in the future.
+limit: 100
+debug: true
 
 tables:
   - lalfdb.lalfpdba_lf_site
@@ -8,3 +10,6 @@ tables:
   - lalfdb.lalfpdba_lf_geocode
   - lalfdb.lalfpdba_sp_survey_point
   - lalfdb.lalfpdba_lf_status
+  - lalfdb.locality
+  - lalfdb.qrt
+  - lalfdb.lalfpdba_lf_address_history
