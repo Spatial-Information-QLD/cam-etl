@@ -24,8 +24,9 @@ tasks:
       - docker-compose --profile graphdb up -d
 
   graphdb:preload:
-    desc: Preload data into GraphDB Docker service.
+    desc: Preload data into GraphDB Docker service. Warning, this overwrites existing data.
     cmds:
+      - task: graphdb:down
       - docker-compose --profile graphdb:preload up
       - docker-compose --profile graphdb:preload down
 
@@ -55,7 +56,6 @@ tasks:
     cmds:
       - task: etl:clean
       - task: etl
-      - task: graphdb:down
       - task: graphdb:preload
       - task: graphdb:up
 

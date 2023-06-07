@@ -33,7 +33,7 @@ class Table(ABC):
     def to_file(table_name: str, graph: Graph):
         output_dir = Path("output")
         output_dir.mkdir(exist_ok=True)
-        filename = Path(table_name + "-" + str(os.getpid()) + ".ttl")
+        filename = Path(table_name + "-" + str(os.getpid()) + ".nq")
 
         store: Store = graph.store._inner
         quads = store.quads_for_pattern(None, None, None)

@@ -1,5 +1,9 @@
 # CAM ETL
 
+## ETL
+
+Bulk loading N-Quads CAM data into GraphDB takes around 23 minutes.
+
 ## QRT Roads
 
 Download from https://qldspatial.information.qld.gov.au/catalogue/custom/detail.page?fid={CE66D3D5-8740-41A7-8B42-30F5F1691B36}.
