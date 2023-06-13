@@ -16,7 +16,6 @@ from cam.tables import (
     qrt,
     lf_address_history,
 )
-from cam.graph import create_graph
 
 
 table_module_mapping: dict[str, Type[Table]] = {
