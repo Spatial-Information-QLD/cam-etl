@@ -11,7 +11,7 @@ from cam.tables.lf_site import SiteTable
 from cam.tables.lf_geocode import GeocodeTable
 from cam.tables.qrt import QRTRoadsTable
 from cam.tables.locality import LocalityTable
-from cam.graph import ADDR, ADDRCMPType, CN, create_graph
+from cam.graph import ADDR, ADDRCMPType, ACTISO, CN, create_graph
 from cam.remote_concepts import get_remote_concepts
 
 
@@ -59,6 +59,7 @@ class AddressTable(Table):
     QRT_ROAD_ID = "qrt_road_id"
     LOCALITY_NAME = "locality_name"
     STATE = "state"
+    POSTCODE = "postcode"
 
     def __init__(self, spark: SparkSession, site_ids: list[str] = None) -> None:
         super().__init__(spark)
@@ -79,9 +80,14 @@ class AddressTable(Table):
                         a.*,
                         q.road_id as qrt_road_id,
                         l.locality_name,
-                        l.state
+                        l.state,
+                        p.postcode
                     from lalfdb.lalfpdba_lf_site s
                         join lalfdb.lalfpdba_lf_address a on a.site_id = s.site_id 
+                        join lalfdb.lalfpdba_lf_geocode g on g.site_id = s.site_id
+                        join lalfdb.lalfpdba_sp_survey_point sp on sp.pid = g.spdb_pid
+                        join lalfdb.qld_postcode_polygon pp on lalfdb.st_intersects(pp.wkt, lalfdb.st_geomfromtext(sp.wkt_literal, 4326))
+                        join lalfdb.postcode p on p.pc_pid = pp.pc_pid
                         join lalfdb.lalfpdba_lf_road r on r.road_id = a.road_id 
                         join lalfdb.lalfpdba_locality l on l.locality_code = r.locality_code 
                         join lalfdb.qrt q on q.road_name_basic = r.qrt_road_name_basic and q.address_locality = l.locality_name 
@@ -148,10 +154,8 @@ class AddressTable(Table):
             )
             graph.add((country_iri, RDF.type, SKOS.Concept))
             graph.add((country_iri, RDF.value, Literal(country)))
-            graph.add((country_iri, SDO.additionalType, ADDRCMPType.countryName))
-            add_addr_component(
-                country, ADDRCMPType.countryName, country_iri, iri, graph
-            )
+            graph.add((country_iri, SDO.additionalType, ACTISO.countryName))
+            add_addr_component(country, ACTISO.countryName, country_iri, iri, graph)
 
             # unit_type_code
             unit_type_code = row[AddressTable.UNIT_TYPE_CODE]
@@ -267,6 +271,14 @@ class AddressTable(Table):
             locality_iri = LocalityTable.get_iri(locality_id)
             add_addr_component(
                 locality_id, ADDRCMPType.locality, locality_iri, iri, graph
+            )
+
+            # postcode
+            postcode_component = BNode()
+            graph.add((iri, SDO.hasPart, postcode_component))
+            graph.add((postcode_component, SDO.additionalType, ACTISO.postcode))
+            graph.add(
+                (postcode_component, RDF.value, Literal(row[AddressTable.POSTCODE]))
             )
 
         Table.to_file(table_name, graph)

@@ -4,6 +4,26 @@
 
 Bulk loading N-Quads CAM data into GraphDB takes around 23 minutes.
 
+## Postcodes
+
+Before loading, see if PostGIS is enabled for the `lalfdb` schema.
+
+```sql
+SHOW search_path;
+-- If not available, set it.
+SET search_path = public, lalfdb;
+```
+
+Load the `QLD_POSTCODE.dbf` file into Postgres.
+
+```bash
+shp2pgsql -D -I -s 4326 "/tmp/postgres-data/postcodes/Postcode Boundaries/Postcode Boundaries MAY 2023/Standard/QLD_POSTCODE.dbf" lalfdb.postcode | psql address postgres
+# shp2pgsql -D -I -s 4326 "/tmp/postgres-data/postcodes/Postcode Boundaries/Postcode Boundaries MAY 2023/Standard/QLD_POSTCODE_POLYGON.shp" lalfdb.postcode_polygon | psql address postgres
+```
+
+Note, I was not able to load the `QLD_POSTCODE_POLYGON.shp` file using `shp2pgsql`. I had to open it in QGIS and export it as CSV. I then used DBeaver to load the CSV into the database.
+
+
 ## QRT Roads
 
 Download from https://qldspatial.information.qld.gov.au/catalogue/custom/detail.page?fid={CE66D3D5-8740-41A7-8B42-30F5F1691B36}.

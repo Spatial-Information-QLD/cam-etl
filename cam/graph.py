@@ -50,7 +50,17 @@ class ADDRCMPType(DefinedNamespace):
     streetLocality: URIRef
     locality: URIRef
     stateOrTerritory: URIRef
+
+
+class ACTISO(DefinedNamespace):
+    _fail = True
+    _underscore_num = True
+    _NS = Namespace(
+        "http://def.isotc211.org/iso19160/-1/2015/Address/code/AnzAddressComponentTypes/"
+    )
+
     countryName: URIRef
+    postcode: URIRef
 
 
 class ASTISO(DefinedNamespace):
@@ -135,6 +145,7 @@ class CN(DefinedNamespace):
 prefixes = {
     "addr": ADDR,
     "act": ADDRCMPType,
+    "actiso": ACTISO,
     "geo": GEO,
     "dcterms": DCTERMS,
     "skos": SKOS,
