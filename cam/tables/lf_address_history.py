@@ -3,7 +3,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from rdflib import URIRef, Literal, BNode
-from rdflib.namespace import RDFS, TIME, DCTERMS, PROV
+from rdflib.namespace import RDFS, TIME, DCTERMS, PROV, RDF
 from pyspark.sql import SparkSession
 from jinja2 import Template
 
@@ -94,6 +94,7 @@ class AddressHistoryTable(Table):
                     address_histories[i - 1][ADDR_HISTORY_ID],
                     address_histories[i - 1][VERSION],
                 )
+                graph.add((lifecycle_stage_iri, RDF.type, LIFECYCLE.LifecycleStage))
                 graph.add(
                     (address_iri, LIFECYCLE.hasLifecycleStage, lifecycle_stage_iri)
                 )
