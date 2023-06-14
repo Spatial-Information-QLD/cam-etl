@@ -6,7 +6,7 @@ debug: true
 
 tables:
   # - lalfdb.lalfpdba_lf_site # ~3min
-  # - lalfdb.lalfpdba_lf_address # ~83min
+  # - lalfdb.lalfpdba_lf_address # ~129min
   # - lalfdb.lalfpdba_lf_geocode # ~6min
   # - lalfdb.lalfpdba_sp_survey_point # ~3min
   # - lalfdb.lalfpdba_lf_status # ~3sec
