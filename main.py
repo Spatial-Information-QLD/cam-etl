@@ -15,6 +15,8 @@ from cam.tables import (
     locality,
     qrt,
     lf_address_history,
+    placenm,
+    lf_place_name,
 )
 
 
@@ -27,6 +29,8 @@ table_module_mapping: dict[str, Type[Table]] = {
     "lalfdb.locality": locality.LocalityTable,
     "lalfdb.qrt": qrt.QRTRoadsTable,
     "lalfdb.lalfpdba_lf_address_history": lf_address_history.AddressHistoryTable,
+    "lalfdb.lapnpdba_placenm": placenm.GazettedPlaceNmTable,
+    "lalfdb.lalfdba_lf_place_name": lf_place_name.PlacenameTable,
 }
 
 

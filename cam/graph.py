@@ -120,6 +120,7 @@ class LIFECYCLE(DefinedNamespace):
 
     hasLifecycleStage: URIRef
     hasTime: URIRef
+    LifecycleStage: URIRef
 
 
 class LST(DefinedNamespace):
@@ -142,6 +143,24 @@ class CN(DefinedNamespace):
     isNameFor: URIRef
 
 
+class GN(DefinedNamespace):
+    _fail = True
+    _underscore_num = True
+    _NS = Namespace("https://linked.data.gov.au/def/gn/")
+
+    GeographicalName: URIRef
+    GeographicalObject: URIRef
+    ISAPronunciation: URIRef
+
+
+class GPT(DefinedNamespace):
+    _fail = True
+    _underscore_num = True
+    _NS = Namespace("https://linked.data.gov.au/def/gn-part-types/")
+
+    GeographicalGivenName: URIRef
+
+
 prefixes = {
     "addr": ADDR,
     "act": ADDRCMPType,
@@ -159,6 +178,8 @@ prefixes = {
     "lst": LST,
     "cn": CN,
     "sdo": SDO,
+    "gn": GN,
+    "gpt": GPT,
 }
 
 

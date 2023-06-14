@@ -13,3 +13,5 @@ tables:
   # - lalfdb.locality # ~4sec
   # - lalfdb.qrt # ~17min
   # - lalfdb.lalfpdba_lf_address_history # ~32min
+  # - lalfdb.lapnpdba_placenm # ~16sec
+  # - lalfdb.lalfdba_lf_place_name # ~50sec
