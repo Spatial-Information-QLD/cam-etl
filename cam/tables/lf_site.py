@@ -39,7 +39,7 @@ class SiteTable(Table):
                     from lalfdb.lalfpdba_lf_site s
                     {% if site_ids %}
                     where
-                        s.site_id IN (1066374, 1075435, 2578313, 1724075, 33254)
+                        s.site_id in {{ site_ids }}
                     {% endif %}
                 ) AS site
             """
