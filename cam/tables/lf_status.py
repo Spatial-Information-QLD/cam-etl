@@ -55,7 +55,7 @@ class StatusTable(Table):
     STATUS_CODE = "status_code"
     STATUS = "status"
 
-    def __init__(self, spark: SparkSession, site_ids: list[str] = None) -> None:
+    def __init__(self, spark: SparkSession, site_ids: str = None) -> None:
         super().__init__(spark)
 
     @staticmethod

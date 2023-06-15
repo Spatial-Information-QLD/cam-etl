@@ -20,7 +20,7 @@ class SiteTable(Table):
     PARCEL_ID = "parcel_id"
     VERSION_NO = "version_no"
 
-    def __init__(self, spark: SparkSession, site_ids: list[str] = None) -> None:
+    def __init__(self, spark: SparkSession, site_ids: str = None) -> None:
         super().__init__(spark)
 
         self.df = (

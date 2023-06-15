@@ -19,7 +19,7 @@ class QRTRoadsTable(Table):
     ROAD_TYPE = "road_type"
     ROAD_SUFFIX = "road_suffix"
 
-    def __init__(self, spark: SparkSession, site_ids: list[str] = None) -> None:
+    def __init__(self, spark: SparkSession, site_ids: str = None) -> None:
         self.df = (
             spark.read.format("jdbc")
             .option(

@@ -19,7 +19,7 @@ class PlacenameTable(Table):
     SITE_ID = "site_id"
     NAME_DATA_SOURCE = "pl_name_data_source"
 
-    def __init__(self, spark: SparkSession, site_ids: list[str] = None) -> None:
+    def __init__(self, spark: SparkSession, site_ids: str = None) -> None:
         super().__init__(spark)
 
         self.df = (
@@ -42,9 +42,10 @@ class PlacenameTable(Table):
                     from lalfdb.lalfpdba_lf_place_name pn
                     join lalfdb.lalfpdba_lf_place_name_data_source pnds on pnds.pl_name_data_source_code = pn.pl_name_data_source_code
                     where pn.pl_name_status_code != 'H'
+                    {% if site_ids %}and pn.site_id in {{ site_ids }}{% endif %}
                 ) AS placenm
             """
-                ).render(),
+                ).render(site_ids=site_ids),
             )
             .load()
         )
