@@ -10,15 +10,10 @@ from cam.tables import Table
 from cam.graph import ADDR, create_graph
 
 
-class SiteTable(Table):
-    table = "lalfdb.lalfpdba_lf_site"
+class ParcelTable(Table):
+    table = "lalfdb.lalfpdba_lf_parcel"
 
-    SITE_ID = "site_id"
-    PARENT_SITE_ID = "parent_site_id"
-    SITE_TYPE_CODE = "site_type_code"
-    SITE_STATUS_CODE = "site_status_code"
     PARCEL_ID = "parcel_id"
-    VERSION_NO = "version_no"
 
     def __init__(self, spark: SparkSession, site_ids: str = None) -> None:
         super().__init__(spark)
@@ -35,13 +30,14 @@ class SiteTable(Table):
                 Template(
                     """
                 (
-                    select *
-                    from lalfdb.lalfpdba_lf_site s
+                    select p.parcel_id
+                    from lalfdb.lalfpdba_lf_parcel p
+                    join lalfdb.lalfpdba_lf_site s on s.parcel_id = p.parcel_id
                     {% if site_ids %}
                     where
                         s.site_id in {{ site_ids }}
                     {% endif %}
-                ) AS site
+                ) as parcel
             """
                 ).render(site_ids=site_ids),
             )
@@ -49,8 +45,8 @@ class SiteTable(Table):
         )
 
     @staticmethod
-    def get_iri(site_id: str):
-        return URIRef(f"https://linked.data.gov.au/dataset/qld-addr/addr-obj-{site_id}")
+    def get_iri(parcel_id: str):
+        return URIRef(f"https://linked.data.gov.au/dataset/qld-cad/{parcel_id}")
 
     @staticmethod
     def transform(rows: itertools.chain, table_name: str):
@@ -58,7 +54,8 @@ class SiteTable(Table):
         graph = create_graph(str(oxigraph_path))
 
         for row in rows:
-            iri = SiteTable.get_iri(row[SiteTable.SITE_ID])
+            parcel_id = row[ParcelTable.PARCEL_ID]
+            iri = ParcelTable.get_iri(parcel_id)
             graph.add((iri, RDF.type, ADDR.AddressableObject))
 
         Table.to_file(table_name, graph)
