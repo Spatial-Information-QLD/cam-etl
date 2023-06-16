@@ -43,7 +43,7 @@ tasks:
   etl:clean:
     desc: Delete the files in output/ directory.
     cmds:
-      - cmd: rm output/*.ttl
+      - cmd: rm output/*.nq
         ignore_error: true
 
   ontodia:
