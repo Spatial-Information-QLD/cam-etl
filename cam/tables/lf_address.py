@@ -11,6 +11,7 @@ from cam.tables.lf_parcel import ParcelTable
 from cam.tables.lf_geocode import GeocodeTable
 from cam.tables.qrt import QRTRoadsTable
 from cam.tables.locality import LocalityTable
+from cam.tables.lf_place_name import PlacenameTable
 from cam.graph import ADDR, ADDRCMPType, ACTISO, CN, create_graph
 from cam.remote_concepts import get_remote_concepts
 
@@ -63,12 +64,14 @@ class AddressTable(Table):
                 (
                     select distinct
                         p.parcel_id,
+                        pn.pl_name_id,
                         a.*,
                         q.road_id as qrt_road_id,
                         l.locality_name,
                         l.state,
                         po.postcode
                     from lalfdb.lalfpdba_lf_site s
+                        left join lalfdb.lalfpdba_lf_place_name pn on pn.site_id = s.site_id
                         join lalfdb.lalfpdba_lf_parcel p on p.parcel_id = s.parcel_id
                         join lalfdb.lalfpdba_lf_address a on a.site_id = s.site_id
                         join lalfdb.lalfpdba_lf_geocode g on g.site_id = s.site_id
@@ -118,6 +121,7 @@ class AddressTable(Table):
         STATE = "state"
         POSTCODE = "postcode"
         GEOCODE_ID = "geocode_id"
+        PLACE_NAME_ID = "pl_name_id"
 
         # Fetch FSDF vocabularies
         flat_type_codes = get_remote_concepts(
@@ -279,8 +283,13 @@ class AddressTable(Table):
             postcode_component = BNode()
             graph.add((iri, SDO.hasPart, postcode_component))
             graph.add((postcode_component, SDO.additionalType, ACTISO.postcode))
-            graph.add(
-                (postcode_component, RDF.value, Literal(row[POSTCODE]))
+            graph.add((postcode_component, RDF.value, Literal(row[POSTCODE])))
+
+            # place name
+            place_name_id = str(row[PLACE_NAME_ID])
+            place_name_iri = PlacenameTable.get_iri(place_name_id)
+            add_addr_component(
+                place_name_id, ADDRCMPType.placeName, place_name_iri, iri, graph
             )
 
         Table.to_file(table_name, graph)

@@ -50,6 +50,7 @@ class ADDRCMPType(DefinedNamespace):
     streetLocality: URIRef
     locality: URIRef
     stateOrTerritory: URIRef
+    placeName: URIRef
 
 
 class ACTISO(DefinedNamespace):
