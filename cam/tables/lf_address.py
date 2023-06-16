@@ -7,7 +7,7 @@ from pyspark.sql import SparkSession
 from jinja2 import Template
 
 from cam.tables import Table
-from cam.tables.lf_site import SiteTable
+from cam.tables.lf_parcel import ParcelTable
 from cam.tables.lf_geocode import GeocodeTable
 from cam.tables.qrt import QRTRoadsTable
 from cam.tables.locality import LocalityTable
@@ -46,21 +46,6 @@ def add_addr_component(
 class AddressTable(Table):
     table = "lalfdb.lalfpdba_lf_address"
 
-    ADDR_ID = "addr_id"
-    UNIT_TYPE_CODE = "unit_type_code"
-    UNIT_NO = "unit_no"
-    UNIT_SUFFIX = "unit_suffix"
-    LEVEL_TYPE_CODE = "level_type_code"
-    LEVEL_NO = "level_no"
-    STREET_NO_FIRST = "street_no_first"
-    STREET_NO_FIRST_SUFFIX = "street_no_first_suffix"
-    STREET_NO_LAST = "street_no_last"
-    STREET_NO_LAST_SUFFIX = "street_no_last_suffix"
-    QRT_ROAD_ID = "qrt_road_id"
-    LOCALITY_NAME = "locality_name"
-    STATE = "state"
-    POSTCODE = "postcode"
-
     def __init__(self, spark: SparkSession, site_ids: str = None) -> None:
         super().__init__(spark)
 
@@ -76,18 +61,20 @@ class AddressTable(Table):
                 Template(
                     """
                 (
-                    select distinct 
+                    select distinct
+                        p.parcel_id,
                         a.*,
                         q.road_id as qrt_road_id,
                         l.locality_name,
                         l.state,
-                        p.postcode
+                        po.postcode
                     from lalfdb.lalfpdba_lf_site s
-                        join lalfdb.lalfpdba_lf_address a on a.site_id = s.site_id 
+                        join lalfdb.lalfpdba_lf_parcel p on p.parcel_id = s.parcel_id
+                        join lalfdb.lalfpdba_lf_address a on a.site_id = s.site_id
                         join lalfdb.lalfpdba_lf_geocode g on g.site_id = s.site_id
                         join lalfdb.lalfpdba_sp_survey_point sp on sp.pid = g.spdb_pid
                         join lalfdb.qld_postcode_polygon pp on lalfdb.st_intersects(pp.wkt, lalfdb.st_geomfromtext(sp.wkt_literal, 4326))
-                        join lalfdb.postcode p on p.pc_pid = pp.pc_pid
+                        join lalfdb.postcode po on po.pc_pid = pp.pc_pid
                         join lalfdb.lalfpdba_lf_road r on r.road_id = a.road_id 
                         join lalfdb.lalfpdba_locality l on l.locality_code = r.locality_code 
                         join lalfdb.qrt q on q.road_name_basic = r.qrt_road_name_basic and q.address_locality = l.locality_name 
@@ -115,6 +102,23 @@ class AddressTable(Table):
         oxigraph_path = Path(f"oxigraph_data/{table_name}")
         graph = create_graph(str(oxigraph_path))
 
+        PARCEL_ID = "parcel_id"
+        ADDR_ID = "addr_id"
+        UNIT_TYPE_CODE = "unit_type_code"
+        UNIT_NO = "unit_no"
+        UNIT_SUFFIX = "unit_suffix"
+        LEVEL_TYPE_CODE = "level_type_code"
+        LEVEL_NO = "level_no"
+        STREET_NO_FIRST = "street_no_first"
+        STREET_NO_FIRST_SUFFIX = "street_no_first_suffix"
+        STREET_NO_LAST = "street_no_last"
+        STREET_NO_LAST_SUFFIX = "street_no_last_suffix"
+        QRT_ROAD_ID = "qrt_road_id"
+        LOCALITY_NAME = "locality_name"
+        STATE = "state"
+        POSTCODE = "postcode"
+        GEOCODE_ID = "geocode_id"
+
         # Fetch FSDF vocabularies
         flat_type_codes = get_remote_concepts(
             FSDF_SPARQL_ENDPOINT,
@@ -127,18 +131,18 @@ class AddressTable(Table):
         # Process each row in the results
         for row in rows:
             # addr_id
-            iri = AddressTable.get_iri(row[AddressTable.ADDR_ID])
+            iri = AddressTable.get_iri(row[ADDR_ID])
             graph.add((iri, RDF.type, ADDR.Address))
             graph.add((iri, RDF.type, CN.CompoundName))
 
-            site_iri = SiteTable.get_iri(row[SiteTable.SITE_ID])
-            graph.add((iri, ADDR.isAddressFor, site_iri))
-            graph.add((site_iri, ADDR.hasAddress, iri))
-            graph.add((iri, CN.isNameFor, site_iri))
-            graph.add((site_iri, SDO.name, iri))
+            parcel_iri = ParcelTable.get_iri(row[PARCEL_ID])
+            graph.add((iri, ADDR.isAddressFor, parcel_iri))
+            graph.add((parcel_iri, ADDR.hasAddress, iri))
+            graph.add((iri, CN.isNameFor, parcel_iri))
+            graph.add((parcel_iri, SDO.name, iri))
 
             # Create and add QLD state
-            state = row[AddressTable.STATE]
+            state = row[STATE]
             state_iri = AddressTable.get_state_iri(state)
             graph.add((state_iri, RDF.type, SKOS.Concept))
             graph.add((state_iri, RDF.value, Literal(state)))
@@ -158,7 +162,7 @@ class AddressTable(Table):
             add_addr_component(country, ACTISO.countryName, country_iri, iri, graph)
 
             # unit_type_code
-            unit_type_code = row[AddressTable.UNIT_TYPE_CODE]
+            unit_type_code = row[UNIT_TYPE_CODE]
             add_addr_component(
                 unit_type_code,
                 ADDRCMPType.flatTypeCode,
@@ -171,7 +175,7 @@ class AddressTable(Table):
             )
 
             # unit_no
-            unit_no = row[AddressTable.UNIT_NO]
+            unit_no = row[UNIT_NO]
             add_addr_component(
                 unit_no,
                 ADDRCMPType.flatNumber,
@@ -181,7 +185,7 @@ class AddressTable(Table):
             )
 
             # unit_suffix
-            unit_suffix: str = row[AddressTable.UNIT_SUFFIX]
+            unit_suffix: str = row[UNIT_SUFFIX]
             add_addr_component(
                 unit_suffix,
                 ADDRCMPType.flatNumberSuffix,
@@ -191,7 +195,7 @@ class AddressTable(Table):
             )
 
             # level_type_code
-            level_type_code = row[AddressTable.LEVEL_TYPE_CODE]
+            level_type_code = row[LEVEL_TYPE_CODE]
             add_addr_component(
                 level_type_code,
                 ADDRCMPType.levelTypeCode,
@@ -204,7 +208,7 @@ class AddressTable(Table):
             )
 
             # level_no
-            level_no = row[AddressTable.LEVEL_NO]
+            level_no = row[LEVEL_NO]
             add_addr_component(
                 level_no,
                 ADDRCMPType.levelNumber,
@@ -214,7 +218,7 @@ class AddressTable(Table):
             )
 
             # # street_no_first
-            street_no_first = row[AddressTable.STREET_NO_FIRST]
+            street_no_first = row[STREET_NO_FIRST]
             add_addr_component(
                 street_no_first,
                 ADDRCMPType.numberFirst,
@@ -224,7 +228,7 @@ class AddressTable(Table):
             )
 
             # # street_no_first_suffix
-            street_no_first_suffix = row[AddressTable.STREET_NO_FIRST_SUFFIX]
+            street_no_first_suffix = row[STREET_NO_FIRST_SUFFIX]
             add_addr_component(
                 street_no_first_suffix,
                 ADDRCMPType.numberFirstSuffix,
@@ -234,7 +238,7 @@ class AddressTable(Table):
             )
 
             # street_no_last
-            street_no_last = row[AddressTable.STREET_NO_LAST]
+            street_no_last = row[STREET_NO_LAST]
             add_addr_component(
                 street_no_last,
                 ADDRCMPType.numberLast,
@@ -244,7 +248,7 @@ class AddressTable(Table):
             )
 
             # street_no_last_suffix
-            street_no_last_suffix = row[AddressTable.STREET_NO_LAST_SUFFIX]
+            street_no_last_suffix = row[STREET_NO_LAST_SUFFIX]
             add_addr_component(
                 street_no_last_suffix,
                 ADDRCMPType.numberLastSuffix,
@@ -253,21 +257,19 @@ class AddressTable(Table):
                 graph,
             )
 
-            # TODO: Provenance stuff here...
-
             # geocode_id
-            geocode_iri = GeocodeTable.get_iri(row[GeocodeTable.GEOCODE_ID])
+            geocode_iri = GeocodeTable.get_iri(row[GEOCODE_ID])
             graph.add((iri, ADDR.hasGeocode, geocode_iri))
 
             # road_id
-            road_id = str(row[AddressTable.QRT_ROAD_ID])
+            road_id = str(row[QRT_ROAD_ID])
             road_iri = QRTRoadsTable.get_iri(road_id)
             add_addr_component(
                 road_id, ADDRCMPType.streetLocality, road_iri, iri, graph
             )
 
             # locality
-            locality_id = str(row[AddressTable.LOCALITY_NAME])
+            locality_id = str(row[LOCALITY_NAME])
             locality_iri = LocalityTable.get_iri(locality_id)
             add_addr_component(
                 locality_id, ADDRCMPType.locality, locality_iri, iri, graph
@@ -278,7 +280,7 @@ class AddressTable(Table):
             graph.add((iri, SDO.hasPart, postcode_component))
             graph.add((postcode_component, SDO.additionalType, ACTISO.postcode))
             graph.add(
-                (postcode_component, RDF.value, Literal(row[AddressTable.POSTCODE]))
+                (postcode_component, RDF.value, Literal(row[POSTCODE]))
             )
 
         Table.to_file(table_name, graph)

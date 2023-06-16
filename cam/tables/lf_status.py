@@ -52,9 +52,6 @@ astiso:unofficial
 class StatusTable(Table):
     table = "lalfdb.lalfpdba_lf_status"
 
-    STATUS_CODE = "status_code"
-    STATUS = "status"
-
     def __init__(self, spark: SparkSession, site_ids: str = None) -> None:
         super().__init__(spark)
 
@@ -66,6 +63,9 @@ class StatusTable(Table):
     def transform(rows: itertools.chain, table_name: str):
         oxigraph_path = Path(f"oxigraph_data/{table_name}")
         graph = create_graph(str(oxigraph_path))
+
+        STATUS_CODE = "status_code"
+        STATUS = "status"
 
         concept_scheme = URIRef("https://linked.data.gov.au/def/qld-addr-status")
         graph.add((concept_scheme, RDF.type, SKOS.ConceptScheme))
@@ -94,25 +94,21 @@ class StatusTable(Table):
         )
 
         for row in rows:
-            concept = URIRef(StatusTable.get_iri(row[StatusTable.STATUS_CODE]))
+            concept = URIRef(StatusTable.get_iri(row[STATUS_CODE]))
 
             graph.add((concept, RDF.type, SKOS.Concept))
             graph.add(
                 (
                     concept,
                     DCTERMS.identifier,
-                    Literal(row[StatusTable.STATUS_CODE], datatype=XSD.token),
+                    Literal(row[STATUS_CODE], datatype=XSD.token),
                 )
             )
             graph.add(
                 (concept, DCTERMS.provenance, Literal(provenance_text, lang="en"))
             )
-            graph.add(
-                (concept, SKOS.prefLabel, Literal(row[StatusTable.STATUS], lang="en"))
-            )
-            graph.add(
-                (concept, SKOS.definition, Literal(row[StatusTable.STATUS], lang="en"))
-            )
+            graph.add((concept, SKOS.prefLabel, Literal(row[STATUS], lang="en")))
+            graph.add((concept, SKOS.definition, Literal(row[STATUS], lang="en")))
             graph.add((concept, SKOS.inScheme, concept_scheme))
 
         graph.parse(data=anz_address_types)

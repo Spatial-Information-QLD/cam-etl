@@ -7,13 +7,11 @@ from pyspark.sql import SparkSession
 from jinja2 import Template
 
 from cam.tables import Table
-from cam.graph import ADDR, create_graph
+from cam.graph import ADDR, CSDM, create_graph
 
 
 class ParcelTable(Table):
     table = "lalfdb.lalfpdba_lf_parcel"
-
-    PARCEL_ID = "parcel_id"
 
     def __init__(self, spark: SparkSession, site_ids: str = None) -> None:
         super().__init__(spark)
@@ -53,10 +51,13 @@ class ParcelTable(Table):
         oxigraph_path = Path(f"oxigraph_data/{table_name}")
         graph = create_graph(str(oxigraph_path))
 
+        PARCEL_ID = "parcel_id"
+
         for row in rows:
-            parcel_id = row[ParcelTable.PARCEL_ID]
+            parcel_id = row[PARCEL_ID]
             iri = ParcelTable.get_iri(parcel_id)
             graph.add((iri, RDF.type, ADDR.AddressableObject))
+            graph.add((iri, RDF.type, CSDM.Parcel))
 
         Table.to_file(table_name, graph)
         graph.close()

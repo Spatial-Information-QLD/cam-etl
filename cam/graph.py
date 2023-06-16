@@ -161,10 +161,19 @@ class GPT(DefinedNamespace):
     GeographicalGivenName: URIRef
 
 
+class CSDM(DefinedNamespace):
+    _fail = True
+    _underscore_num = True
+    _NS = Namespace("https://linked.data.gov.au/def/cad/")
+
+    Parcel: URIRef
+
+
 prefixes = {
     "addr": ADDR,
     "act": ADDRCMPType,
     "actiso": ACTISO,
+    "csdm": CSDM,
     "geo": GEO,
     "dcterms": DCTERMS,
     "skos": SKOS,

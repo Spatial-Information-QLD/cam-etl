@@ -13,8 +13,6 @@ from cam.graph import ADDR, ADDRCMPType, create_graph
 class LocalityTable(Table):
     table = "lalfdb.lalfpdba_locality"
 
-    LOCALITY_NAME = "locality_name"
-
     def __init__(self, spark: SparkSession, site_ids: str = None) -> None:
         super().__init__(spark)
 
@@ -50,14 +48,16 @@ class LocalityTable(Table):
         oxigraph_path = Path(f"oxigraph_data/{table_name}")
         graph = create_graph(str(oxigraph_path))
 
+        LOCALITY_NAME = "locality_name"
+
         for row in rows:
-            iri = LocalityTable.get_iri(row[LocalityTable.LOCALITY_NAME])
+            iri = LocalityTable.get_iri(row[LOCALITY_NAME])
 
             # TODO: check class type in model.
             graph.add((iri, RDF.type, ADDR.Locality))
             graph.add((iri, SDO.additionalType, ADDRCMPType.locality))
-            graph.add((iri, RDFS.label, Literal(row[LocalityTable.LOCALITY_NAME])))
-            graph.add((iri, RDF.value, Literal(row[LocalityTable.LOCALITY_NAME])))
+            graph.add((iri, RDFS.label, Literal(row[LOCALITY_NAME])))
+            graph.add((iri, RDF.value, Literal(row[LOCALITY_NAME])))
 
         Table.to_file(table_name, graph)
         graph.close()

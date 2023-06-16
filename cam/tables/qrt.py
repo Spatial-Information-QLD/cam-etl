@@ -13,12 +13,6 @@ from cam.graph import ROADS, RCT, CN, create_graph
 class QRTRoadsTable(Table):
     table = "lalfdb.qrt"
 
-    ROAD_ID = "road_id"
-    ROAD_PREFIX = "road_prefix"
-    ROAD_NAME = "road_name"
-    ROAD_TYPE = "road_type"
-    ROAD_SUFFIX = "road_suffix"
-
     def __init__(self, spark: SparkSession, site_ids: str = None) -> None:
         self.df = (
             spark.read.format("jdbc")
@@ -74,9 +68,15 @@ class QRTRoadsTable(Table):
         oxigraph_path = Path(f"oxigraph_data/{table_name}")
         graph = create_graph(str(oxigraph_path))
 
+        ROAD_ID = "road_id"
+        ROAD_PREFIX = "road_prefix"
+        ROAD_NAME = "road_name"
+        ROAD_TYPE = "road_type"
+        ROAD_SUFFIX = "road_suffix"
+
         for row in rows:
-            iri = QRTRoadsTable.get_iri(row[QRTRoadsTable.ROAD_ID])
-            label_iri = QRTRoadsTable.get_label_iri(row[QRTRoadsTable.ROAD_ID])
+            iri = QRTRoadsTable.get_iri(row[ROAD_ID])
+            label_iri = QRTRoadsTable.get_label_iri(row[ROAD_ID])
 
             graph.add((iri, RDF.type, ROADS.RoadObject))
             graph.add((label_iri, RDF.type, ROADS.RoadLabel))
@@ -86,7 +86,7 @@ class QRTRoadsTable(Table):
             graph.add((label_iri, CN.isNameFor, iri))
 
             # Road Prefix
-            road_prefix = row[QRTRoadsTable.ROAD_PREFIX]
+            road_prefix = row[ROAD_PREFIX]
             if road_prefix is not None:
                 bnode = BNode()
                 graph.add((label_iri, SDO.hasPart, bnode))
@@ -100,7 +100,7 @@ class QRTRoadsTable(Table):
                 graph.add((bnode, RDF.value, Literal(road_prefix)))
 
             # Road Name
-            road_name = row[QRTRoadsTable.ROAD_NAME]
+            road_name = row[ROAD_NAME]
             if road_name is not None:
                 bnode = BNode()
                 graph.add((label_iri, SDO.hasPart, bnode))
@@ -114,7 +114,7 @@ class QRTRoadsTable(Table):
                 graph.add((bnode, RDF.value, Literal(road_name)))
 
             # Road Type
-            road_type = row[QRTRoadsTable.ROAD_TYPE]
+            road_type = row[ROAD_TYPE]
             if road_type is not None:
                 bnode = BNode()
                 graph.add((label_iri, SDO.hasPart, bnode))
@@ -128,7 +128,7 @@ class QRTRoadsTable(Table):
                 graph.add((bnode, RDF.value, Literal(road_type)))
 
             # Road Suffix
-            road_suffix = row[QRTRoadsTable.ROAD_SUFFIX]
+            road_suffix = row[ROAD_SUFFIX]
             if road_suffix is not None:
                 bnode = BNode()
                 graph.add((label_iri, SDO.hasPart, bnode))

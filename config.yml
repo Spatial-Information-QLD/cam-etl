@@ -5,13 +5,13 @@ limit: 100
 debug: true
 
 tables:
-  # - lalfdb.lalfpdba_lf_site # ~3min
-  # - lalfdb.lalfpdba_lf_address # ~129min
-  # - lalfdb.lalfpdba_lf_geocode # ~6min
-  # - lalfdb.lalfpdba_sp_survey_point # ~3min
-  # - lalfdb.lalfpdba_lf_status # ~3sec
-  # - lalfdb.locality # ~4sec
-  # - lalfdb.qrt # ~17min
-  # - lalfdb.lalfpdba_lf_address_history # ~32min
-  # - lalfdb.lapnpdba_placenm # ~16sec
-  # - lalfdb.lalfdba_lf_place_name # ~50sec
+  - lalfdb.lalfpdba_lf_parcel
+  - lalfdb.lalfpdba_lf_address # ~129min
+  - lalfdb.lalfpdba_lf_geocode # ~6min
+  - lalfdb.lalfpdba_sp_survey_point # ~3min
+  - lalfdb.lalfpdba_lf_status # ~3sec
+  - lalfdb.locality # ~4sec
+  - lalfdb.qrt # ~17min
+  - lalfdb.lalfpdba_lf_address_history # ~32min
+  - lalfdb.lapnpdba_placenm # ~16sec
+  - lalfdb.lalfpdba_lf_place_name # ~50sec

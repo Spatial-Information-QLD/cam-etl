@@ -1,7 +1,7 @@
 import itertools
 from pathlib import Path
 
-from rdflib import Graph, URIRef
+from rdflib import URIRef
 from rdflib.namespace import RDF, GEO
 from pyspark.sql import SparkSession
 from jinja2 import Template
@@ -13,9 +13,6 @@ from cam.graph import ADDR, create_graph
 
 class GeocodeTable(Table):
     table = "lalfdb.lalfpdba_lf_geocode"
-
-    GEOCODE_ID = "geocode_id"
-    SPDB_PID = "spdb_pid"
 
     def __init__(self, spark: SparkSession, site_ids: str = None) -> None:
         super().__init__(spark)
@@ -57,11 +54,14 @@ class GeocodeTable(Table):
         oxigraph_path = Path(f"oxigraph_data/{table_name}")
         graph = create_graph(str(oxigraph_path))
 
+        GEOCODE_ID = "geocode_id"
+        SPDB_PID = "spdb_pid"
+
         for row in rows:
-            iri = GeocodeTable.get_iri(row[GeocodeTable.GEOCODE_ID])
+            iri = GeocodeTable.get_iri(row[GEOCODE_ID])
             graph.add((iri, RDF.type, ADDR.Geocode))
 
-            point_iri = SPSurveyPointTable.get_iri(row[GeocodeTable.SPDB_PID])
+            point_iri = SPSurveyPointTable.get_iri(row[SPDB_PID])
             graph.add((iri, GEO.hasGeometry, point_iri))
 
         Table.to_file(table_name, graph)

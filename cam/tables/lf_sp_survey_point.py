@@ -13,10 +13,6 @@ from cam.graph import create_graph
 class SPSurveyPointTable(Table):
     table = "lalfdb.lalfpdba_sp_survey_point"
 
-    PID = "pid"
-    CENTROID_LON = "centroid_lon"
-    CENTROID_LAT = "centroid_lat"
-
     def __init__(self, spark: SparkSession, site_ids: str = None) -> None:
         super().__init__(spark)
 
@@ -58,14 +54,18 @@ class SPSurveyPointTable(Table):
         oxigraph_path = Path(f"oxigraph_data/{table_name}")
         graph = create_graph(str(oxigraph_path))
 
+        PID = "pid"
+        CENTROID_LON = "centroid_lon"
+        CENTROID_LAT = "centroid_lat"
+
         for row in rows:
-            iri = SPSurveyPointTable.get_iri(row[SPSurveyPointTable.PID])
+            iri = SPSurveyPointTable.get_iri(row[PID])
             graph.add(
                 (
                     iri,
                     GEO.asWKT,
                     Literal(
-                        f"POINT ({row[SPSurveyPointTable.CENTROID_LON]} {row[SPSurveyPointTable.CENTROID_LAT]})",
+                        f"POINT ({row[CENTROID_LON]} {row[CENTROID_LAT]})",
                         datatype=GEO.wktLiteral,
                     ),
                 )

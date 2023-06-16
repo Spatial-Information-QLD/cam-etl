@@ -13,16 +13,6 @@ from cam.graph import create_graph, GN, CN, GPT
 class GazettedPlaceNmTable(Table):
     table = "lalfdb.lapnpdba_placenm"
 
-    REF_NO = "ref_no"
-    PLACENAME = "placename"
-    PLACETYPE = "placetype"
-    LATCOORD = "latcoord"
-    LONCOORD = "loncoord"
-    GAZ_DATE = "gaz_date"
-    COMMENTS = "comments"
-    ORIGIN = "origin"
-    HISTORY = "history"
-
     def __init__(self, spark: SparkSession, site_ids: str = None) -> None:
         super().__init__(spark)
 
@@ -68,16 +58,26 @@ class GazettedPlaceNmTable(Table):
         oxigraph_path = Path(f"oxigraph_data/{table_name}")
         graph = create_graph(str(oxigraph_path))
 
+        REF_NO = "ref_no"
+        PLACENAME = "placename"
+        PLACETYPE = "placetype"
+        LATCOORD = "latcoord"
+        LONCOORD = "loncoord"
+        GAZ_DATE = "gaz_date"
+        COMMENTS = "comments"
+        ORIGIN = "origin"
+        HISTORY = "history"
+
         for row in rows:
             # Geographical Object
-            ref = row[GazettedPlaceNmTable.REF_NO]
+            ref = row[REF_NO]
             iri = GazettedPlaceNmTable.get_iri(ref)
             graph.add((iri, RDF.type, GN.GeographicalObject))
 
             # lat long
             geometry_iri = BNode()
-            lat = row[GazettedPlaceNmTable.LATCOORD]
-            long = row[GazettedPlaceNmTable.LONCOORD]
+            lat = row[LATCOORD]
+            long = row[LONCOORD]
             if lat is not None and long is not None:
                 graph.add((iri, GEO.hasGeometry, geometry_iri))
                 graph.add((geometry_iri, RDF.type, GEO.Geometry))
@@ -90,7 +90,7 @@ class GazettedPlaceNmTable(Table):
                 )
 
             # placetype
-            placetype: str = row[GazettedPlaceNmTable.PLACETYPE]
+            placetype: str = row[PLACETYPE]
             if placetype is not None:
                 graph.add(
                     (
@@ -115,22 +115,22 @@ class GazettedPlaceNmTable(Table):
                 (
                     geographical_name_iri,
                     RDF.value,
-                    Literal(row[GazettedPlaceNmTable.PLACENAME]),
+                    Literal(row[PLACENAME]),
                 )
             )
 
             # comment
-            comment = row[GazettedPlaceNmTable.COMMENTS]
+            comment = row[COMMENTS]
             if comment is not None and comment != "":
                 graph.add((geographical_name_iri, RDFS.comment, Literal(comment)))
 
             # origin
-            origin: str = row[GazettedPlaceNmTable.ORIGIN]
+            origin: str = row[ORIGIN]
             if origin is not None and origin != "":
                 graph.add((geographical_name_iri, DCTERMS.description, Literal(origin)))
 
             # history
-            history = row[GazettedPlaceNmTable.HISTORY]
+            history = row[HISTORY]
             if history is not None and origin != "":
                 graph.add((geographical_name_iri, SKOS.historyNote, Literal(history)))
 
