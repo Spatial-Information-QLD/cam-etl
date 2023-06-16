@@ -1,9 +1,5 @@
 db_connection: postgresql://postgres:postgres@localhost:5432/address
 
-# limit and debug are unused and to be removed in the future.
-limit: 100
-debug: true
-
 tables:
   - lalfdb.lalfpdba_lf_parcel
   - lalfdb.lalfpdba_lf_address # ~129min
@@ -15,3 +11,8 @@ tables:
   - lalfdb.lalfpdba_lf_address_history # ~32min
   - lalfdb.lapnpdba_placenm # ~16sec
   - lalfdb.lalfpdba_lf_place_name # ~50sec
+  - lalfdb.lalfpdba_lf_unit_type
+  - lalfdb.lalfpdba_lf_level_type
+
+# Value is a SQL list
+site_ids: "(1066374, 1075435, 2578313, 1724075, 33254, 1837741)"

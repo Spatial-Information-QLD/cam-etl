@@ -17,6 +17,8 @@ from cam.tables import (
     placenm,
     lf_place_name,
     lf_parcel,
+    lf_unit_type,
+    lf_level_type,
 )
 
 
@@ -31,6 +33,8 @@ table_module_mapping: dict[str, Type[Table]] = {
     "lalfdb.lapnpdba_placenm": placenm.GazettedPlaceNmTable,
     "lalfdb.lalfpdba_lf_place_name": lf_place_name.PlacenameTable,
     "lalfdb.lalfpdba_lf_parcel": lf_parcel.ParcelTable,
+    "lalfdb.lalfpdba_lf_unit_type": lf_unit_type.UnitTypeTable,
+    "lalfdb.lalfpdba_lf_level_type": lf_level_type.LevelTypeTable,
 }
 
 
@@ -46,9 +50,7 @@ def main():
 
     for table in config.tables:
         database_table = table_module_mapping[table]
-        database_table_instance = database_table(
-            spark, "(1066374, 1075435, 2578313, 1724075, 33254, 1837741)"
-        )
+        database_table_instance = database_table(spark, config.site_ids)
 
         # database_table_instance.df = database_table_instance.df.repartition(12)
         database_table_instance.df.foreachPartition(

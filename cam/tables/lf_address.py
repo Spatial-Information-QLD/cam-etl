@@ -12,6 +12,8 @@ from cam.tables.lf_geocode import GeocodeTable
 from cam.tables.qrt import QRTRoadsTable
 from cam.tables.locality import LocalityTable
 from cam.tables.lf_place_name import PlacenameTable
+from cam.tables.lf_unit_type import UnitTypeTable
+from cam.tables.lf_level_type import LevelTypeTable
 from cam.graph import ADDR, ADDRCMPType, ACTISO, CN, create_graph
 from cam.remote_concepts import get_remote_concepts
 
@@ -124,13 +126,13 @@ class AddressTable(Table):
         PLACE_NAME_ID = "pl_name_id"
 
         # Fetch FSDF vocabularies
-        flat_type_codes = get_remote_concepts(
-            FSDF_SPARQL_ENDPOINT,
-            FLAT_TYPE_CODE_IRI,
-        )
-        level_type_codes = get_remote_concepts(
-            FSDF_SPARQL_ENDPOINT, LEVEL_TYPE_CODE_IRI
-        )
+        # flat_type_codes = get_remote_concepts(
+        #     FSDF_SPARQL_ENDPOINT,
+        #     FLAT_TYPE_CODE_IRI,
+        # )
+        # level_type_codes = get_remote_concepts(
+        #     FSDF_SPARQL_ENDPOINT, LEVEL_TYPE_CODE_IRI
+        # )
 
         # Process each row in the results
         for row in rows:
@@ -170,10 +172,7 @@ class AddressTable(Table):
             add_addr_component(
                 unit_type_code,
                 ADDRCMPType.flatTypeCode,
-                flat_type_codes.get(
-                    unit_type_code,
-                    URIRef(f"https://example.com/flatTypeCode/{unit_type_code}"),
-                ),
+                UnitTypeTable.get_iri(unit_type_code),
                 iri,
                 graph,
             )
@@ -203,10 +202,7 @@ class AddressTable(Table):
             add_addr_component(
                 level_type_code,
                 ADDRCMPType.levelTypeCode,
-                level_type_codes.get(
-                    level_type_code,
-                    URIRef(f"https://example.com/levelTypeCode/{level_type_code}"),
-                ),
+                URIRef(LevelTypeTable.get_iri(level_type_code)),
                 iri,
                 graph,
             )
@@ -286,7 +282,9 @@ class AddressTable(Table):
             graph.add((postcode_component, RDF.value, Literal(row[POSTCODE])))
 
             # place name
-            place_name_id = str(row[PLACE_NAME_ID])
+            place_name_id = (
+                str(row[PLACE_NAME_ID]) if row[PLACE_NAME_ID] is not None else None
+            )
             place_name_iri = PlacenameTable.get_iri(place_name_id)
             add_addr_component(
                 place_name_id, ADDRCMPType.placeName, place_name_iri, iri, graph
