@@ -59,7 +59,7 @@ tasks:
       - task: graphdb:preload
       - task: graphdb:up
 
-  dev:with-clean:
+  dev:clean:
     cmds:
       - task: etl:clean
       - task: etl
