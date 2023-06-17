@@ -1,4 +1,4 @@
-# GraphDB needs Docker Desktop to have at least 8GB to function properly.
+# GraphDB needs Docker Desktop to have at least 8GB to function at a reasonable performance.
 version: "3.8"
 
 services:
@@ -33,7 +33,7 @@ services:
       - 7200:7200
     environment:
       GDB_JAVA_OPTS: >-
-        -Xmx2g -Xms1g
+        -Xmx3g -Xms1g
         -Dgraphdb.home=/opt/graphdb/home
         -Dgraphdb.workbench.importDirectory=/opt/graphdb/home/graphdb-import
         -Dgraphdb.workbench.cors.enable=true
