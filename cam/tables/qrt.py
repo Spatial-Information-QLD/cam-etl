@@ -33,7 +33,7 @@ class QRTRoadsTable(Table):
                             q.road_name,
                             q.road_type,
                             NULLIF(q.road_suffix, '') as "road_suffix"
-                        from lalfdb.lalfpdba_lf_address a 
+                        from lalfdb.lalfpdba_lf_address a
                             join lalfdb.lalfpdba_lf_road r on r.road_id = a.road_id
                             join lalfdb.lalfpdba_locality l on l.locality_code = r.locality_code
                             join lalfdb.qrt q on q.road_name_basic = r.qrt_road_name_basic and q.address_locality = l.locality_name
