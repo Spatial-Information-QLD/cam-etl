@@ -24,8 +24,12 @@ class ADDR(DefinedNamespace):
     Geocode: URIRef
     Locality: URIRef
 
-    isAddressFor: URIRef
     hasAddress: URIRef
+    isAddressFor: URIRef
+    hasPrimary: URIRef
+    isPrimaryAddressFor: URIRef
+    hasAlias: URIRef
+    isAliasAddressFor: URIRef
     hasGeocode: URIRef
     hasFeatureComponent: URIRef
     hasComponentType: URIRef

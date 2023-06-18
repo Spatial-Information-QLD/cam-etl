@@ -1,18 +1,18 @@
 db_connection: postgresql://postgres:postgres@localhost:5432/address
 
 tables:
-  - lalfdb.lalfpdba_lf_parcel
-  - lalfdb.lalfpdba_lf_address # ~129min
-  - lalfdb.lalfpdba_lf_geocode # ~6min
-  - lalfdb.lalfpdba_sp_survey_point # ~3min
-  - lalfdb.lalfpdba_lf_status # ~3sec
-  - lalfdb.locality # ~4sec
-  - lalfdb.qrt # ~17min
-  - lalfdb.lalfpdba_lf_address_history # ~32min
-  - lalfdb.lapnpdba_placenm # ~16sec
-  - lalfdb.lalfpdba_lf_place_name # ~50sec
-  - lalfdb.lalfpdba_lf_unit_type
-  - lalfdb.lalfpdba_lf_level_type
+  # - lalfdb.lalfpdba_lf_parcel # ~4 minutes
+  # - lalfdb.lalfpdba_lf_address # ~130 minutes
+  # - lalfdb.lalfpdba_lf_geocode # ~6 minutes
+  # - lalfdb.lalfpdba_sp_survey_point # ~3.5 minutes
+  # - lalfdb.lalfpdba_lf_status # ~4 seconds
+  # - lalfdb.locality # ~4 seconds
+  # - lalfdb.qrt # ~17.5 minutes
+  # - lalfdb.lalfpdba_lf_address_history # ~34.5 minutes
+  # - lalfdb.lapnpdba_placenm # ~21 seconds
+  # - lalfdb.lalfpdba_lf_place_name # ~50.5 seconds
+  # - lalfdb.lalfpdba_lf_unit_type # ~3.5 seconds
+  # - lalfdb.lalfpdba_lf_level_type # ~3.5 seconds
 
 # Value is a SQL list
-site_ids: "(1066374, 1075435, 2578313, 1724075, 33254, 1837741, 82599, 2322305, 347127)"
+# site_ids: "(1066374, 1075435, 2578313, 1724075, 33254, 1837741, 82599, 2322305, 347127)"

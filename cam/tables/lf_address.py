@@ -109,6 +109,7 @@ class AddressTable(Table):
 
         PARCEL_ID = "parcel_id"
         ADDR_ID = "addr_id"
+        ADDR_STATUS_CODE = "addr_status_code"
         UNIT_TYPE_CODE = "unit_type_code"
         UNIT_NO = "unit_no"
         UNIT_SUFFIX = "unit_suffix"
@@ -142,10 +143,19 @@ class AddressTable(Table):
             graph.add((iri, RDF.type, CN.CompoundName))
 
             parcel_iri = ParcelTable.get_iri(row[PARCEL_ID])
-            graph.add((iri, ADDR.isAddressFor, parcel_iri))
-            graph.add((parcel_iri, ADDR.hasAddress, iri))
             graph.add((iri, CN.isNameFor, parcel_iri))
             graph.add((parcel_iri, SDO.name, iri))
+
+            # address status and relationship to addressable object
+            graph.add((parcel_iri, ADDR.hasAddress, iri))
+            graph.add((iri, ADDR.isAddressFor, parcel_iri))
+            status = row[ADDR_STATUS_CODE]
+            if status == "P":
+                graph.add((parcel_iri, ADDR.hasPrimary, iri))
+                graph.add((iri, ADDR.isPrimaryAddressFor, parcel_iri))
+            elif status == "A":
+                graph.add((parcel_iri, ADDR.hasAlias, iri))
+                graph.add((iri, ADDR.isAliasAddressFor, parcel_iri))
 
             # Create and add QLD state
             state = row[STATE]

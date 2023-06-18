@@ -2,7 +2,7 @@
 
 ## ETL
 
-Bulk loading N-Quads CAM data into GraphDB takes around 23 minutes.
+Bulk loading N-Quads CAM data into GraphDB takes around 16 minutes.
 
 ## Postcodes
 
