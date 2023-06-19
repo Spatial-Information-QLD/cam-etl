@@ -32,10 +32,12 @@ Start up GraphDB again.
 task graphdb:up
 ```
 
-With Python 3.10 or higher installed, create a Python virtual environment.
+With Python 3.10 or higher installed, create a Python virtual environment, activate it, and install the Python dependencies.
 
 ```bash
 python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
 Enable the autocomplete index in GraphDB.
