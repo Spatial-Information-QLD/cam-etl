@@ -1,5 +1,71 @@
 # CAM ETL
 
+## Getting started
+
+With Docker Desktop running with at least 8 GB of memory allocated, start GraphDB.
+
+```bash
+task graphdb:up
+```
+
+Go to http://localhost:7200/repository and create a new GraphDB repository named `addressing` as the repository ID. Tick `Enable SHACL validation` and click `Create`.
+
+Now that the repository is created, stop GraphDB.
+
+```bash
+task graphdb:down
+```
+
+Download the Addressing RDF data from <sharepoint-url>, unzip it in the root of this project directory and ensure the directory containing the `*.nq` files is named `output`. This directory gets mounted into GraphDB `preload` service as defined in the [docker-compose.yml](docker-compose.yml).
+
+Bulk load the data using the [GraphDB ImportRDF tool](https://graphdb.ontotext.com/documentation/10.2/loading-data-using-importrdf.html) with the preload option.
+
+```bash
+task graphdb:preload
+```
+
+This should take around 19 minutes.
+
+Start up GraphDB again.
+
+```bash
+task graphdb:up
+```
+
+With Python 3.10 or higher installed, create a Python virtual environment.
+
+```bash
+python -m venv venv
+```
+
+Enable the autocomplete index in GraphDB.
+
+```bash
+python enable_graphdb_fts.py
+```
+
+The autocomplete index should now be building. The whole building process should take around 10 minutes. See http://localhost:7200/autocomplete for its status.
+
+Once the autocomplete index completes building, head to http://localhost:7200 and try and search for an address in the `View resource` search box.
+
+## Loading SHACL shapes
+
+Go to http://localhost:7200/import#user and load `shacl.ttl` into the graph `<http://rdf4j.org/schema/rdf4j#SHACLShapeGraph>`.
+
+To test the SHACL validator, go to http://localhost:7200/import# and use Import RDF text snippet. Paste the data below into the text field.
+
+```turtle
+PREFIX addr: <https://w3id.org/profile/anz-address/>
+
+<urn:example:1> a addr:Address .
+```
+
+Once import is completed, an error will appear as
+
+```
+org.eclipse.rdf4j.sail.shacl.GraphDBShaclSailValidationException: Failed SHACL validation
+```
+
 ## ETL
 
 Bulk loading N-Quads CAM data into GraphDB takes around 16 minutes.
@@ -22,7 +88,6 @@ shp2pgsql -D -I -s 4326 "/tmp/postgres-data/postcodes/Postcode Boundaries/Postco
 ```
 
 Note, I was not able to load the `QLD_POSTCODE_POLYGON.shp` file using `shp2pgsql`. I had to open it in QGIS and export it as CSV. I then used DBeaver to load the CSV into the database.
-
 
 ## QRT Roads
 
