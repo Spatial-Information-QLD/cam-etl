@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/python:3.10 as builder
+FROM python:3.10
 
 WORKDIR /app
 
