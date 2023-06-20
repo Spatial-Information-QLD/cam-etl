@@ -15,7 +15,6 @@ from cam.tables.lf_place_name import PlacenameTable
 from cam.tables.lf_unit_type import UnitTypeTable
 from cam.tables.lf_level_type import LevelTypeTable
 from cam.graph import ADDR, ADDRCMPType, ACTISO, CN, create_graph
-from cam.remote_concepts import get_remote_concepts
 
 
 FSDF_SPARQL_ENDPOINT = "https://gnaf.linked.fsdf.org.au/sparql"
