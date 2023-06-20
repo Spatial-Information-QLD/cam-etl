@@ -1,4 +1,5 @@
 import requests
+from jinja2 import Template
 
 
 def autocomplete(graphdb_url: str, repository_id: str, enabled: bool) -> None:
@@ -54,3 +55,17 @@ def sparql_update(graphdb_url: str, repository_id: str, query: str) -> None:
         data={"update": query},
     )
     response.raise_for_status()
+
+
+def sparql_describe(iri: str, graphdb_url: str, repository_id: str) -> str:
+    headers = {"accept": "text/turtle", "content-type": "application/sparql-query"}
+    query = Template(
+        """
+        describe <{{ iri }}>
+    """
+    ).render(iri=iri)
+    response = requests.post(
+        f"{graphdb_url}/repositories/{repository_id}", data=query, headers=headers
+    )
+    response.raise_for_status()
+    return response.text

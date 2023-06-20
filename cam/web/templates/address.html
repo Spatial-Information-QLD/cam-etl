@@ -1,0 +1,100 @@
+{% extends 'base.html' %} {% block content %}
+
+<div
+  class="back-button pt-3 link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+  style="cursor: pointer; text-decoration: underline"
+>
+  Go back
+</div>
+
+<hr />
+
+<h1>{{ address_one_liner }}</h1>
+
+<div class="pb-3">IRI: <code>{{ iri }}</code></div>
+
+<h3>Templated Name</h3>
+
+<pre>{{ address_multi_liner }}</pre>
+
+<h3>Geocode</h3>
+<div class="mb-3" id="map" style="width: 600px; height: 400px"></div>
+<div>Longitude: {{ point.longitude }}</div>
+<div>Latitude: {{ point.latitude }}</div>
+
+<hr />
+
+<h3>GraphDB View</h3>
+
+<div class="pb-4">
+  <a
+    class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+    target="_blank"
+    href="http://localhost:7200/graphs-visualizations?uri={{ iri }}&role=subject"
+    >View GraphDB in new tab →
+  </a>
+</div>
+
+<iframe
+  class="pb-3"
+  src="http://localhost:7200/graphs-visualizations?uri={{ iri }}&role=subject"
+  width="100%"
+  height="800px"
+>
+</iframe>
+
+<h3>RDF Turtle</h3>
+
+<p>
+  RDF Turtle representation of <code>{{ iri }}</code> and its inbound
+  relationships.
+</p>
+
+<pre class="p-2" style="border: solid; border-width: 1px">
+{{ turtle_representation }}</pre
+>
+
+<hr />
+
+<div
+  class="pb-3 back-button link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+  style="cursor: pointer; text-decoration: underline"
+>
+  Go back
+</div>
+
+{% endblock %} {% block css %}
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+/>
+{% endblock %} {% block scripts %}
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""
+></script>
+
+<script>
+  let latitude = {{ point.latitude }}
+  let longitude = {{ point.longitude }}
+  var map = L.map("map").setView([latitude, longitude], 16);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution:
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  }).addTo(map);
+  var marker = L.marker([latitude, longitude]).addTo(map);
+</script>
+
+<script>
+  const backButtons = document.getElementsByClassName("back-button");
+  for (backButton of backButtons) {
+    backButton.addEventListener("click", () => {
+      window.history.back();
+    });
+  }
+</script>
+{% endblock %}

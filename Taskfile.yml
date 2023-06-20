@@ -68,3 +68,15 @@ tasks:
     desc: Alias for etl task.
     cmds:
       - task: etl
+
+  web:build:
+    cmds:
+      - docker-compose --profile web build
+
+  web:up:
+    cmds:
+      - docker-compose --profile web up -d
+
+  web:down:
+    cmds:
+      - docker-compose --profile web down

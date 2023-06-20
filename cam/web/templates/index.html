@@ -1,0 +1,42 @@
+{% extends 'base.html' %} {% block content %}
+
+<h1>Queensland Addressing Database</h1>
+
+<p>Search for a Queensland address.</p>
+<p>
+  Examples:
+  <ul>
+    <li class="mb-2">
+      <code>1 William ST (Y) BRISBANE CITY QLD 4000 Australia</code>
+      <a href="{{ url_for('address_route', iri='https://linked.data.gov.au/dataset/qld-addr/addr-2764956') }}"><button type="button" class="btn btn-outline-secondary btn-sm">View</button></a>
+    </li>
+    <li class="mb-2">
+      <code>72 Yundah ST (Y) SHORNCLIFFE QLD 4017 Australia</code>
+      <a href="{{ url_for('address_route', iri='https://linked.data.gov.au/dataset/qld-addr/addr-1075435') }}"><button type="button" class="btn btn-outline-secondary btn-sm">View</button></a>
+    </li>
+    <li class="mb-2">
+      <code
+      >OAK TREE PARK AVENUE UNIT 11 155A-157A Glenmore RD (Y) PARK AVENUE QLD 4701
+      Australia</code
+    >
+    <a href="{{ url_for('address_route', iri='https://linked.data.gov.au/dataset/qld-addr/addr-2367581') }}"><button type="button" class="btn btn-outline-secondary btn-sm">View</button></a>
+    </li>
+  </ul>
+  
+</p>
+
+<div class="mb-2"><span id="search-size"></span></div>
+
+<input
+  class="form-control"
+  type="search"
+  name="search"
+  placeholder="Search addresses"
+  hx-post="/search"
+  hx-trigger="keyup changed delay:500ms, search"
+  hx-target="#search-results"
+  hx-indicator=".htmx-indicator"
+/>
+
+<div id="search-results"></div>
+{% endblock %}

@@ -44,6 +44,7 @@ services:
         -Dreuse.vars.in.subselects=true
     networks:
       - graphdb
+      - web
     profiles:
       - graphdb
 
@@ -79,6 +80,19 @@ services:
     profiles:
       - graphdb:preload
 
+  web:
+    build:
+      dockerfile: ./web.Dockerfile
+      context: .
+    environment:
+      - GRAPHDB_URL=http://graphdb:7200
+    ports:
+      - 8000:8000
+    networks:
+      - web
+    profiles:
+      - web
+
 volumes:
   postgres-data:
     name: cam-etl_devcontainer_postgres-data
@@ -90,3 +104,4 @@ networks:
   postgres:
   graphdb:
   preload:
+  web:

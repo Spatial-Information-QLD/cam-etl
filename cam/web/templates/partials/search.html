@@ -1,0 +1,13 @@
+{% for item in results %}
+<div class="card p-2">
+  <div>
+    <a
+      class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+      href="{{ url_for('address_route', iri=item.value) }}"
+      >{{ item.description | safe }}</a
+    >
+  </div>
+</div>
+{% endfor %}
+
+<span id="search-size" hx-swap-oob="true">Results: {{ size }}</span>
