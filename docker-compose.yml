@@ -81,9 +81,7 @@ services:
       - graphdb:preload
 
   web:
-    build:
-      dockerfile: ./web.Dockerfile
-      context: .
+    image: ghcr.io/spatial-information-qld/cam-web
     environment:
       - GRAPHDB_URL=http://graphdb:7200
     ports:
