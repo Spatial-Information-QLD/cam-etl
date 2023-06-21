@@ -28,7 +28,7 @@ jobs:
         uses: zazuko/action-docker-meta@main
         id: docker_meta
         with:
-          images: ghcr.io/spatial-information-qld/cam-etl
+          images: ghcr.io/spatial-information-qld/cam-web
 
       - name: Build and push Docker images
         id: docker_build
