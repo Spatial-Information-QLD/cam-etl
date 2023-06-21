@@ -68,11 +68,11 @@ Once import is completed, an error will appear as
 org.eclipse.rdf4j.sail.shacl.GraphDBShaclSailValidationException: Failed SHACL validation
 ```
 
-## ETL
+## ETL Data Loading Notes
 
-Bulk loading N-Quads CAM data into GraphDB takes around 16 minutes.
+Below are the notes of things that were used to load the source data into PostgreSQL with PostGIS enabled.
 
-## Postcodes
+### Postcodes
 
 Before loading, see if PostGIS is enabled for the `lalfdb` schema.
 
@@ -91,7 +91,7 @@ shp2pgsql -D -I -s 4326 "/tmp/postgres-data/postcodes/Postcode Boundaries/Postco
 
 Note, I was not able to load the `QLD_POSTCODE_POLYGON.shp` file using `shp2pgsql`. I had to open it in QGIS and export it as CSV. I then used DBeaver to load the CSV into the database.
 
-## QRT Roads
+### QRT Roads
 
 Download from https://qldspatial.information.qld.gov.au/catalogue/custom/detail.page?fid={CE66D3D5-8740-41A7-8B42-30F5F1691B36}.
 
@@ -125,33 +125,31 @@ SET
 	address_locality = UPPER(q.locality_left);
 ```
 
-````
-
-## Addressing DB
+### Addressing DB
 
 See the schema documentation here: https://spatial-information-qld.github.io/cam-etl/addressdb/
 
 The dataset is several GBs zipped. We may put a subset of it in this repository in the future for demo purposes.
 
-### Tables
+#### Tables
 
 A bunch of tables were loaded in to a PostgreSQL database and a schema was created from the documentation provided.
 
-#### lalfpdba_lf_address
+##### lalfpdba_lf_address
 
 The empty strings in the columns `level_type_code` and `unit_type_code` were converted to `NULL`.
 
 The column `geocode_id` was added as a foreign key to the `lalfpdba_lf_geocode` table.
 
-#### lalfpdba_sp_survey_point
+##### lalfpdba_sp_survey_point
 
 The column `wkt_literal` was added with values derived from the existing columns `centroid_lon` and `centroid_lat`.
 
-#### lalfpdba_lf_road
+##### lalfpdba_lf_road
 
 The column `locality_code` is a foreign key to the `locality` table. Can't actually create it though since data is not correct (e.g., some data missing).
 
-## Place names
+### Place names
 
 The place names source data is from PNDB. A dump of the files are in `pndb/`.
 
@@ -161,7 +159,7 @@ Here is the schema of the tables of interest.
 
 A set of the relevant tables are documented below.
 
-### Place name type
+#### Place name type
 
 File: [pndb/lapnpdba.pntypes.csv](pndb/lapnpdba.pntypes.csv)
 
@@ -282,4 +280,3 @@ The terms from the look up table not found in ICSM Place Names Categories:
     ```
 
 </details>
-````
