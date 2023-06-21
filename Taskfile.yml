@@ -69,10 +69,6 @@ tasks:
     cmds:
       - task: etl
 
-  web:build:
-    cmds:
-      - docker-compose --profile web build
-
   web:up:
     cmds:
       - docker-compose --profile web up -d
