@@ -4,6 +4,8 @@
 
 With Docker Desktop running with at least 8 GB of memory allocated, start GraphDB.
 
+Note that the following commands prefixed with `task` requires the [Taskfile CLI tool installed](https://taskfile.dev/installation/).
+
 ```bash
 task graphdb:up
 ```
@@ -49,6 +51,16 @@ python enable_graphdb_fts.py
 The autocomplete index should now be building. The whole building process should take around 10 minutes. See http://localhost:7200/autocomplete for its status.
 
 Once the autocomplete index completes building, head to http://localhost:7200 and try and search for an address in the `View resource` search box.
+
+## Web UI Demo
+
+A simple web user-interface can be started using the following command.
+
+```bash
+task web:up
+```
+
+This application is a demonstration of how a simple downstream application can interface with the graph database. Users can search for addresses using the full-text search functionality and view each address with the full address name in a templated format, a graph view of it in GraphDB, and the raw RDF data view in the Turtle format.
 
 ## Loading SHACL shapes
 
