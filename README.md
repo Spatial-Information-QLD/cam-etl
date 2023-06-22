@@ -2,6 +2,8 @@
 
 ## Getting started
 
+The notes below is to get an instance of GraphDB running with the output of the ETL data loaded and a simple web application querying GraphDB. For instructions on running the ETL, see [etl-notes.md](etl-notes.md).
+
 With Docker Desktop running with at least 8 GB of memory allocated, start GraphDB.
 
 Note that the following commands prefixed with `task` requires the [Taskfile CLI tool installed](https://taskfile.dev/installation/).
