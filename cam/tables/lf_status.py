@@ -124,7 +124,7 @@ class StatusTable(Table):
         # astiso:unofficial
         graph.add((ASTISO.unofficial, SKOS.narrower, StatusTable.get_iri("A")))
         graph.add((ASTISO.unofficial, SKOS.narrower, StatusTable.get_iri("H")))
-        graph.add((ASTISO.unofficial, SKOS.narrower, StatusTable.get_iri("U")))
+        graph.add((ASTISO.unofficial, SKOS.narrower, StatusTable.get_iri("X")))
         graph.add((concept_scheme, SKOS.hasTopConcept, ASTISO.unofficial))
 
         Table.to_file(table_name, graph)
