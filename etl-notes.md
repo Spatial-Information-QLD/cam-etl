@@ -1,6 +1,14 @@
+# Running the ETL
+
+To run the ETL, the following database tables need to be loaded into a PostgreSQL database named  with PostGIS extension.
+
+## Addressing Database
+
+- `lf_address_history`
+
 ## ETL Data Loading Notes
 
-Below are the notes of things that were used to load the source data into PostgreSQL with PostGIS enabled.
+Below are some notes on loading the addressing database dump, place names data dump and QRT data dump into a PostgreSQL database with the PostGIS extension.
 
 ### Postcodes
 
