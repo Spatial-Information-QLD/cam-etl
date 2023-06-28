@@ -18,6 +18,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
       - ./QSC_Extracted_Data_20230509_104812401000-11104:/tmp/postgres-data/QSC
       - ./Postcode_MAY23_QLD_GDA2020_SHP_108:/tmp/postgres-data/postcodes
+      - ./postgres-backup:/tmp/postgres-backup
     ports:
       - 5432:5432
     networks:

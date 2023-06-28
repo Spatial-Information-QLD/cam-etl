@@ -20,7 +20,7 @@ Now that the repository is created, stop GraphDB.
 task graphdb:down
 ```
 
-Download the Addressing RDF data from <sharepoint-url>, unzip it in the root of this project directory and ensure the directory containing the `*.nq` files is named `output`. This directory gets mounted into GraphDB `preload` service as defined in the [docker-compose.yml](docker-compose.yml).
+Download the Addressing RDF data from this [SharePoint](https://itpqld.sharepoint.com.mcas.ms/sites/R-SICAMProjectBoard/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FR%2DSICAMProjectBoard%2FShared%20Documents%2FGeneral%2FSandbox%20ETL&viewid=d8225c45%2D5e3a%2D4dda%2Db296%2Db01e4ae1eb77) folder, unzip it in the root of this project directory and ensure the directory containing the `*.nq` files is named `output`. This directory gets mounted into GraphDB `preload` service as defined in the [docker-compose.yml](docker-compose.yml).
 
 Bulk load the data using the [GraphDB ImportRDF tool](https://graphdb.ontotext.com/documentation/10.2/loading-data-using-importrdf.html) with the preload option.
 
@@ -80,4 +80,36 @@ Once import is completed, an error will appear as
 
 ```
 org.eclipse.rdf4j.sail.shacl.GraphDBShaclSailValidationException: Failed SHACL validation
+```
+
+## Postgres Backup and Restore
+
+The backup and restore process documented here uses `pg_dump`. See [Postgres' backup-dump.html](https://www.postgresql.org/docs/current/backup-dump.html) for more information.
+
+### Backup
+
+A Postgres data dump of the Addressing database was performed using `pg_dump`.
+
+The `--password` prompts for the password.
+
+```
+pg_dump --username postgres --password -d address > /tmp/postgres-backup/address
+```
+
+### Restore
+
+To restore, download the `postres-backup.zip` file from this [SharePoint](https://itpqld.sharepoint.com.mcas.ms/sites/R-SICAMProjectBoard/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FR%2DSICAMProjectBoard%2FShared%20Documents%2FGeneral%2FSandbox%20ETL&viewid=d8225c45%2D5e3a%2D4dda%2Db296%2Db01e4ae1eb77) folder.
+
+Run `psql` to restore the database.
+
+Create the database named `address`.
+
+```
+echo "CREATE DATABASE address;" | psql --username postgres --password -d postgres
+```
+
+Restore the data to the newly created `address` database.
+
+```
+psql --username postgres --password -d address < /tmp/postgres-backup/address
 ```
