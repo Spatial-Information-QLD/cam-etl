@@ -6,6 +6,7 @@ from flask_htmx import HTMX
 from pydantic import BaseModel
 from jinja2 import Template
 from shapely.wkt import loads
+from rdflib import Graph
 
 from cam.compound_naming import (
     get_compound_name_object,
@@ -13,6 +14,7 @@ from cam.compound_naming import (
     template_address_one_liner,
 )
 from cam.graphdb import sparql, sparql_describe
+from cam.graph import prefixes
 
 app = Flask(__name__)
 htmx = HTMX(app)
@@ -65,6 +67,14 @@ def get_wkt_point(iri: str) -> Point:
         return Point(longitude=point.x, latitude=point.y)
 
 
+def long_turtle(value: str) -> str:
+    graph = Graph()
+    graph.parse(data=value)
+    for key, val in prefixes.items():
+        graph.bind(key, val)
+    return graph.serialize(format="longturtle")
+
+
 @app.get("/")
 def home_route():
     return render_template("index.html")
@@ -90,7 +100,7 @@ def address_route():
     address_one_liner = template_address_one_liner(compound_name_object)
     address_multi_liner = template_address(compound_name_object)
     point = get_wkt_point(iri)
-    turtle_representation = sparql_describe(iri, GRAPHDB_URL, GRAPHDB_REPO)
+    turtle_representation = long_turtle(sparql_describe(iri, GRAPHDB_URL, GRAPHDB_REPO))
 
     return render_template(
         "address.html",
