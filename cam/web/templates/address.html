@@ -30,14 +30,14 @@
   <a
     class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
     target="_blank"
-    href="http://localhost:7200/graphs-visualizations?uri={{ iri }}&role=subject"
+    href="{{ graphdb_url }}/graphs-visualizations?uri={{ iri }}&role=subject"
     >View GraphDB in new tab →
   </a>
 </div>
 
 <iframe
   class="pb-3"
-  src="http://localhost:7200/graphs-visualizations?uri={{ iri }}&role=subject"
+  src="{{ graphdb_url }}/graphs-visualizations?uri={{ iri }}&role=subject"
   width="100%"
   height="800px"
 >
