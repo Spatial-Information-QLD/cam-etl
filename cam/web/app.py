@@ -109,4 +109,5 @@ def address_route():
         address_multi_liner=address_multi_liner,
         point=point,
         turtle_representation=turtle_representation,
+        graphdb_url=GRAPHDB_URL,
     )
