@@ -4,52 +4,66 @@ version: "3"
 
 tasks:
   postgres:driver:download:
-    desc: Download Postgres JDBC driver.
+    desc: Download Postgres JDBC driver. No longer needed as we're not using pyspark anymore.
     cmds:
       - curl -o postgresql.jar https://jdbc.postgresql.org/download/postgresql-42.6.0.jar
 
   postgres:up:
     desc: Start Postgres Docker service.
     cmds:
-      - docker-compose --profile postgres up -d
+      - docker compose --profile postgres up -d
 
   postgres:down:
     desc: Stop Postgres Docker service.
     cmds:
-      - docker-compose --profile postgres down
+      - docker compose --profile postgres down
 
   graphdb:up:
     desc: Start GraphDB Docker service.
     cmds:
-      - docker-compose --profile graphdb up -d
+      - docker compose --profile graphdb up -d
 
   graphdb:preload:
     desc: Preload data into GraphDB Docker service. Warning, this overwrites existing data.
     cmds:
       - task: graphdb:down
-      - docker-compose --profile graphdb:preload up
-      - docker-compose --profile graphdb:preload down
+      - docker compose --profile graphdb:preload up
+      - docker compose --profile graphdb:preload down
 
   graphdb:down:
     desc: Stop GraphDB Docker service.
     cmds:
-      - docker-compose --profile graphdb down
+      - docker compose --profile graphdb down
+
+  etl:db:qrt:
+    desc: Run the ETL for QRT.
+    cmds:
+      - uv run python etl_qrt.py
+      - zip -r qrt-rdf.zip qrt-rdf
+
+  etl:db:pndb:
+    desc: Run the ETL for PNDB.
+    cmds:
+      - uv run python etl_pndb_pre_validate.py
+      - uv run python etl_pndb.py
+      - zip -r pndb-rdf.zip pndb-rdf
 
   etl:
     desc: Run the ETL.
     cmds:
-      - OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES venv/bin/python main.py
+      - task: etl:db:qrt
+      - task: etl:db:pndb
 
   etl:clean:
     desc: Delete the files in output/ directory.
     cmds:
-      - cmd: rm output/*.nq
+      - cmd: rm qrt-rdf/*.nt
         ignore_error: true
 
   ontodia:
     desc: Run ontodia server.
     cmds:
-      - venv/bin/python -m http.server -d ontodia/
+      - .venv/bin/python -m http.server -d ontodia/
 
   dev:load-db:
     desc: Clear the locally produced data, recreate data, spin down GraphDB, load data, spin back up GraphDB.
@@ -71,8 +85,8 @@ tasks:
 
   web:up:
     cmds:
-      - docker-compose --profile web up -d
+      - docker compose --profile web up -d
 
   web:down:
     cmds:
-      - docker-compose --profile web down
+      - docker compose --profile web down

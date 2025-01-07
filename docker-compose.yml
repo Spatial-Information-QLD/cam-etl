@@ -1,5 +1,4 @@
 # GraphDB needs Docker Desktop to have at least 8GB to function at a reasonable performance.
-version: "3.8"
 
 services:
   postgres:
@@ -16,9 +15,9 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - ./QSC_Extracted_Data_20230509_104812401000-11104:/tmp/postgres-data/QSC
-      - ./Postcode_MAY23_QLD_GDA2020_SHP_108:/tmp/postgres-data/postcodes
-      - ./postgres-backup:/tmp/postgres-backup
+      # - ./QSC_Extracted_Data_20241106_194641344180-3412:/tmp/postgres-data/QSC
+      # - ./Postcode_MAY23_QLD_GDA2020_SHP_108:/tmp/postgres-data/postcodes
+      # - ./postgres-backup:/tmp/postgres-backup
     ports:
       - 5432:5432
     networks:
@@ -94,8 +93,8 @@ services:
 
 volumes:
   postgres-data:
-    name: cam-etl_devcontainer_postgres-data
-    external: true
+    # name: cam-etl_devcontainer_postgres-data
+    # external: true
 
   graphdb-data:
 

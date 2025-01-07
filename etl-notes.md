@@ -1,6 +1,64 @@
 # Running the ETL
 
-To run the ETL, the following database tables need to be loaded into a PostgreSQL database named  with PostGIS extension.
+The ETL created from 2023 in the CAM1 project used pyspark where the entire table was loaded into memory and distributed to workers. In the CAM3 2024 project, data is now loaded into a local `lalfdb` postgres database in the default `public` schema, and pyspark is no longer used. Rather than dealing with the complexities of pyspark and the overhead of setting up the Java dependency, python multiprocessing and the psycopg library with server-side cursor is used instead. This allows for better performance, less overhead and easier memory pressure management.
+
+## Setting things up
+
+Start the postgres database service.
+
+```sh
+task postgres:up
+```
+
+Create the `lalfdb` database via `psql` by running the following commands in the postgres container.
+
+```sh
+psql -d postgres -c "CREATE DATABASE lalfdb;" -U postgres -w
+psql -d lalfdb -c "CREATE EXTENSION postgis;" -U postgres -w
+```
+
+## QRT - Queensland Roads and Tracks
+
+Download QRT v2, a new dataset schema created by Anne Goldsack from [R-SI CAM Project Board > General > Stage 3 - Location Addressing Rollout > Legacy DB exports](https://itpqld.sharepoint.com/sites/R-SICAMProjectBoard/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FR-SICAMProjectBoard%2FShared%20Documents%2FGeneral%2FStage%203%20-%20Location%20Addressing%20Rollout%2FLegacy%20DB%20exports).
+
+Use a postgres client to load the flat QRT CSV file into the `lalfdb` database into the `qrt` table. Map all columns to the `text` data type.
+
+To run the ETL, run the following command.
+
+```sh
+task etl:db:qrt
+```
+
+## Place Names Database
+
+The Place Names Database contains both gazetted and non-gazetted place names.
+
+Download the Place Names Database from [R-SI CAM Project Board > General > Stage 3 - Location Addressing Rollout > Legacy DB exports](https://itpqld.sharepoint.com/:u:/r/sites/R-SICAMProjectBoard/Shared%20Documents/General/Stage%203%20-%20Location%20Addressing%20Rollout/Legacy%20DB%20exports/PNDB.zip?csf=1&web=1&e=3C8MkR).
+
+Use a postgres client to load the PNDB CSV files into the `lalfdb` database. Map the CSV file to the following table names with columns mapped to the `text` data type.
+
+- `Tags.csv` -> `pndb.tags`
+- `Place name.csv` -> `pndb.place_name`
+- `Indigenous name.csv` -> `pndb.indigenous_name`
+- `History.csv` -> `pndb.history`
+
+The `pndb.place_name.type_resolved` column maps to the [Geographical Names Categories vocabulary](https://github.com/geological-survey-of-queensland/vocabularies/blob/b07763c87f2f872133197e6fb0eb911de85879c6/vocabularies-qsi/go-categories.ttl).
+
+To run the ETL, run the following command.
+
+```sh
+task etl:db:pndb
+```
+
+## LALF
+
+The LALF is the Ingress Queensland addressing database. It contains tables that are necessary to form an entire Queensland address, and includes things like place names,
+
+### Place Names
+
+The place names data in the LALF is separate to the PNDB. These place names are used mainly from an addressing perspective and includes names for things like properties, buildings, etc.
+
+---
 
 ## Addressing Database
 
