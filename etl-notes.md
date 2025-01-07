@@ -52,7 +52,13 @@ task etl:db:pndb
 
 ## LALF
 
-The LALF is the Ingress Queensland addressing database. It contains tables that are necessary to form an entire Queensland address, and includes things like place names,
+The LALF is the Ingress Queensland addressing database. It contains tables that are necessary to form a valid Queensland address object.
+
+The following files contain null terminator characters, which are not supported in PostgreSQL. Run the `addressdb/remove_null_terminator_char.py` script to remove the null terminator characters from the files.
+
+- `lalfpdba.lf_incremental_action.csv`
+- `lalfpdba.lf_address.csv`
+- `lalfpdba.lf_address_history.csv`
 
 ### Place Names
 
