@@ -26,7 +26,7 @@ services:
       - postgres
 
   graphdb:
-    image: ghcr.io/kurrawong/graphdb-compound-naming:0.1.3
+    image: ontotext/graphdb:10.8.2
     volumes:
       - graphdb-data:/opt/graphdb/home
     ports:
@@ -50,7 +50,7 @@ services:
 
   preload:
     container_name: graphdb-preload
-    image: ontotext/graphdb:10.2.1
+    image: ontotext/graphdb:10.8.2
     entrypoint:
       [
         "/opt/graphdb/dist/bin/importrdf",
