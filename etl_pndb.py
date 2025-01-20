@@ -50,7 +50,6 @@ LANGUAGE = "language"
 PRONUNCIATION = "pronunciation"
 SOURCE = "source"
 DATE_ADDED = "date_added"
-STATUS = "status"
 PREFERRED = "preferred"
 CREATED_USER = "created_user"
 CREATED_DATE = "created_date"
@@ -402,7 +401,7 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
 
     output_dir = Path(output_dir_name)
     filename = Path(dataset + "-" + str(job_id) + ".nt")
-    serialize(output_dir, filename, graph)
+    serialize(output_dir, str(filename), graph)
 
 
 def main():

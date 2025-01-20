@@ -48,6 +48,12 @@ tasks:
       - uv run python etl_pndb.py
       - zip -r pndb-rdf.zip pndb-rdf
 
+  etl:db:lalf:
+    desc: Run the ETL for LALF.
+    cmds:
+      - uv run python etl_lalf_parcel.py
+      - zip -r lalf-rdf.zip lalf-rdf
+
   etl:
     desc: Run the ETL.
     cmds:
@@ -58,6 +64,10 @@ tasks:
     desc: Delete the files in output/ directory.
     cmds:
       - cmd: rm qrt-rdf/*.nt
+        ignore_error: true
+      - cmd: rm pndb-rdf/*.nt
+        ignore_error: true
+      - cmd: rm lalf-rdf/*.nt
         ignore_error: true
 
   ontodia:

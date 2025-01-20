@@ -3,6 +3,17 @@ from rdflib.namespace import DefinedNamespace, Namespace
 
 
 sir_id_datatype = URIRef("urn:ladb:sir-id")
+lot_no_datatype = URIRef(f"https://linked.data.gov.au/dataset/qld-addr/datatype/lot-no")
+plan_no_datatype = URIRef(f"https://linked.data.gov.au/dataset/qld-addr/datatype/plan-no")
+
+
+class ADDR(DefinedNamespace):
+    _fail = True
+    _underscore_num = True
+    _NS = Namespace("https://linked.data.gov.au/def/addr/")
+
+    Address: URIRef
+    AddressableObject: URIRef
 
 
 class CN(DefinedNamespace):

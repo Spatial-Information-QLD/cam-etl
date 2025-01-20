@@ -290,7 +290,7 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
 
     output_dir = Path(output_dir_name)
     filename = Path(dataset + "-" + str(job_id) + ".nt")
-    serialize(output_dir, filename, graph)
+    serialize(output_dir, str(filename), graph)
 
 
 def main():
