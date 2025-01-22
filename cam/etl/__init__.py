@@ -1,6 +1,7 @@
 from pathlib import Path
 from functools import wraps
 from contextlib import contextmanager
+from typing import Iterator
 
 import psycopg
 import psycopg.rows
@@ -34,11 +35,11 @@ def worker_wrap(f):
 
 
 @contextmanager
-def get_db_connection(host: str, port: int, dbname: str, user: str, password: str):
+def get_db_connection(host: str, port: int, dbname: str, user: str, password: str) -> Iterator[psycopg.Connection]:
     """
     Get a database connection with a context manager.
     """
-    connection = psycopg.connect(
+    connection: psycopg.Connection = psycopg.connect(
         host=host,
         port=port,
         dbname=dbname,

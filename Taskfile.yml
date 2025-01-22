@@ -18,6 +18,16 @@ tasks:
     cmds:
       - docker compose --profile postgres down
 
+  postgres:backup:
+    desc: Back up the LALFDB database.
+    cmds:
+      - docker exec -i cam-etl-postgres-1 pg_dump -U postgres -d lalfdb | gzip > backup.sql.gz
+
+  postgres:restore:
+    desc: Restore the LALFDB database.
+    cmds:
+      - gunzip < backup.sql.gz | docker exec -i cam-etl-postgres-1 psql -U postgres -d lalfdb
+
   graphdb:up:
     desc: Start GraphDB Docker service.
     cmds:
@@ -52,6 +62,7 @@ tasks:
     desc: Run the ETL for LALF.
     cmds:
       - uv run python etl_lalf_parcel.py
+      - uv run python etl_lalf_geocode.py
       - zip -r lalf-rdf.zip lalf-rdf
 
   etl:

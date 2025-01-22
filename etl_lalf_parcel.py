@@ -3,22 +3,24 @@ import concurrent.futures
 from textwrap import dedent
 from pathlib import Path
 
-from rdflib import Graph, URIRef, RDF, RDFS, BNode, Literal, SDO, SKOS
+from rdflib import Graph, URIRef, RDF, RDFS, Literal, SDO
 
 from cam.etl import (
     add_additional_property,
     get_db_connection,
-    get_concept_from_vocab,
     get_vocab_graph,
     worker_wrap,
     serialize,
 )
-from cam.etl.namespaces import ADDR, sir_id_datatype, CN, LC, REG, ROADS, RNPT, lot_no_datatype, plan_no_datatype
+from cam.etl.namespaces import ADDR, lot_datatype, plan_datatype
 from cam.etl.types import Row
 from cam.etl.settings import settings
 
 dataset = "lalf"
 output_dir_name = "lalf-rdf"
+
+# TODO: ensure this is added to go-categories
+parcel_type = URIRef("https://linked.data.gov.au/def/go-categories/parcel")
 
 PARCEL_ID = "parcel_id"
 PLAN_NO = "plan_no"
@@ -30,8 +32,8 @@ PARCEL_DATA_SOURCE_CODE = "parcel_data_source_code"
 PARCEL_DATA_SOURCE_DATE = "parcel_data_source_date"
 
 
-def get_iri(parcel_id: str) -> URIRef:
-    return URIRef(f"https://linked.data.gov.au/dataset/qld-addr/parcel/{parcel_id}")
+def get_iri(lot: str, plan: str) -> URIRef:
+    return URIRef(f"https://linked.data.gov.au/dataset/qld-addr/parcel/{lot}{plan}")
 
 
 @worker_wrap
@@ -39,18 +41,19 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
     graph = Graph(store="Oxigraph")
 
     for row in rows:
-        parcel_iri = get_iri(row[PARCEL_ID])
+        parcel_iri = get_iri(row[LOT_NO], row[PLAN_NO])
         graph.add((parcel_iri, RDF.type, ADDR.AddressableObject))
+        graph.add((parcel_iri, SDO.additionalType, parcel_type))
 
         # lot and plan
         graph.add((parcel_iri, RDFS.label, Literal(f"{row[LOT_NO]}{row[PLAN_NO]}")))
         if lot_no := row[LOT_NO]:
-            graph.add((parcel_iri, SDO.identifier, Literal(lot_no, datatype=lot_no_datatype)))
+            graph.add((parcel_iri, SDO.identifier, Literal(lot_no, datatype=lot_datatype)))
         if plan_no := row[PLAN_NO]:
-            graph.add((parcel_iri, SDO.identifier, Literal(plan_no, datatype=plan_no_datatype)))
+            graph.add((parcel_iri, SDO.identifier, Literal(plan_no, datatype=plan_datatype)))
 
         # parcel_id
-        add_additional_property(parcel_iri, PARCEL_ID, row[PARCEL_STATUS_CODE], graph)
+        add_additional_property(parcel_iri, PARCEL_ID, row[PARCEL_ID], graph)
 
         # parcel_status_code
         add_additional_property(parcel_iri, PARCEL_STATUS_CODE, row[PARCEL_STATUS_CODE], graph)

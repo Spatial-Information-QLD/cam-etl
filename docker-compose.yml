@@ -74,7 +74,7 @@ services:
         -Dreuse.vars.in.subselects=true
     volumes:
       - graphdb-data:/opt/graphdb/home
-      - ./output:/opt/graphdb/home/graphdb-import
+      - ./graphdb-import:/opt/graphdb/home/graphdb-import
     networks:
       - preload
     profiles:
@@ -93,9 +93,6 @@ services:
 
 volumes:
   postgres-data:
-    # name: cam-etl_devcontainer_postgres-data
-    # external: true
-
   graphdb-data:
 
 networks:

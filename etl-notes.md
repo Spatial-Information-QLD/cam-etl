@@ -2,6 +2,12 @@
 
 The ETL created from 2023 in the CAM1 project used pyspark where the entire table was loaded into memory and distributed to workers. In the CAM3 2024 project, data is now loaded into a local `lalfdb` postgres database in the default `public` schema, and pyspark is no longer used. Rather than dealing with the complexities of pyspark and the overhead of setting up the Java dependency, python multiprocessing and the psycopg library with server-side cursor is used instead. This allows for better performance, less overhead and easier memory pressure management.
 
+## Scope
+
+The primary purpose of the target system is to manage the names of spatial objects. This includes addresses, geographical names, road names, etc.
+
+These name objects are the primary objects in the system. Secondary objects are the spatial objects it is names for. It must contain the spatial reference identifier and its class type using either an RDF class and/or a geographical object category type. The metadata on these secondary spatial objects is minimal since these objects are managed authoritatively in the spatial system. The spatial objects here are just a copy to facilitate in connecting relationships and ease of querying. These spatial objects must be synced via the message oriented middleware where the spatial system emits events to notify dependent systems such as this to update its spatial object references.
+
 ## Setting things up
 
 Start the postgres database service.
@@ -13,8 +19,8 @@ task postgres:up
 Create the `lalfdb` database via `psql` by running the following commands in the postgres container.
 
 ```sh
-psql -d postgres -c "CREATE DATABASE lalfdb;" -U postgres -w
-psql -d lalfdb -c "CREATE EXTENSION postgis;" -U postgres -w
+docker exec -i cam-etl-postgres-1 psql -d postgres -c "CREATE DATABASE lalfdb;" -U postgres -w
+docker exec -i cam-etl-postgres-1 psql -d lalfdb -c "CREATE EXTENSION postgis;" -U postgres -w
 ```
 
 ## QRT - Queensland Roads and Tracks
@@ -33,7 +39,34 @@ task etl:db:qrt
 
 - Map road name and locality from LALF to QRT.
 - There's an existing mapping process in FME already. Dig out this logic and implement the same here.
-- Road types with `xxx` should not be brought over.
+- Road types with `xxx` should not be brought over. See if there are any other road types that should not be brought over.
+
+To be able to get some of the roads data from the LALF and join it together with QRT, we need to add a `qrt_road_name_basic` with values concatenating from `lf_road`'s `road_name` and `lf_road_name_type.road_name_type`.
+
+```sql
+ALTER TABLE "lalfpdba.lf_road"
+    ADD COLUMN qrt_road_name_basic text;
+
+UPDATE
+	"lalfpdba.lf_road" r
+SET
+	qrt_road_name_basic = r.road_name || ' ' || rnt.road_name_type
+FROM "lalfpdba.lf_road_name_type" rnt
+WHERE rnt.road_name_type_code = r.road_name_type_code;
+```
+
+We also need to align the locality values in QRT and the LALF's locality table. To do this, convert the QRT's `locality_left` column's value to an uppercase and insert it into a new column named `lalf_locality`.
+
+```sql
+ALTER TABLE qrt
+	ADD COLUMN lalf_locality text;
+
+UPDATE
+	qrt q
+SET
+	lalf_locality = UPPER(q.locality_left);
+```
+
 
 ## Place Names Database
 
@@ -70,6 +103,107 @@ The following files contain null terminator characters, which are not supported 
 
 Use a postgres client to load the CSV files into the `lalfdb` database. Map all columns to the `text` data type.
 
+### Create a point geometry for the geocodes
+
+This will aide us in developing the ETL so we can make a spatial query and convert only a subset of the dataset.
+
+This step is entirely optional and unecessary if you want to run the entire ETL.
+
+Update the `lalfpdba.sp_survey_point` table.
+
+```sql
+ALTER TABLE "lalfpdba.sp_survey_point"
+ADD COLUMN geom geometry(Point, 4326);
+```
+
+Populate the new `geom` column.
+
+```sql
+UPDATE "lalfpdba.sp_survey_point"
+SET geom = ST_SetSRID(ST_MakePoint(CAST(centroid_lon as float), CAST(centroid_lat as float)), 4326);
+```
+
+Create a spatial index on `geom`.
+
+```sql
+CREATE INDEX sp_survey_point_geom_idx
+ON "lalfpdba.sp_survey_point" USING GIST (geom);
+```
+
+Size of `lf_parcel` and `sp_survey_point` tables.
+
+```sql
+-- size of lf_parcel
+select count(*) -- 3,289,378
+from "lalfpdba.lf_parcel" p
+where p.parcel_status_code != 'D';
+
+-- size of sp_survey_point
+select count(*) -- 2,832,,215
+from "lalfpdba.sp_survey_point";
+
+-- check that all lf_parcel parcels have a geocode in sp survey point
+select count(*) -- 691,384
+from "lalfpdba.lf_parcel" p
+left join "lalfpdba.sp_survey_point" sp on p.plan_no = sp.plan_no and p.lot_no = sp.lot_no
+where p.parcel_status_code != 'D' and sp.plan_no is null and sp.lot_no is null;
+```
+
+Get the address' parcels grouped by parcel status code
+
+```sql
+-- get the address' parcels grouped by parcel status code
+select p.parcel_status_code, count(*)
+from
+    "lalfpdba.lf_address" a
+left join "lalfpdba.lf_site" s on a.site_id = s.site_id
+left join "lalfpdba.lf_parcel" p  on s.parcel_id = p.parcel_id
+where a.addr_status_code != 'H'
+group by p.parcel_status_code;
+```
+
+| parcel_status_code | count   |
+|--------------------|---------|
+| C                  | 2795207 |
+| D                  | 1       |
+
+Addresses that do not have a geocode.
+
+```sql
+-- addresses that don't have a geocode
+select distinct p.plan_no, p.lot_no, p.parcel_status_code, l."pndb.place_name", r.road_name, r.road_name_type_code, a.*
+from
+    "lalfpdba.lf_address" a
+left join "lalfpdba.lf_site" s on a.site_id = s.site_id
+left join "lalfpdba.lf_parcel" p  on s.parcel_id = p.parcel_id
+left join "lalfpdba.sp_survey_point" sp on p.plan_no = sp.plan_no and p.lot_no = sp.lot_no
+left join "lalfpdba.lf_road" r on a.road_id = r.road_id
+left join lalf_pndb_localities_joined l on r.locality_code = l."lalf.locality_code"
+left join qrt q on r.qrt_road_name_basic = q.road_name_basic_1 and
+             l."pndb.place_name" = q.locality_left
+where a.addr_status_code != 'H' and sp.plan_no is null and sp.lot_no is null
+;
+```
+
+Parcel types that do not have a survey point.
+
+```sql
+-- parcel types that do not have a survey point
+select p.parcel_status_code, count(*)
+from "lalfpdba.lf_parcel" p
+left join "lalfpdba.sp_survey_point" sp on p.plan_no = sp.plan_no and p.lot_no = sp.lot_no
+where sp.plan_no is null and sp.lot_no is null
+group by p.parcel_status_code;
+```
+| parcel_status_code | count  |
+|--------------------|--------|
+|                    | 20     |
+| C                  | 358593 |
+| D                  | 870747 |
+| N                  | 91562  |
+| T                  | 86     |
+| U                  | 241123 |
+
 ### Names and Addresses for Places
 
 We currently do not have a 'property' spatial object that represents the aggregate parcel boundaries of a property (likely rural). The solution for now is to have the property name point to multiple spatial objects (the individual parcels) to not lose that information. In the future, this will be reconciled with a new spatial dataset that can represent the property. This is not a concern with addressing because the individual parcels should have their own addresses.
@@ -83,6 +217,15 @@ The current geographical object category vocabulary is managed nationally under 
 #### Sub-address inference
 
 Rather than record the direct relationship in the data, see if we can infer it by performing spatial queries to get the parent address from the base parcel. Alternatively, we can also compare the address components to find the parent address.
+
+Investigation:
+
+Initial investigations are looking good. It seems we are able to query the FoundationData's lot boundary for all common properties by its plan. This will provide the geometry for all. Note that there may be more than one common property per building.
+
+In some cases, if it's a BUP plan, there may be individual lots within the plan. Use the FoundationData's Building and Unit Lot Plans to retrieve lot on plans where the plan starts with `BUP`.
+
+- [Lot boundary query for BUP10259](https://spatial-gis.information.qld.gov.au/arcgis/rest/services/Basemaps/FoundationData/FeatureServer/2/query?where=plan%3D%27BUP10259%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&defaultSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnExceededLimitFeatures=false&quantizationParameters=&returnCentroid=false&timeReferenceUnknownClient=false&maxRecordCountFactor=&sqlFormat=none&resultType=&featureEncoding=esriDefault&datumTransformation=&cacheHint=false&f=html)
+- [Building Unit Lot Plans query for BUP10259](https://spatial-gis.information.qld.gov.au/arcgis/rest/services/Basemaps/FoundationData/FeatureServer/31/query?where=bup_plan%3D%27BUP10259%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&defaultSR=&spatialRel=esriSpatialRelIntersects&distance=&units=esriSRUnit_Foot&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&havingClause=&gdbVersion=&historicMoment=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&multipatchOption=xyFootprint&resultOffset=&resultRecordCount=&returnTrueCurves=false&returnCentroid=false&timeReferenceUnknownClient=false&maxRecordCountFactor=&sqlFormat=none&resultType=&featureEncoding=esriDefault&datumTransformation=&cacheHint=false&f=html)
 
 ### Place Names
 
@@ -186,6 +329,11 @@ TODO: do addressable objects need to have a soft type? E.g., property, parcel, s
 - if it's a parcel, look up spatial system to pull info with the plan and lot number
 - if it's a sub-site, we just work with the geocodes within Quali.
 - likely a follow-up exercise.
+
+TODO: why lot 1-4 plan SP337524 not exist in LALF?
+TODO: why lot 86 plan RP94913 not exist in QLD Globe but exists in LALF? 
+  - looks like the alias address is in the qld globe but the primary address is not
+  - 
 
 #### Question - what do the parcel status codes mean?
 
@@ -395,11 +543,13 @@ Follow the `prev_locality_code` column to get the latest current locality.
 
 #### Mapping between LALF localities to PNDB suburbs
 
-Map the `locality` table's `locality_code` to the `pndb.place_name` table's `reference_number`. Use the `pndb.history` table to get the latest place name by following the `historic_reference_number`. Each historic record may branch into one or more records. We must perform a depth-first search recursively to find the latest place name that matches the locality name.
+Map the `locality` table's `locality_code` to the `pndb.place_name` table's `reference_number`. Use the `pndb.history` table to get the latest place name by following the `historic_reference_number`. Each historical record may branch into one or more records. We must perform a depth-first search recursively to find the latest place name that matches the locality name.
 
 The above Windsor code `LGA_0313` is problematic. It is not a code in the PNDB. Michael will send me a table that provides the mapping from this `LGA_` code to the place name code in the PNDB.
 
 Note: there may be some localities that don't map to the PNDB. For example, K'gari.
+
+Michael has sent two files over. `lalf-pndb_localities_joined.csv` and `lalf_localities_unjoined.csv`. I have uploaded them to the project's SharePoint.
 
 ### Parcel, Site, Address cardinality
 
