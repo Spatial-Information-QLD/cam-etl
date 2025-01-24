@@ -3,7 +3,7 @@ import concurrent.futures
 from textwrap import dedent
 from pathlib import Path
 
-from rdflib import Graph, URIRef, RDF, BNode, Literal, SDO, SKOS
+from rdflib import Dataset, Graph, URIRef, RDF, BNode, Literal, SDO, SKOS
 
 from cam.etl import (
     add_additional_property,
@@ -18,8 +18,9 @@ from cam.etl.types import Row
 from cam.etl.settings import settings
 
 
-dataset = "qrt"
+dataset_name = "qrt"
 output_dir_name = "qrt-rdf"
+graph_name = URIRef("urn:ladb:graph:roads")
 
 ROAD_TYPES_URL = "https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@9fa34d76fc0a27d711d8030b934c2c83dd378156/vocabularies-qsi/road-types.ttl"
 GN_AFFIX_URL = "https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@b07763c87f2f872133197e6fb0eb911de85879c6/vocabularies-qsi/gn-affix.ttl"
@@ -64,7 +65,7 @@ def transform_row(
     road_suffix: str,
     road_name_basic: str,
     road_name_source: str,
-    graph: Graph,
+    ds: Dataset,
     vocab_graph: Graph,
     row: Row,
     road_type_concept_scheme: URIRef,
@@ -75,64 +76,66 @@ def transform_row(
     label_iri = get_label_iri(row[road_id])
 
     # Road Object
-    graph.add((iri, RDF.type, ROADS.RoadObject))
-    graph.add((iri, SDO.identifier, Literal(row[road_id], datatype=sir_id_datatype)))
-    graph.add((iri, SDO.hasPart, segment_iri))
-    graph.add((iri, SDO.name, label_iri))
+    ds.add((iri, RDF.type, ROADS.RoadObject, graph_name))
+    ds.add((iri, SDO.identifier, Literal(row[road_id], datatype=sir_id_datatype), graph_name))
+    ds.add((iri, SDO.hasPart, segment_iri, graph_name))
+    ds.add((iri, SDO.name, label_iri, graph_name))
 
     # Road Segment
-    graph.add((segment_iri, RDF.type, ROADS.RoadSegment))
-    graph.add(
+    ds.add((segment_iri, RDF.type, ROADS.RoadSegment, graph_name))
+    ds.add(
         (
             segment_iri,
             SDO.identifier,
             Literal(row[road_segment_id], datatype=sir_id_datatype),
+            graph_name,
         )
     )
-    graph.add((segment_iri, SDO.isPartOf, iri))
+    ds.add((segment_iri, SDO.isPartOf, iri, graph_name))
 
-    add_additional_property(segment_iri, locality_left, row[locality_left], graph)
-    add_additional_property(segment_iri, locality_right, row[locality_right], graph)
-    add_additional_property(segment_iri, lga_name_left, row[lga_name_left], graph)
-    add_additional_property(segment_iri, lga_name_right, row[lga_name_right], graph)
+    add_additional_property(segment_iri, locality_left, row[locality_left], ds, graph_name)
+    add_additional_property(segment_iri, locality_right, row[locality_right], ds, graph_name)
+    add_additional_property(segment_iri, lga_name_left, row[lga_name_left], ds, graph_name)
+    add_additional_property(segment_iri, lga_name_right, row[lga_name_right], ds, graph_name)
 
     locality_left_iri = get_locality_iri(row[locality_left])
-    graph.add((segment_iri, ROADS.localityLeft, locality_left_iri))
-    graph.add((locality_left_iri, SDO.name, Literal(row[locality_left])))
+    ds.add((segment_iri, ROADS.localityLeft, locality_left_iri, graph_name))
+    ds.add((locality_left_iri, SDO.name, Literal(row[locality_left]), graph_name))
 
     locality_right_iri = get_locality_iri(row[locality_right])
-    graph.add((segment_iri, ROADS.localityRight, locality_right_iri))
-    graph.add((locality_right_iri, SDO.name, Literal(row[locality_right])))
+    ds.add((segment_iri, ROADS.localityRight, locality_right_iri, graph_name))
+    ds.add((locality_right_iri, SDO.name, Literal(row[locality_right]), graph_name))
 
     lga_left_iri = get_lga_iri(row[lga_name_left])
-    graph.add((segment_iri, ROADS.lgaLeft, lga_left_iri))
-    graph.add((lga_left_iri, SDO.name, Literal(row[lga_name_left])))
+    ds.add((segment_iri, ROADS.lgaLeft, lga_left_iri, graph_name))
+    ds.add((lga_left_iri, SDO.name, Literal(row[lga_name_left]), graph_name))
 
     lga_right_iri = get_lga_iri(row[lga_name_right])
-    graph.add((segment_iri, ROADS.lgaRight, lga_right_iri))
-    graph.add((lga_right_iri, SDO.name, Literal(row[lga_name_right])))
+    ds.add((segment_iri, ROADS.lgaRight, lga_right_iri, graph_name))
+    ds.add((lga_right_iri, SDO.name, Literal(row[lga_name_right]), graph_name))
 
     # Road Label
-    graph.add((label_iri, RDF.type, ROADS.RoadLabel))
-    graph.add((label_iri, RDF.type, CN.CompoundName))
-    graph.add((label_iri, CN.isNameFor, iri))
-    graph.add((label_iri, SDO.name, Literal(row[road_name_full])))
-    add_additional_property(label_iri, road_name_basic, row[road_name_basic], graph)
-    add_additional_property(label_iri, road_name_source, row[road_name_source], graph)
+    ds.add((label_iri, RDF.type, ROADS.RoadLabel, graph_name))
+    ds.add((label_iri, RDF.type, CN.CompoundName, graph_name))
+    ds.add((label_iri, CN.isNameFor, iri, graph_name))
+    ds.add((label_iri, SDO.name, Literal(row[road_name_full]), graph_name))
+    add_additional_property(label_iri, road_name_basic, row[road_name_basic], ds, graph_name)
+    add_additional_property(label_iri, road_name_source, row[road_name_source], ds, graph_name)
 
     # TODO: add authority
 
     # Road Label Lifecycle Stage
     bnode = BNode(f"{row[road_id]}-lifecycle-stage")
-    graph.add((label_iri, LC.hasLifecycleStage, bnode))
-    graph.add((bnode, SDO.additionalType, REG.accepted))
+    ds.add((label_iri, LC.hasLifecycleStage, bnode, graph_name))
+    ds.add((bnode, SDO.additionalType, REG.accepted, graph_name))
 
     # Name template
-    graph.add(
+    ds.add(
         (
             label_iri,
             CN.nameTemplate,
             Literal(f"{{RNPT.RoadGivenName}} {{RNPT.RoadType}} {{RNPT.RoadSuffix}}"),
+            graph_name,
         )
     )
 
@@ -140,26 +143,28 @@ def transform_row(
     road_name_value = row[road_name]
     if road_name_value:
         bnode = BNode(f"{row[road_id]}-road-name")
-        graph.add((label_iri, SDO.hasPart, bnode))
-        graph.add(
+        ds.add((label_iri, SDO.hasPart, bnode, graph_name))
+        ds.add(
             (
                 bnode,
                 SDO.additionalType,
                 RNPT.RoadGivenName,
+                graph_name,
             )
         )
-        graph.add((bnode, SDO.value, Literal(road_name_value)))
+        ds.add((bnode, SDO.value, Literal(road_name_value), graph_name))
 
     # Road Type
     road_type_value = row[road_type]
     if road_type_value:
         bnode = BNode(f"{row[road_id]}-road-type")
-        graph.add((label_iri, SDO.hasPart, bnode))
-        graph.add(
+        ds.add((label_iri, SDO.hasPart, bnode, graph_name))
+        ds.add(
             (
                 bnode,
                 SDO.additionalType,
                 RNPT.RoadType,
+                graph_name,
             )
         )
 
@@ -192,18 +197,19 @@ def transform_row(
                 raise Exception(
                     f"Concept IRI not found for road type value '{road_type_value}'"
                 )
-        graph.add((bnode, SDO.value, concept))
+        ds.add((bnode, SDO.value, concept, graph_name))
 
     # Road Suffix
     road_suffix_value = row[road_suffix]
     if road_suffix_value:
         bnode = BNode(f"{row[road_id]}-road-suffix")
-        graph.add((label_iri, SDO.hasPart, bnode))
-        graph.add(
+        ds.add((label_iri, SDO.hasPart, bnode, graph_name))
+        ds.add(
             (
                 bnode,
                 SDO.additionalType,
                 RNPT.RoadSuffix,
+                graph_name,
             )
         )
         concept = get_concept_from_vocab(
@@ -216,7 +222,7 @@ def transform_row(
             raise Exception(
                 f"Concept IRI not found for road suffix value '{road_suffix_value}'"
             )
-        graph.add((bnode, SDO.value, concept))
+        ds.add((bnode, SDO.value, concept, graph_name))
 
 
 @worker_wrap
@@ -246,7 +252,7 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
     road_type_concept_scheme = URIRef("https://linked.data.gov.au/def/road-types")
     road_suffix_concept_scheme = URIRef("https://linked.data.gov.au/def/gn-affix")
 
-    graph = Graph(store="Oxigraph")
+    ds = Dataset(store="Oxigraph")
     for row in rows:
         transform_row(
             ROAD_ID,
@@ -261,7 +267,7 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
             ROAD_SUFFIX,
             ROAD_NAME_BASIC,
             ROAD_NAME_SOURCE,
-            graph,
+            ds,
             vocab_graph,
             row,
             road_type_concept_scheme,
@@ -281,7 +287,7 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
                 ROAD_SUFFIX_2,
                 ROAD_NAME_BASIC_2,
                 ROAD_NAME_SOURCE_2,
-                graph,
+                ds,
                 vocab_graph,
                 row,
                 road_type_concept_scheme,
@@ -289,8 +295,8 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
             )
 
     output_dir = Path(output_dir_name)
-    filename = Path(dataset + "-" + str(job_id) + ".nt")
-    serialize(output_dir, str(filename), graph)
+    filename = Path(dataset_name + "-" + str(job_id) + ".nq")
+    serialize(output_dir, str(filename), ds)
 
 
 def main():

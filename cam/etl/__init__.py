@@ -6,17 +6,14 @@ from typing import Iterator
 import psycopg
 import psycopg.rows
 import pyoxigraph
-from rdflib import Graph, URIRef, BNode, SDO, Literal, SKOS
+from rdflib import Dataset, Graph, URIRef, BNode, SDO, Literal, SKOS
 
 
-def serialize(output_dir: Path, filename: str, graph: Graph):
+def serialize(output_dir: Path, filename: str, ds: Dataset):
     output_dir.mkdir(exist_ok=True)
-    store: pyoxigraph.Store = graph.store._inner
+    store: pyoxigraph.Store = ds.store._inner
     quads = store.quads_for_pattern(None, None, None)
-    triples = (
-        pyoxigraph.Triple(quad.subject, quad.predicate, quad.object) for quad in quads
-    )
-    pyoxigraph.serialize(triples, str(output_dir / filename), "application/n-triples")
+    pyoxigraph.serialize(quads, str(output_dir / filename), "application/n-quads")
 
 
 def worker_wrap(f):
@@ -73,7 +70,7 @@ def get_concept_from_vocab(
 
 
 def add_additional_property(
-    focus_node: URIRef | BNode, property_key: str, property_value: str, graph: Graph
+    focus_node: URIRef | BNode, property_key: str, property_value: str, graph: Dataset, graph_name: URIRef
 ):
     """
     Create a schema.org sdo:PropertyValue object linked from the focus node with sdo:additionalProperty.
@@ -82,6 +79,6 @@ def add_additional_property(
     # Create a positive value that is compatible with oxigraph blank nodes based on the hash of the string identifier.
     safe_id = f"b{hash(str(focus_node) + property_key) & 0xFFFFFFFF:x}"
     bnode = BNode(safe_id)
-    graph.add((focus_node, SDO.additionalProperty, bnode))
-    graph.add((bnode, SDO.propertyID, Literal(property_key)))
-    graph.add((bnode, SDO.value, Literal(property_value)))
+    graph.add((focus_node, SDO.additionalProperty, bnode, graph_name))
+    graph.add((bnode, SDO.propertyID, Literal(property_key), graph_name))
+    graph.add((bnode, SDO.value, Literal(property_value), graph_name))

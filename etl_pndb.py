@@ -4,7 +4,7 @@ from textwrap import dedent
 from pathlib import Path
 
 from psycopg import Cursor
-from rdflib import Graph, URIRef, RDF, SDO, Literal, SKOS, BNode, TIME, XSD, PROV
+from rdflib import Dataset, Graph, URIRef, RDF, SDO, Literal, SKOS, BNode, TIME, XSD, PROV
 from rdflib.namespace import GEO
 
 from cam.etl import (
@@ -20,8 +20,9 @@ from cam.etl.types import Row
 from cam.etl.settings import settings
 
 
-dataset = "pndb"
+dataset_name = "pndb"
 output_dir_name = "pndb-rdf"
+graph_name = URIRef("urn:ladb:graph:geographical-names")
 
 INDIGENOUS_GROUP_IRI = URIRef(
     "https://linked.data.gov.au/def/naming-authority/indigenous-group"
@@ -77,16 +78,17 @@ def transform_row():
     pass
 
 
-def add_geographical_object(row: Row, graph: Graph, vocab_graph: Graph) -> None:
+def add_geographical_object(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
     iri = get_iri(row[REFERENCE_NUMBER])
-    graph.add((iri, RDF.type, GN.GeographicalObject))
+    ds.add((iri, RDF.type, GN.GeographicalObject, graph_name))
 
     # sdo:identifier
-    graph.add(
+    ds.add(
         (
             iri,
             SDO.identifier,
             Literal(row[REFERENCE_NUMBER], datatype=sir_id_datatype),
+            graph_name,
         )
     )
 
@@ -100,12 +102,12 @@ def add_geographical_object(row: Row, graph: Graph, vocab_graph: Graph) -> None:
         raise Exception(
             f"No geographical object category concept matched for value {row[TYPE_RESOLVED]}."
         )
-    graph.add((iri, SDO.additionalType, value))
+    ds.add((iri, SDO.additionalType, value, graph_name))
 
     # geo:hasGeometry
     bnode_geometry = BNode(f"go-geo-hasGeometry-{row[REFERENCE_NUMBER]}")
-    graph.add((iri, GEO.hasGeometry, bnode_geometry))
-    graph.add(
+    ds.add((iri, GEO.hasGeometry, bnode_geometry, graph_name))
+    ds.add(
         (
             bnode_geometry,
             GEO.asWKT,
@@ -113,6 +115,7 @@ def add_geographical_object(row: Row, graph: Graph, vocab_graph: Graph) -> None:
                 f"POINT ({row[LONGITUDE_DD]} {row[LATITUDE_DD]})",
                 datatype=GEO.wktLiteral,
             ),
+            graph_name,
         )
     )
 
@@ -121,19 +124,20 @@ def add_lifecycle_stage(
     focus_node: URIRef | BNode,
     bnode_id: str,
     row: Row,
-    graph: Graph,
+    ds: Dataset,
     vocab_graph: Graph,
 ) -> None:
     bnode = BNode(bnode_id)
-    graph.add((focus_node, LC.hasLifecycleStage, bnode))
+    ds.add((focus_node, LC.hasLifecycleStage, bnode, graph_name))
     bnode_has_beginning = BNode(bnode_id + "-lifecycle-stage-has-beginning")
-    graph.add((bnode, TIME.hasBeginning, bnode_has_beginning))
+    ds.add((bnode, TIME.hasBeginning, bnode_has_beginning, graph_name))
     if row.get(GAZETTED_DATE):
-        graph.add(
+        ds.add(
             (
                 bnode_has_beginning,
                 TIME.inXSDDate,
                 Literal(row[GAZETTED_DATE], datatype=XSD.date),
+                graph_name,
             )
         )
 
@@ -153,13 +157,13 @@ def add_lifecycle_stage(
         # TODO: review with Michael
         match (status, currency):
             case ("Y", "Y"):
-                graph.add((bnode, SDO.additionalType, GN_STATUS.gazetted))
+                ds.add((bnode, SDO.additionalType, GN_STATUS.gazetted, graph_name))
             case ("N", "Y"):
-                graph.add((bnode, SDO.additionalType, GN_STATUS.informal))
+                ds.add((bnode, SDO.additionalType, GN_STATUS.informal, graph_name))
             case ("Y", "N"):
-                graph.add((bnode, SDO.additionalType, GN_STATUS.retired))
+                ds.add((bnode, SDO.additionalType, GN_STATUS.retired, graph_name))
             case ("N", "N"):
-                graph.add((bnode, SDO.additionalType, GN_STATUS.historical))
+                ds.add((bnode, SDO.additionalType, GN_STATUS.historical, graph_name))
             case _:
                 raise ValueError(
                     f"Unmatched authority combination with status {status} and currency {currency}"
@@ -167,7 +171,7 @@ def add_lifecycle_stage(
 
 
 def add_authority(
-    focus_node: URIRef | BNode, row: Row, graph: Graph, vocab_graph: Graph
+    focus_node: URIRef | BNode, row: Row, ds: Dataset, vocab_graph: Graph
 ) -> None:
     reference_number = row[REFERENCE_NUMBER]
     status = row[STATUS]
@@ -183,7 +187,7 @@ def add_authority(
 
     match (status, currency):
         case ("Y", "Y") | ("Y", "N") | ("N", "N"):
-            graph.add((focus_node, CN.hasAuthority, PLACE_NAMES_ACT_IRI))
+            ds.add((focus_node, CN.hasAuthority, PLACE_NAMES_ACT_IRI, graph_name))
         case ("N", "Y"):
             pass
         case _:
@@ -192,45 +196,46 @@ def add_authority(
             )
 
 
-def add_geographical_name(row: Row, graph: Graph, vocab_graph: Graph) -> None:
+def add_geographical_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
     iri = get_iri(row[REFERENCE_NUMBER])
     label_iri = get_label_iri(row[REFERENCE_NUMBER])
 
     # Geographical Name
-    graph.add((iri, SDO.name, label_iri))
-    graph.add((label_iri, RDF.type, CN.CompoundName))
-    graph.add((label_iri, RDF.type, GN.GeographicalName))
-    graph.add((label_iri, CN.isNameFor, iri))
-    graph.add((label_iri, SDO.name, Literal(row[PLACE_NAME])))
+    ds.add((iri, SDO.name, label_iri, graph_name))
+    ds.add((label_iri, RDF.type, CN.CompoundName, graph_name))
+    ds.add((label_iri, RDF.type, GN.GeographicalName, graph_name))
+    ds.add((label_iri, CN.isNameFor, iri, graph_name))
+    ds.add((label_iri, SDO.name, Literal(row[PLACE_NAME]), graph_name))
 
     # Lifecycle stage
     add_lifecycle_stage(
         label_iri,
         f"gn-lifecycle-stage-{row[REFERENCE_NUMBER]}",
         row,
-        graph,
+        ds,
         vocab_graph,
     )
 
     # Name template
-    graph.add(
+    ds.add(
         (
             label_iri,
             CN.nameTemplate,
             Literal(
                 f"{{GNPT.geographicalPrefix}} {{GNPT.geographicalGivenName}} {{GNPT.geographicalSuffix}}"
             ),
+            graph_name,
         )
     )
 
     # Given Name Part
     bnode_given_name = BNode(f"gn-given-name-{row[REFERENCE_NUMBER]}")
-    graph.add((label_iri, SDO.hasPart, bnode_given_name))
-    graph.add((bnode_given_name, SDO.value, Literal(row[PLACE_NAME], lang="en")))
-    graph.add((bnode_given_name, SDO.additionalType, GNPT.geographicalGivenName))
+    ds.add((label_iri, SDO.hasPart, bnode_given_name, graph_name))
+    ds.add((bnode_given_name, SDO.value, Literal(row[PLACE_NAME], lang="en"), graph_name))
+    ds.add((bnode_given_name, SDO.additionalType, GNPT.geographicalGivenName, graph_name))
 
     # Authority
-    add_authority(label_iri, row, graph, vocab_graph)
+    add_authority(label_iri, row, ds, vocab_graph)
 
     # Add history note
     history_note = ""
@@ -242,42 +247,42 @@ def add_geographical_name(row: Row, graph: Graph, vocab_graph: Graph) -> None:
         history_note += comments + "\n\n"
     history_note = history_note.strip()
     if history_note:
-        graph.add((label_iri, SKOS.historyNote, Literal(history_note, lang="en")))
+        ds.add((label_iri, SKOS.historyNote, Literal(history_note, lang="en"), graph_name))
 
     # Property values
     if status := row[STATUS]:
-        add_additional_property(label_iri, STATUS, status, graph)
+        add_additional_property(label_iri, STATUS, status, ds, graph_name)
     if currency := row[CURRENCY]:
-        add_additional_property(label_iri, CURRENCY, currency, graph)
+        add_additional_property(label_iri, CURRENCY, currency, ds, graph_name)
     if gazette_page := row[GAZETTE_PAGE]:
-        add_additional_property(label_iri, GAZETTE_PAGE, gazette_page, graph)
+        add_additional_property(label_iri, GAZETTE_PAGE, gazette_page, ds, graph_name)
     if links := row[LINKS]:
-        add_additional_property(label_iri, LINKS, links, graph)
+        add_additional_property(label_iri, LINKS, links, ds, graph_name)
     if pronunciation := row[PRONUNCIATION]:
-        add_additional_property(label_iri, PRONUNCIATION, pronunciation, graph)
+        add_additional_property(label_iri, PRONUNCIATION, pronunciation, ds, graph_name)
     if internal_comments := row[INTERNAL_COMMENTS]:
-        add_additional_property(label_iri, INTERNAL_COMMENTS, internal_comments, graph)
+        add_additional_property(label_iri, INTERNAL_COMMENTS, internal_comments, ds, graph_name)
     if place_currency := row[PLACE_CURRENCY]:
-        add_additional_property(label_iri, PLACE_CURRENCY, place_currency, graph)
+        add_additional_property(label_iri, PLACE_CURRENCY, place_currency, ds, graph_name)
 
 
-def add_indigenous_name(row: Row, graph: Graph, vocab_graph: Graph) -> None:
+def add_indigenous_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
     iri = get_iri(row[REFERENCE_NUMBER])
     label_iri = get_indigenous_label_iri(row[REFERENCE_NUMBER], row[OBJECTID])
 
     # Geographical name
-    graph.add((iri, SDO.name, label_iri))
-    graph.add((label_iri, RDF.type, CN.CompoundName))
-    graph.add((label_iri, RDF.type, GN.GeographicalName))
-    graph.add((label_iri, CN.isNameFor, iri))
-    graph.add((label_iri, SDO.name, Literal(row[PLACE_NAME])))
+    ds.add((iri, SDO.name, label_iri, graph_name))
+    ds.add((label_iri, RDF.type, CN.CompoundName, graph_name))
+    ds.add((label_iri, RDF.type, GN.GeographicalName, graph_name))
+    ds.add((label_iri, CN.isNameFor, iri, graph_name))
+    ds.add((label_iri, SDO.name, Literal(row[PLACE_NAME]), graph_name))
 
     # Lifecycle
     add_lifecycle_stage(
         label_iri,
         f"gn-lifecycle-stage-{row[REFERENCE_NUMBER]}-{hash(row[PLACE_NAME])}",
         row,
-        graph,
+        ds,
         vocab_graph,
     )
 
@@ -285,46 +290,46 @@ def add_indigenous_name(row: Row, graph: Graph, vocab_graph: Graph) -> None:
     bnode_given_name = BNode(
         f"gn-given-name-{row[REFERENCE_NUMBER]}-{hash(row[PLACE_NAME])}"
     )
-    graph.add((label_iri, SDO.hasPart, bnode_given_name))
+    ds.add((label_iri, SDO.hasPart, bnode_given_name, graph_name))
     # TODO: add indigenous language code datatype.
     #       we currently don't have this information in the data.
-    graph.add((bnode_given_name, SDO.value, Literal(row[PLACE_NAME], lang="aus")))
-    graph.add((bnode_given_name, SDO.additionalType, GNPT.geographicalGivenName))
+    ds.add((bnode_given_name, SDO.value, Literal(row[PLACE_NAME], lang="aus"), graph_name))
+    ds.add((bnode_given_name, SDO.additionalType, GNPT.geographicalGivenName, graph_name))
 
     # Authority
-    graph.add((label_iri, CN.hasAuthority, INDIGENOUS_GROUP_IRI))
+    ds.add((label_iri, CN.hasAuthority, INDIGENOUS_GROUP_IRI, graph_name))
 
     # Add additional properties
     if language := row[LANGUAGE]:
-        add_additional_property(iri, LANGUAGE, language, graph)
+        add_additional_property(iri, LANGUAGE, language, ds, graph_name)
     if pronunciation := row[PRONUNCIATION]:
-        add_additional_property(iri, PRONUNCIATION, pronunciation, graph)
+        add_additional_property(iri, PRONUNCIATION, pronunciation, ds, graph_name)
     if source := row[SOURCE]:
-        add_additional_property(iri, SOURCE, source, graph)
+        add_additional_property(iri, SOURCE, source, ds, graph_name)
     if date_added := row[DATE_ADDED]:
-        add_additional_property(iri, DATE_ADDED, date_added, graph)
+        add_additional_property(iri, DATE_ADDED, date_added, ds, graph_name)
     if status := row[STATUS]:
-        add_additional_property(iri, STATUS, status, graph)
+        add_additional_property(iri, STATUS, status, ds, graph_name)
     if preferred := row[PREFERRED]:
-        add_additional_property(iri, PREFERRED, preferred, graph)
+        add_additional_property(iri, PREFERRED, preferred, ds, graph_name)
     if created_user := row[CREATED_USER]:
-        add_additional_property(iri, CREATED_USER, created_user, graph)
+        add_additional_property(iri, CREATED_USER, created_user, ds, graph_name)
     if created_date := row[CREATED_DATE]:
-        add_additional_property(iri, CREATED_DATE, created_date, graph)
+        add_additional_property(iri, CREATED_DATE, created_date, ds, graph_name)
     if internal_comments := row[INTERNAL_COMMENTS]:
-        add_additional_property(iri, INTERNAL_COMMENTS, internal_comments, graph)
+        add_additional_property(iri, INTERNAL_COMMENTS, internal_comments, ds, graph_name)
 
 
-def add_tag(row: Row, graph: Graph, vocab_graph: Graph) -> None:
+def add_tag(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
     label_iri = get_label_iri(row[REFERENCE_NUMBER])
     if tag := row[TAG]:
-        add_additional_property(label_iri, TAG, tag, graph)
+        add_additional_property(label_iri, TAG, tag, ds, graph_name)
     if tag_resolved := row[TAG_RESOLVED]:
-        add_additional_property(label_iri, TAG_RESOLVED, tag_resolved, graph)
+        add_additional_property(label_iri, TAG_RESOLVED, tag_resolved, ds, graph_name)
     if created_user := row[CREATED_USER]:
-        add_additional_property(label_iri, CREATED_USER, created_user, graph)
+        add_additional_property(label_iri, CREATED_USER, created_user, ds, graph_name)
     if created_date := row[CREATED_DATE]:
-        add_additional_property(label_iri, CREATED_DATE, created_date, graph)
+        add_additional_property(label_iri, CREATED_DATE, created_date, ds, graph_name)
 
 
 def get_historic_rows(reference_number: str, cursor: Cursor) -> list[Row]:
@@ -369,7 +374,7 @@ def get_tag_rows(reference_number: str, cursor: Cursor) -> list[Row]:
 
 @worker_wrap
 def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
-    graph = Graph(store="Oxigraph")
+    ds = Dataset(store="Oxigraph")
 
     with get_db_connection(
         host=settings.etl.db.host,
@@ -382,26 +387,26 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
         with connection.cursor() as cursor:
             for row in rows:
                 reference_number = row[REFERENCE_NUMBER]
-                add_geographical_object(row, graph, vocab_graph)
-                add_geographical_name(row, graph, vocab_graph)
+                add_geographical_object(row, ds, vocab_graph)
+                add_geographical_name(row, ds, vocab_graph)
 
                 if historic_rows := get_historic_rows(reference_number, cursor):
                     for historic_row in historic_rows:
                         iri = get_iri(row[REFERENCE_NUMBER])
                         historic_iri = get_iri(historic_row[HISTORIC_REFERENCE_NUMBER])
-                        graph.add((iri, PROV.wasDerivedFrom, historic_iri))
+                        ds.add((iri, PROV.wasDerivedFrom, historic_iri, graph_name))
 
                 if indigenous_rows := get_indigenous_rows(reference_number, cursor):
                     for indigenous_row in indigenous_rows:
-                        add_indigenous_name(indigenous_row, graph, vocab_graph)
+                        add_indigenous_name(indigenous_row, ds, vocab_graph)
 
                 if tag_rows := get_tag_rows(reference_number, cursor):
                     for tag_row in tag_rows:
-                        add_tag(tag_row, graph, vocab_graph)
+                        add_tag(tag_row, ds, vocab_graph)
 
     output_dir = Path(output_dir_name)
-    filename = Path(dataset + "-" + str(job_id) + ".nt")
-    serialize(output_dir, str(filename), graph)
+    filename = Path(dataset_name + "-" + str(job_id) + ".nq")
+    serialize(output_dir, str(filename), ds)
 
 
 def main():

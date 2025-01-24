@@ -3,7 +3,7 @@ import concurrent.futures
 from textwrap import dedent
 from pathlib import Path
 
-from rdflib import Graph, URIRef, RDF, RDFS, Literal, SDO
+from rdflib import Dataset, Graph, URIRef, RDF, RDFS, Literal, SDO
 
 from cam.etl import (
     add_additional_property,
@@ -16,8 +16,9 @@ from cam.etl.namespaces import ADDR, lot_datatype, plan_datatype
 from cam.etl.types import Row
 from cam.etl.settings import settings
 
-dataset = "lalf"
+dataset_name = "lalf_parcel"
 output_dir_name = "lalf-rdf"
+graph_name = URIRef("urn:ladb:graph:addresses")
 
 # TODO: ensure this is added to go-categories
 parcel_type = URIRef("https://linked.data.gov.au/def/go-categories/parcel")
@@ -38,37 +39,37 @@ def get_iri(lot: str, plan: str) -> URIRef:
 
 @worker_wrap
 def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
-    graph = Graph(store="Oxigraph")
+    ds = Dataset(store="Oxigraph")
 
     for row in rows:
         parcel_iri = get_iri(row[LOT_NO], row[PLAN_NO])
-        graph.add((parcel_iri, RDF.type, ADDR.AddressableObject))
-        graph.add((parcel_iri, SDO.additionalType, parcel_type))
+        ds.add((parcel_iri, RDF.type, ADDR.AddressableObject, graph_name))
+        ds.add((parcel_iri, SDO.additionalType, parcel_type, graph_name))
 
         # lot and plan
-        graph.add((parcel_iri, RDFS.label, Literal(f"{row[LOT_NO]}{row[PLAN_NO]}")))
+        ds.add((parcel_iri, RDFS.label, Literal(f"{row[LOT_NO]}{row[PLAN_NO]}"), graph_name))
         if lot_no := row[LOT_NO]:
-            graph.add((parcel_iri, SDO.identifier, Literal(lot_no, datatype=lot_datatype)))
+            ds.add((parcel_iri, SDO.identifier, Literal(lot_no, datatype=lot_datatype), graph_name))
         if plan_no := row[PLAN_NO]:
-            graph.add((parcel_iri, SDO.identifier, Literal(plan_no, datatype=plan_datatype)))
+            ds.add((parcel_iri, SDO.identifier, Literal(plan_no, datatype=plan_datatype), graph_name))
 
         # parcel_id
-        add_additional_property(parcel_iri, PARCEL_ID, row[PARCEL_ID], graph)
+        add_additional_property(parcel_iri, PARCEL_ID, row[PARCEL_ID], ds, graph_name)
 
         # parcel_status_code
-        add_additional_property(parcel_iri, PARCEL_STATUS_CODE, row[PARCEL_STATUS_CODE], graph)
+        add_additional_property(parcel_iri, PARCEL_STATUS_CODE, row[PARCEL_STATUS_CODE], ds, graph_name)
 
         # parcel_create_date
-        add_additional_property(parcel_iri, PARCEL_CREATE_DATE, row[PARCEL_CREATE_DATE], graph)
+        add_additional_property(parcel_iri, PARCEL_CREATE_DATE, row[PARCEL_CREATE_DATE], ds, graph_name)
 
         # parcel_data_source_date
-        add_additional_property(parcel_iri, PARCEL_DATA_SOURCE_DATE, row[PARCEL_DATA_SOURCE_DATE], graph)
+        add_additional_property(parcel_iri, PARCEL_DATA_SOURCE_DATE, row[PARCEL_DATA_SOURCE_DATE], ds, graph_name)
 
         # ignoring parcel_org_source_code and parcel_data_source_code because they only have one distinct value in each.
 
     output_dir = Path(output_dir_name)
-    filename = Path(dataset + "-" + str(job_id) + ".nt")
-    serialize(output_dir, str(filename), graph)
+    filename = Path(dataset_name + "-" + str(job_id) + ".nq")
+    serialize(output_dir, str(filename), ds)
 
 
 def main():
@@ -93,7 +94,8 @@ def main():
                     SELECT
                         *
                     FROM
-                        "lalfpdba.lf_parcel"
+                        "lalfpdba.lf_parcel" p
+                    WHERE p.parcel_status_code != 'D'
                 """
                 ),
             )

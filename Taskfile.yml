@@ -70,15 +70,16 @@ tasks:
     cmds:
       - task: etl:db:qrt
       - task: etl:db:pndb
+      - task: etl:db:lalf
 
   etl:clean:
     desc: Delete the files in output/ directory.
     cmds:
-      - cmd: rm qrt-rdf/*.nt
+      - cmd: rm qrt-rdf/*.nq
         ignore_error: true
-      - cmd: rm pndb-rdf/*.nt
+      - cmd: rm pndb-rdf/*.nq
         ignore_error: true
-      - cmd: rm lalf-rdf/*.nt
+      - cmd: rm lalf-rdf/*.nq
         ignore_error: true
 
   ontodia:

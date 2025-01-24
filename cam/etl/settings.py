@@ -16,7 +16,7 @@ class DatabaseSettings(BaseSettings):
 class ETLSettings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="cam_etl__", extra="allow")
 
-    batch_size: int = 50_000
+    batch_size: int = 10_000
 
     db: DatabaseSettings | None = None
 

@@ -3,7 +3,7 @@ import concurrent.futures
 from textwrap import dedent
 from pathlib import Path
 
-from rdflib import Graph, URIRef, RDF, RDFS, Literal, SDO, SKOS
+from rdflib import Dataset, Graph, URIRef, RDF, Literal, SDO, SKOS
 from rdflib.namespace import GEO
 
 from cam.etl import (
@@ -13,13 +13,15 @@ from cam.etl import (
     worker_wrap,
     serialize,
 )
-from cam.etl.namespaces import ADDR, lot_datatype, plan_datatype
 from cam.etl.lalf_geocode import vocab_mapping
 from cam.etl.types import Row
 from cam.etl.settings import settings
 
-dataset = "lalf"
+dataset_name = "lalf_geocode"
 output_dir_name = "lalf-rdf"
+graph_name = URIRef("urn:ladb:graph:addresses")
+
+GEOCODE_TYPES_URL = "https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@b07763c87f2f872133197e6fb0eb911de85879c6/vocabularies-qsi/addr-geocode-types.ttl"
 
 GEOCODE_ID = "geocode_id"
 GEOCODE_STATUS_CODE = "geocode_status_code"
@@ -42,11 +44,11 @@ def get_iri(geocode_id: str) -> URIRef:
 
 @worker_wrap
 def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
-    graph = Graph(store="Oxigraph")
+    ds = Dataset(store="Oxigraph")
 
     for row in rows:
         geocode_iri = get_iri(row[GEOCODE_ID])
-        graph.add((geocode_iri, RDF.type, GEO.Geometry))
+        ds.add((geocode_iri, RDF.type, GEO.Geometry, graph_name))
 
         # geocode type
         value = vocab_graph.value(
@@ -58,55 +60,55 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
             raise Exception(
                 f"No geocode type concept matched for value {row[GEOCODE_TYPE_CODE]}."
             )
-        graph.add((geocode_iri, SDO.additionalType, value))
+        ds.add((geocode_iri, SDO.additionalType, value, graph_name))
 
         # geocode
-        geom = Literal(f"POINT Z ({row[CENTROID_LON]} {row[CENTROID_LAT]})", datatype=GEO.wktLiteral)
-        graph.add((geocode_iri, GEO.hasGeometry, geom))
+        geom = Literal(f"POINT ({row[CENTROID_LON]} {row[CENTROID_LAT]})", datatype=GEO.wktLiteral)
+        ds.add((geocode_iri, GEO.asWKT, geom, graph_name))
 
         # geocode_id
-        add_additional_property(geocode_iri, GEOCODE_ID, row[GEOCODE_ID], graph)
+        add_additional_property(geocode_iri, GEOCODE_ID, row[GEOCODE_ID], ds, graph_name)
 
         # geocode_status_code
-        add_additional_property(geocode_iri, GEOCODE_STATUS_CODE, row[GEOCODE_STATUS_CODE], graph)
+        add_additional_property(geocode_iri, GEOCODE_STATUS_CODE, row[GEOCODE_STATUS_CODE], ds, graph_name)
 
         # geocode_type_code
-        add_additional_property(geocode_iri, GEOCODE_TYPE_CODE, row[GEOCODE_TYPE_CODE], graph)
+        add_additional_property(geocode_iri, GEOCODE_TYPE_CODE, row[GEOCODE_TYPE_CODE], ds, graph_name)
 
         # site_id
-        add_additional_property(geocode_iri, SITE_ID, row[SITE_ID], graph)
+        add_additional_property(geocode_iri, SITE_ID, row[SITE_ID], ds, graph_name)
 
         # spdb_pid
-        add_additional_property(geocode_iri, SPDB_PID, row[SPDB_PID], graph)
+        add_additional_property(geocode_iri, SPDB_PID, row[SPDB_PID], ds, graph_name)
 
         # geocode_create_date
-        add_additional_property(geocode_iri, GEOCODE_CREATE_DATE, row[GEOCODE_CREATE_DATE], graph)
+        add_additional_property(geocode_iri, GEOCODE_CREATE_DATE, row[GEOCODE_CREATE_DATE], ds, graph_name)
 
         # geocode_data_source_date
-        add_additional_property(geocode_iri, GEOCODE_DATA_SOURCE_DATE, row[GEOCODE_DATA_SOURCE_DATE], graph)
+        add_additional_property(geocode_iri, GEOCODE_DATA_SOURCE_DATE, row[GEOCODE_DATA_SOURCE_DATE], ds, graph_name)
 
         # survey_point_id
-        add_additional_property(geocode_iri, SURVEY_POINT_ID, row[SURVEY_POINT_ID], graph)
+        add_additional_property(geocode_iri, SURVEY_POINT_ID, row[SURVEY_POINT_ID], ds, graph_name)
 
         # pid
-        add_additional_property(geocode_iri, PID, row[PID], graph)
+        add_additional_property(geocode_iri, PID, row[PID], ds, graph_name)
 
         # plan_no
-        add_additional_property(geocode_iri, PLAN_NO, row[PLAN_NO], graph)
+        add_additional_property(geocode_iri, PLAN_NO, row[PLAN_NO], ds, graph_name)
 
         # lot_no
-        add_additional_property(geocode_iri, LOT_NO, row[LOT_NO], graph)
+        add_additional_property(geocode_iri, LOT_NO, row[LOT_NO], ds, graph_name)
 
 
     output_dir = Path(output_dir_name)
-    filename = Path(dataset + "-" + str(job_id) + ".nt")
-    serialize(output_dir, str(filename), graph)
+    filename = Path(dataset_name + "-" + str(job_id) + ".nq")
+    serialize(output_dir, str(filename), ds)
 
 
 def main():
     start_time = time.time()
 
-    vocab_graph = get_vocab_graph([])
+    vocab_graph = get_vocab_graph([GEOCODE_TYPES_URL])
     print(f"Remotely fetched {len(vocab_graph)} statements for vocab_graph")
 
     with get_db_connection(
@@ -129,7 +131,7 @@ def main():
                         g.site_id,
                         g.spdb_pid,
                         g.geocode_create_date,
-                        g.geocode_data_source_date
+                        g.geocode_data_source_date,
                         sp.survey_point_id,
                         sp.pid,
                         sp.plan_no,
