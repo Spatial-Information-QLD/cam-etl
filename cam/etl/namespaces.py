@@ -3,8 +3,41 @@ from rdflib.namespace import DefinedNamespace, Namespace
 
 
 sir_id_datatype = URIRef("urn:ladb:sir-id")
-lot_datatype = URIRef(f"https://linked.data.gov.au/dataset/qld-addr/datatype/lot")
-plan_datatype = URIRef(f"https://linked.data.gov.au/dataset/qld-addr/datatype/plan")
+lot_datatype = URIRef("https://linked.data.gov.au/dataset/qld-addr/datatype/lot")
+plan_datatype = URIRef("https://linked.data.gov.au/dataset/qld-addr/datatype/plan")
+qld_state = URIRef("https://sws.geonames.org/2152274/")
+aus_country = URIRef("https://sws.geonames.org/2077456/")
+lifecycle_stage_current = URIRef(
+    "https://linked.data.gov.au/def/lifecycle-stage-types/current"
+)
+
+
+class ADDR_PT(DefinedNamespace):
+    _fail = True
+    _underscore_num = True
+    _NS = Namespace("https://linked.data.gov.au/def/addr-part-types/")
+
+    addressNumberFirst: URIRef
+    addressNumberFirstSuffix: URIRef
+    addressNumberLast: URIRef
+    addressNumberLastSuffix: URIRef
+    buildingLevelNumber: URIRef
+    buildingLevelNumberSuffix: URIRef
+    buildingLevelType: URIRef
+    countryName: URIRef
+    geographicName: URIRef
+    buildingName: URIRef
+    indigenousCountryName: URIRef
+    locality: URIRef
+    postcode: URIRef
+    propertyName: URIRef
+    road: URIRef
+    stateOrTerritory: URIRef
+    subaddressNumber: URIRef
+    subaddressNumberSuffix: URIRef
+    subaddressType: URIRef
+    waterFeature: URIRef
+    thoroughfareName: URIRef
 
 
 class ADDR(DefinedNamespace):
@@ -14,6 +47,9 @@ class ADDR(DefinedNamespace):
 
     Address: URIRef
     AddressableObject: URIRef
+
+    hasGeocode: URIRef
+    hasStatus: URIRef
 
 
 class CN(DefinedNamespace):

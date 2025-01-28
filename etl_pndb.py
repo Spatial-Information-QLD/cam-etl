@@ -4,7 +4,7 @@ from textwrap import dedent
 from pathlib import Path
 
 from psycopg import Cursor
-from rdflib import Dataset, Graph, URIRef, RDF, SDO, Literal, SKOS, BNode, TIME, XSD, PROV
+from rdflib import Dataset, Graph, URIRef, RDF, SDO, Literal, SKOS, BNode, TIME, XSD, PROV, RDFS
 from rdflib.namespace import GEO
 
 from cam.etl import (
@@ -14,7 +14,7 @@ from cam.etl import (
     worker_wrap,
     serialize,
 )
-from cam.etl.pndb import vocab_mapping
+from cam.etl.pndb import vocab_mapping, get_geographical_name_iri
 from cam.etl.namespaces import GN, sir_id_datatype, CN, LC, GNPT, GN_STATUS
 from cam.etl.types import Row
 from cam.etl.settings import settings
@@ -62,10 +62,6 @@ TAG_RESOLVED = "tag_resolved"
 
 def get_iri(reference_number: str):
     return URIRef(f"https://linked.data.gov.au/dataset/qld-addr/go/{reference_number}")
-
-
-def get_label_iri(reference_number: str):
-    return URIRef(f"https://linked.data.gov.au/dataset/qld-addr/gn/{reference_number}")
 
 
 def get_indigenous_label_iri(reference_number: str, objectid: str):
@@ -198,7 +194,7 @@ def add_authority(
 
 def add_geographical_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
     iri = get_iri(row[REFERENCE_NUMBER])
-    label_iri = get_label_iri(row[REFERENCE_NUMBER])
+    label_iri = get_geographical_name_iri(row[REFERENCE_NUMBER])
 
     # Geographical Name
     ds.add((iri, SDO.name, label_iri, graph_name))
@@ -206,6 +202,7 @@ def add_geographical_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
     ds.add((label_iri, RDF.type, GN.GeographicalName, graph_name))
     ds.add((label_iri, CN.isNameFor, iri, graph_name))
     ds.add((label_iri, SDO.name, Literal(row[PLACE_NAME]), graph_name))
+    ds.add((label_iri, RDFS.label, Literal(row[PLACE_NAME]), graph_name))
 
     # Lifecycle stage
     add_lifecycle_stage(
@@ -321,7 +318,7 @@ def add_indigenous_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
 
 
 def add_tag(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
-    label_iri = get_label_iri(row[REFERENCE_NUMBER])
+    label_iri = get_geographical_name_iri(row[REFERENCE_NUMBER])
     if tag := row[TAG]:
         add_additional_property(label_iri, TAG, tag, ds, graph_name)
     if tag_resolved := row[TAG_RESOLVED]:

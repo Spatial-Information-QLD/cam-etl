@@ -3,7 +3,7 @@ import concurrent.futures
 from textwrap import dedent
 from pathlib import Path
 
-from rdflib import Dataset, Graph, URIRef, RDF, BNode, Literal, SDO, SKOS
+from rdflib import Dataset, Graph, URIRef, RDF, BNode, Literal, SDO, SKOS, RDFS
 
 from cam.etl import (
     add_additional_property,
@@ -14,6 +14,7 @@ from cam.etl import (
     serialize,
 )
 from cam.etl.namespaces import sir_id_datatype, CN, LC, REG, ROADS, RNPT
+from cam.etl.qrt import get_road_label_iri
 from cam.etl.types import Row
 from cam.etl.settings import settings
 
@@ -34,10 +35,6 @@ def get_segment_iri(segment_id: str):
     return URIRef(
         f"https://linked.data.gov.au/dataset/qld-addr/road-segment/{segment_id}"
     )
-
-
-def get_label_iri(road_id: str):
-    return URIRef(f"https://linked.data.gov.au/dataset/qld-addr/road-label/{road_id}")
 
 
 def get_locality_iri(value: str):
@@ -73,7 +70,7 @@ def transform_row(
 ):
     iri = get_iri(row[road_id])
     segment_iri = get_segment_iri(row[road_segment_id])
-    label_iri = get_label_iri(row[road_id])
+    label_iri = get_road_label_iri(row[road_id])
 
     # Road Object
     ds.add((iri, RDF.type, ROADS.RoadObject, graph_name))
@@ -119,6 +116,7 @@ def transform_row(
     ds.add((label_iri, RDF.type, CN.CompoundName, graph_name))
     ds.add((label_iri, CN.isNameFor, iri, graph_name))
     ds.add((label_iri, SDO.name, Literal(row[road_name_full]), graph_name))
+    ds.add((label_iri, RDFS.label, Literal(row[road_name_full]), graph_name))
     add_additional_property(label_iri, road_name_basic, row[road_name_basic], ds, graph_name)
     add_additional_property(label_iri, road_name_source, row[road_name_source], ds, graph_name)
 

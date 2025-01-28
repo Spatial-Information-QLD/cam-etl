@@ -64,3 +64,7 @@ vocab_mapping = {
     # TODO: gas well? oil well? oil gas well?
     "Well": URIRef("https://linked.data.gov.au/def/go-categories/unclassified"),
 }
+
+
+def get_geographical_name_iri(reference_number: str):
+    return URIRef(f"https://linked.data.gov.au/dataset/qld-addr/gn/{reference_number}")

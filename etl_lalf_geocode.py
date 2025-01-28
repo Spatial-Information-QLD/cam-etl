@@ -13,7 +13,9 @@ from cam.etl import (
     worker_wrap,
     serialize,
 )
+from cam.etl.lalf_address import get_address_iri
 from cam.etl.lalf_geocode import vocab_mapping
+from cam.etl.namespaces import ADDR
 from cam.etl.types import Row
 from cam.etl.settings import settings
 
@@ -23,6 +25,7 @@ graph_name = URIRef("urn:ladb:graph:addresses")
 
 GEOCODE_TYPES_URL = "https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@b07763c87f2f872133197e6fb0eb911de85879c6/vocabularies-qsi/addr-geocode-types.ttl"
 
+ADDR_ID = "addr_id"
 GEOCODE_ID = "geocode_id"
 GEOCODE_STATUS_CODE = "geocode_status_code"
 GEOCODE_TYPE_CODE = "geocode_type_code"
@@ -47,7 +50,9 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
     ds = Dataset(store="Oxigraph")
 
     for row in rows:
+        addr_iri = get_address_iri(row[ADDR_ID])
         geocode_iri = get_iri(row[GEOCODE_ID])
+        ds.add((addr_iri, ADDR.hasGeocode, geocode_iri, graph_name))
         ds.add((geocode_iri, RDF.type, GEO.Geometry, graph_name))
 
         # geocode type
@@ -99,7 +104,6 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
         # lot_no
         add_additional_property(geocode_iri, LOT_NO, row[LOT_NO], ds, graph_name)
 
-
     output_dir = Path(output_dir_name)
     filename = Path(dataset_name + "-" + str(job_id) + ".nq")
     serialize(output_dir, str(filename), ds)
@@ -125,6 +129,7 @@ def main():
                 dedent(
                     """\
                     SELECT
+                        a.addr_id,
                         g.geocode_id,
                         g.geocode_status_code,
                         g.geocode_type_code,
@@ -140,6 +145,7 @@ def main():
                         sp.centroid_lon
                     FROM "lalfpdba.lf_geocode" g
                         join "lalfpdba.sp_survey_point" sp on g.spdb_pid = sp.pid
+                        join "lalfpdba.lf_address" a on g.site_id = a.site_id
                     WHERE
                         g.geocode_status_code != 'H'
                 """

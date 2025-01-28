@@ -12,6 +12,7 @@ from cam.etl import (
     worker_wrap,
     serialize,
 )
+from cam.etl.lalf_parcel import get_parcel_iri
 from cam.etl.namespaces import ADDR, lot_datatype, plan_datatype
 from cam.etl.types import Row
 from cam.etl.settings import settings
@@ -33,16 +34,12 @@ PARCEL_DATA_SOURCE_CODE = "parcel_data_source_code"
 PARCEL_DATA_SOURCE_DATE = "parcel_data_source_date"
 
 
-def get_iri(lot: str, plan: str) -> URIRef:
-    return URIRef(f"https://linked.data.gov.au/dataset/qld-addr/parcel/{lot}{plan}")
-
-
 @worker_wrap
 def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
     ds = Dataset(store="Oxigraph")
 
     for row in rows:
-        parcel_iri = get_iri(row[LOT_NO], row[PLAN_NO])
+        parcel_iri = get_parcel_iri(row[LOT_NO], row[PLAN_NO])
         ds.add((parcel_iri, RDF.type, ADDR.AddressableObject, graph_name))
         ds.add((parcel_iri, SDO.additionalType, parcel_type, graph_name))
 
