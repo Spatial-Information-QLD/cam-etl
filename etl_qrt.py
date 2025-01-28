@@ -74,7 +74,14 @@ def transform_row(
 
     # Road Object
     ds.add((iri, RDF.type, ROADS.RoadObject, graph_name))
-    ds.add((iri, SDO.identifier, Literal(row[road_id], datatype=sir_id_datatype), graph_name))
+    ds.add(
+        (
+            iri,
+            SDO.identifier,
+            Literal(row[road_id], datatype=sir_id_datatype),
+            graph_name,
+        )
+    )
     ds.add((iri, SDO.hasPart, segment_iri, graph_name))
     ds.add((iri, SDO.name, label_iri, graph_name))
 
@@ -90,10 +97,18 @@ def transform_row(
     )
     ds.add((segment_iri, SDO.isPartOf, iri, graph_name))
 
-    add_additional_property(segment_iri, locality_left, row[locality_left], ds, graph_name)
-    add_additional_property(segment_iri, locality_right, row[locality_right], ds, graph_name)
-    add_additional_property(segment_iri, lga_name_left, row[lga_name_left], ds, graph_name)
-    add_additional_property(segment_iri, lga_name_right, row[lga_name_right], ds, graph_name)
+    add_additional_property(
+        segment_iri, locality_left, row[locality_left], ds, graph_name
+    )
+    add_additional_property(
+        segment_iri, locality_right, row[locality_right], ds, graph_name
+    )
+    add_additional_property(
+        segment_iri, lga_name_left, row[lga_name_left], ds, graph_name
+    )
+    add_additional_property(
+        segment_iri, lga_name_right, row[lga_name_right], ds, graph_name
+    )
 
     locality_left_iri = get_locality_iri(row[locality_left])
     ds.add((segment_iri, ROADS.localityLeft, locality_left_iri, graph_name))
@@ -117,8 +132,12 @@ def transform_row(
     ds.add((label_iri, CN.isNameFor, iri, graph_name))
     ds.add((label_iri, SDO.name, Literal(row[road_name_full]), graph_name))
     ds.add((label_iri, RDFS.label, Literal(row[road_name_full]), graph_name))
-    add_additional_property(label_iri, road_name_basic, row[road_name_basic], ds, graph_name)
-    add_additional_property(label_iri, road_name_source, row[road_name_source], ds, graph_name)
+    add_additional_property(
+        label_iri, road_name_basic, row[road_name_basic], ds, graph_name
+    )
+    add_additional_property(
+        label_iri, road_name_source, row[road_name_source], ds, graph_name
+    )
 
     # TODO: add authority
 

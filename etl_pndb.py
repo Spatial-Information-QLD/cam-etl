@@ -4,7 +4,20 @@ from textwrap import dedent
 from pathlib import Path
 
 from psycopg import Cursor
-from rdflib import Dataset, Graph, URIRef, RDF, SDO, Literal, SKOS, BNode, TIME, XSD, PROV, RDFS
+from rdflib import (
+    Dataset,
+    Graph,
+    URIRef,
+    RDF,
+    SDO,
+    Literal,
+    SKOS,
+    BNode,
+    TIME,
+    XSD,
+    PROV,
+    RDFS,
+)
 from rdflib.namespace import GEO
 
 from cam.etl import (
@@ -228,8 +241,12 @@ def add_geographical_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
     # Given Name Part
     bnode_given_name = BNode(f"gn-given-name-{row[REFERENCE_NUMBER]}")
     ds.add((label_iri, SDO.hasPart, bnode_given_name, graph_name))
-    ds.add((bnode_given_name, SDO.value, Literal(row[PLACE_NAME], lang="en"), graph_name))
-    ds.add((bnode_given_name, SDO.additionalType, GNPT.geographicalGivenName, graph_name))
+    ds.add(
+        (bnode_given_name, SDO.value, Literal(row[PLACE_NAME], lang="en"), graph_name)
+    )
+    ds.add(
+        (bnode_given_name, SDO.additionalType, GNPT.geographicalGivenName, graph_name)
+    )
 
     # Authority
     add_authority(label_iri, row, ds, vocab_graph)
@@ -244,7 +261,9 @@ def add_geographical_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
         history_note += comments + "\n\n"
     history_note = history_note.strip()
     if history_note:
-        ds.add((label_iri, SKOS.historyNote, Literal(history_note, lang="en"), graph_name))
+        ds.add(
+            (label_iri, SKOS.historyNote, Literal(history_note, lang="en"), graph_name)
+        )
 
     # Property values
     if status := row[STATUS]:
@@ -258,9 +277,13 @@ def add_geographical_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
     if pronunciation := row[PRONUNCIATION]:
         add_additional_property(label_iri, PRONUNCIATION, pronunciation, ds, graph_name)
     if internal_comments := row[INTERNAL_COMMENTS]:
-        add_additional_property(label_iri, INTERNAL_COMMENTS, internal_comments, ds, graph_name)
+        add_additional_property(
+            label_iri, INTERNAL_COMMENTS, internal_comments, ds, graph_name
+        )
     if place_currency := row[PLACE_CURRENCY]:
-        add_additional_property(label_iri, PLACE_CURRENCY, place_currency, ds, graph_name)
+        add_additional_property(
+            label_iri, PLACE_CURRENCY, place_currency, ds, graph_name
+        )
 
 
 def add_indigenous_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
@@ -290,8 +313,12 @@ def add_indigenous_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
     ds.add((label_iri, SDO.hasPart, bnode_given_name, graph_name))
     # TODO: add indigenous language code datatype.
     #       we currently don't have this information in the data.
-    ds.add((bnode_given_name, SDO.value, Literal(row[PLACE_NAME], lang="aus"), graph_name))
-    ds.add((bnode_given_name, SDO.additionalType, GNPT.geographicalGivenName, graph_name))
+    ds.add(
+        (bnode_given_name, SDO.value, Literal(row[PLACE_NAME], lang="aus"), graph_name)
+    )
+    ds.add(
+        (bnode_given_name, SDO.additionalType, GNPT.geographicalGivenName, graph_name)
+    )
 
     # Authority
     ds.add((label_iri, CN.hasAuthority, INDIGENOUS_GROUP_IRI, graph_name))
@@ -314,7 +341,9 @@ def add_indigenous_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
     if created_date := row[CREATED_DATE]:
         add_additional_property(iri, CREATED_DATE, created_date, ds, graph_name)
     if internal_comments := row[INTERNAL_COMMENTS]:
-        add_additional_property(iri, INTERNAL_COMMENTS, internal_comments, ds, graph_name)
+        add_additional_property(
+            iri, INTERNAL_COMMENTS, internal_comments, ds, graph_name
+        )
 
 
 def add_tag(row: Row, ds: Dataset, vocab_graph: Graph) -> None:

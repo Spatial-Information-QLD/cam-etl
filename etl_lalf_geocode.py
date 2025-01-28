@@ -68,17 +68,25 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
         ds.add((geocode_iri, SDO.additionalType, value, graph_name))
 
         # geocode
-        geom = Literal(f"POINT ({row[CENTROID_LON]} {row[CENTROID_LAT]})", datatype=GEO.wktLiteral)
+        geom = Literal(
+            f"POINT ({row[CENTROID_LON]} {row[CENTROID_LAT]})", datatype=GEO.wktLiteral
+        )
         ds.add((geocode_iri, GEO.asWKT, geom, graph_name))
 
         # geocode_id
-        add_additional_property(geocode_iri, GEOCODE_ID, row[GEOCODE_ID], ds, graph_name)
+        add_additional_property(
+            geocode_iri, GEOCODE_ID, row[GEOCODE_ID], ds, graph_name
+        )
 
         # geocode_status_code
-        add_additional_property(geocode_iri, GEOCODE_STATUS_CODE, row[GEOCODE_STATUS_CODE], ds, graph_name)
+        add_additional_property(
+            geocode_iri, GEOCODE_STATUS_CODE, row[GEOCODE_STATUS_CODE], ds, graph_name
+        )
 
         # geocode_type_code
-        add_additional_property(geocode_iri, GEOCODE_TYPE_CODE, row[GEOCODE_TYPE_CODE], ds, graph_name)
+        add_additional_property(
+            geocode_iri, GEOCODE_TYPE_CODE, row[GEOCODE_TYPE_CODE], ds, graph_name
+        )
 
         # site_id
         add_additional_property(geocode_iri, SITE_ID, row[SITE_ID], ds, graph_name)
@@ -87,13 +95,23 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
         add_additional_property(geocode_iri, SPDB_PID, row[SPDB_PID], ds, graph_name)
 
         # geocode_create_date
-        add_additional_property(geocode_iri, GEOCODE_CREATE_DATE, row[GEOCODE_CREATE_DATE], ds, graph_name)
+        add_additional_property(
+            geocode_iri, GEOCODE_CREATE_DATE, row[GEOCODE_CREATE_DATE], ds, graph_name
+        )
 
         # geocode_data_source_date
-        add_additional_property(geocode_iri, GEOCODE_DATA_SOURCE_DATE, row[GEOCODE_DATA_SOURCE_DATE], ds, graph_name)
+        add_additional_property(
+            geocode_iri,
+            GEOCODE_DATA_SOURCE_DATE,
+            row[GEOCODE_DATA_SOURCE_DATE],
+            ds,
+            graph_name,
+        )
 
         # survey_point_id
-        add_additional_property(geocode_iri, SURVEY_POINT_ID, row[SURVEY_POINT_ID], ds, graph_name)
+        add_additional_property(
+            geocode_iri, SURVEY_POINT_ID, row[SURVEY_POINT_ID], ds, graph_name
+        )
 
         # pid
         add_additional_property(geocode_iri, PID, row[PID], ds, graph_name)

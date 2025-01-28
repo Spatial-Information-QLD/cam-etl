@@ -44,23 +44,54 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
         ds.add((parcel_iri, SDO.additionalType, parcel_type, graph_name))
 
         # lot and plan
-        ds.add((parcel_iri, RDFS.label, Literal(f"{row[LOT_NO]}{row[PLAN_NO]}"), graph_name))
+        ds.add(
+            (
+                parcel_iri,
+                RDFS.label,
+                Literal(f"{row[LOT_NO]}{row[PLAN_NO]}"),
+                graph_name,
+            )
+        )
         if lot_no := row[LOT_NO]:
-            ds.add((parcel_iri, SDO.identifier, Literal(lot_no, datatype=lot_datatype), graph_name))
+            ds.add(
+                (
+                    parcel_iri,
+                    SDO.identifier,
+                    Literal(lot_no, datatype=lot_datatype),
+                    graph_name,
+                )
+            )
         if plan_no := row[PLAN_NO]:
-            ds.add((parcel_iri, SDO.identifier, Literal(plan_no, datatype=plan_datatype), graph_name))
+            ds.add(
+                (
+                    parcel_iri,
+                    SDO.identifier,
+                    Literal(plan_no, datatype=plan_datatype),
+                    graph_name,
+                )
+            )
 
         # parcel_id
         add_additional_property(parcel_iri, PARCEL_ID, row[PARCEL_ID], ds, graph_name)
 
         # parcel_status_code
-        add_additional_property(parcel_iri, PARCEL_STATUS_CODE, row[PARCEL_STATUS_CODE], ds, graph_name)
+        add_additional_property(
+            parcel_iri, PARCEL_STATUS_CODE, row[PARCEL_STATUS_CODE], ds, graph_name
+        )
 
         # parcel_create_date
-        add_additional_property(parcel_iri, PARCEL_CREATE_DATE, row[PARCEL_CREATE_DATE], ds, graph_name)
+        add_additional_property(
+            parcel_iri, PARCEL_CREATE_DATE, row[PARCEL_CREATE_DATE], ds, graph_name
+        )
 
         # parcel_data_source_date
-        add_additional_property(parcel_iri, PARCEL_DATA_SOURCE_DATE, row[PARCEL_DATA_SOURCE_DATE], ds, graph_name)
+        add_additional_property(
+            parcel_iri,
+            PARCEL_DATA_SOURCE_DATE,
+            row[PARCEL_DATA_SOURCE_DATE],
+            ds,
+            graph_name,
+        )
 
         # ignoring parcel_org_source_code and parcel_data_source_code because they only have one distinct value in each.
 
