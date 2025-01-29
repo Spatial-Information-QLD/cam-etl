@@ -59,6 +59,7 @@ class CN(DefinedNamespace):
 
     CompoundName: URIRef
     hasAuthority: URIRef
+    hasName: URIRef
     isNameFor: URIRef
     nameTemplate: URIRef
 

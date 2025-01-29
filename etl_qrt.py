@@ -83,7 +83,7 @@ def transform_row(
         )
     )
     ds.add((iri, SDO.hasPart, segment_iri, graph_name))
-    ds.add((iri, SDO.name, label_iri, graph_name))
+    ds.add((iri, CN.hasName, label_iri, graph_name))
 
     # Road Segment
     ds.add((segment_iri, RDF.type, ROADS.RoadSegment, graph_name))

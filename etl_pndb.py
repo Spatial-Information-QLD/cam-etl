@@ -210,7 +210,7 @@ def add_geographical_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
     label_iri = get_geographical_name_iri(row[REFERENCE_NUMBER])
 
     # Geographical Name
-    ds.add((iri, SDO.name, label_iri, graph_name))
+    ds.add((iri, CN.hasName, label_iri, graph_name))
     ds.add((label_iri, RDF.type, CN.CompoundName, graph_name))
     ds.add((label_iri, RDF.type, GN.GeographicalName, graph_name))
     ds.add((label_iri, CN.isNameFor, iri, graph_name))

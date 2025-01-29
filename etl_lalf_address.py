@@ -106,7 +106,7 @@ def worker(
         # link to parcel
         parcel_iri = get_parcel_iri(row[LOT_NO], row[PLAN_NO])
         ds.add((addr_iri, CN.isNameFor, parcel_iri, graph_name))
-        ds.add((parcel_iri, SDO.name, addr_iri, graph_name))
+        ds.add((parcel_iri, CN.hasName, addr_iri, graph_name))
 
         # address status
         address_status = row[ADDR_STATUS_CODE]
