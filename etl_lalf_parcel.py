@@ -13,7 +13,7 @@ from cam.etl import (
     serialize,
 )
 from cam.etl.lalf_parcel import get_parcel_iri
-from cam.etl.namespaces import ADDR, lot_datatype, plan_datatype
+from cam.etl.namespaces import ADDR, lot_datatype, plan_datatype, lotplan_datatype
 from cam.etl.types import Row
 from cam.etl.settings import settings
 
@@ -49,6 +49,14 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
                 parcel_iri,
                 RDFS.label,
                 Literal(f"{row[LOT_NO]}{row[PLAN_NO]}"),
+                graph_name,
+            )
+        )
+        ds.add(
+            (
+                parcel_iri,
+                SDO.identifier,
+                Literal(f"{row[LOT_NO]}{row[PLAN_NO]}", datatype=lotplan_datatype),
                 graph_name,
             )
         )

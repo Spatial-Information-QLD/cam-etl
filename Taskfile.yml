@@ -64,6 +64,7 @@ tasks:
       - uv run python etl_lalf_parcel.py
       - uv run python etl_lalf_geocode.py
       - uv run python etl_lalf_address.py
+      - uv run python etl_lalf_place_name.py
       - zip -r lalf-rdf.zip lalf-rdf
 
   etl:

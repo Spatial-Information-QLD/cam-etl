@@ -67,7 +67,6 @@ SET
 	lalf_locality = UPPER(q.locality_left);
 ```
 
-
 ## Place Names Database
 
 The Place Names Database contains both gazetted and non-gazetted place names.
@@ -163,7 +162,7 @@ group by p.parcel_status_code;
 ```
 
 | parcel_status_code | count   |
-|--------------------|---------|
+| ------------------ | ------- |
 | C                  | 2795207 |
 | D                  | 1       |
 
@@ -195,8 +194,9 @@ left join "lalfpdba.sp_survey_point" sp on p.plan_no = sp.plan_no and p.lot_no =
 where sp.plan_no is null and sp.lot_no is null
 group by p.parcel_status_code;
 ```
+
 | parcel_status_code | count  |
-|--------------------|--------|
+| ------------------ | ------ |
 |                    | 20     |
 | C                  | 358593 |
 | D                  | 870747 |
@@ -232,6 +232,10 @@ In some cases, if it's a BUP plan, there may be individual lots within the plan.
 The place names data in the LALF is separate to the PNDB. These place names are used mainly from an addressing perspective and includes names for things like properties, buildings, etc.
 
 The `lalfpdba.lf_place_name` table contains the place names, but the same name for the same entity is duplicated over the `pl_name_id` for each associated site.
+
+#### Place Name De-duplication
+
+The place names for large complexes are duplicated with multiple identifiers in the `lf_place_name` table. Ashlee and Michael have provided a de-duplicated dataset called `lalf_property_address_joined.csv`. We load this data in as `lalf_property_address_joined` table.
 
 An example query where the place is named 'FIRE STATION' over different localities.
 
@@ -331,9 +335,10 @@ TODO: do addressable objects need to have a soft type? E.g., property, parcel, s
 - likely a follow-up exercise.
 
 TODO: why lot 1-4 plan SP337524 not exist in LALF?
-TODO: why lot 86 plan RP94913 not exist in QLD Globe but exists in LALF? 
-  - looks like the alias address is in the qld globe but the primary address is not
-  - 
+TODO: why lot 86 plan RP94913 not exist in QLD Globe but exists in LALF?
+
+- looks like the alias address is in the qld globe but the primary address is not
+-
 
 #### Question - what do the parcel status codes mean?
 
