@@ -91,10 +91,30 @@ services:
     profiles:
       - web
 
+  fuseki:
+    build:
+      context: .
+      dockerfile: fuseki/Dockerfile.fuseki
+    ports:
+      - 3030:3030
+    volumes:
+      - fuseki-data:/fuseki
+      - ./fuseki-import:/tmp/fuseki-import
+    environment:
+      - JAVA_OPTIONS=-Xmx4096m -Xms4096m
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3030/$/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    profiles:
+      - fuseki
+
 volumes:
   postgres-data:
   graphdb-data:
-
+  fuseki-data:
 networks:
   postgres:
   graphdb:

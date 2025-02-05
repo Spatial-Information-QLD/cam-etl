@@ -1,0 +1,29 @@
+ARG JENA_VERSION=5.3.0
+
+FROM amazoncorretto:17-alpine3.19
+ARG JENA_VERSION
+ENV JENA_VERSION=${JENA_VERSION}
+ENV JENA_HOME="/opt/jena"
+ENV FUSEKI_HOME="/opt/fuseki"
+ENV FUSEKI_BASE="/fuseki"
+ENV JAVA_OPTIONS="-Xmx2048m -Xms2048m"
+
+RUN apk add --no-cache bash
+
+# Fuseki
+RUN wget --quiet https://dlcdn.apache.org/jena/binaries/apache-jena-fuseki-${JENA_VERSION}.tar.gz -O /tmp/apache-jena-fuseki.tar.gz && \
+    mkdir -p ${FUSEKI_HOME} && \
+    tar -xzf /tmp/apache-jena-fuseki.tar.gz --strip-components=1 -C ${FUSEKI_HOME} && \
+    rm -f /tmp/apache-jena-fuseki.tar.gz
+
+# Jena commands
+RUN wget --quiet https://dlcdn.apache.org/jena/binaries/apache-jena-${JENA_VERSION}.tar.gz -O /tmp/apache-jena.tar.gz && \
+    mkdir -p ${JENA_HOME} && \
+    tar -xzf /tmp/apache-jena.tar.gz --strip-components=1 -C ${JENA_HOME} && \
+    rm -f /tmp/apache-jena.tar.gz
+
+ENV PATH="${JENA_HOME}/bin:${FUSEKI_HOME}:${PATH}"
+
+COPY fuseki/shiro.ini ${FUSEKI_BASE}/shiro.ini
+
+CMD ["fuseki-server"]
