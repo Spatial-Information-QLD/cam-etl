@@ -68,6 +68,26 @@ tasks:
   fuseki:bash:
     cmd: docker compose run --rm fuseki /bin/bash
 
+  fuseki:qali:import:vocabs:
+    cmds:
+      - mkdir -p vocabs-import
+      - curl -o vocabs-import/road-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/road-types.ttl
+      - curl -o vocabs-import/gn-affix.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/gn-affix.ttl
+      - curl -o vocabs-import/go-categories.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/go-categories.ttl
+      - curl -o vocabs-import/addr-geocode-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/addr-geocode-types.ttl
+      - curl -o vocabs-import/addr-subaddress-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-subaddress-types.ttl
+      - curl -o vocabs-import/addr-level-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-level-types.ttl
+      - curl -o vocabs-import/addr-part-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/addr-part-types.ttl
+      - curl -o vocabs-import/reg-statuses.ttl https://agldwg.github.io/reg-statuses/vocabulary.ttl
+      - curl -o vocabs-import/lifecycle-stage-types https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/lifeycle-stage-types.ttl
+      - curl -o vocabs-import/gn-part-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/gn-part-types.ttl
+      - curl -o vocabs-import/gn-affixes.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/GeographicalNames/gn-affix.ttl
+      - curl -o vocabs-import/addr-classes.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-classes.ttl
+      - curl -o vocabs-import/addr-part-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/addr-part-types.ttl
+      - curl -o vocabs-import/addr-status-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-status-types.ttl
+      - curl -o vocabs-import/addr-geocode-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/addr-geocode-types.ttl
+      - curl -o vocabs-import/addr-level-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-level-types.ttl
+
   fuseki:qali:gzip:
     cmds:
       - mkdir -p fuseki-import

@@ -1,0 +1,62 @@
+PREFIX : <https://linked.data.gov.au/def/authorities/>
+PREFIX cs: <https://linked.data.gov.au/def/authorities>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sdo: <https://schema.org/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+:community-group a skos:Concept ;
+    rdfs:isDefinedBy : ;
+    skos:definition "Community Group."@en ;
+    skos:inScheme : ;
+    skos:narrower :indigenous-group ;
+    skos:prefLabel "Community Group"@en ;
+    skos:topConceptOf : .
+
+:indigenous-group a skos:Concept ;
+    rdfs:isDefinedBy : ;
+    skos:definition "Indigenous Group."@en ;
+    skos:inScheme : ;
+    skos:prefLabel "Indigenous Group"@en .
+
+:local-gov a skos:Concept ;
+    rdfs:isDefinedBy : ;
+    skos:definition "Local Government."@en ;
+    skos:inScheme : ;
+    skos:prefLabel "Local Government"@en ;
+    skos:topConceptOf : .
+
+:state-gov a skos:Concept ;
+    rdfs:isDefinedBy : ;
+    skos:definition "State Government."@en ;
+    skos:inScheme : ;
+    skos:prefLabel "State Government"@en ;
+    skos:topConceptOf : .
+
+:tmr a skos:Concept ;
+    rdfs:isDefinedBy : ;
+    skos:altLabel "TMR"@en ;
+    skos:definition "Transport and Main Roads."@en ;
+    skos:inScheme : ;
+    skos:prefLabel "Transport and Main Roads"@en ;
+    skos:topConceptOf : .
+
+: a skos:ConceptScheme ;
+    owl:versionIRI :None ;
+    skos:definition "The authorities code list."@en ;
+    skos:hasTopConcept :community-group,
+        :local-gov,
+        :state-gov,
+        :tmr ;
+    skos:historyNote "This is a placeholder vocabulary until a real one is created."@en ;
+    skos:prefLabel "Authorities"@en ;
+    sdo:creator [ a sdo:Organization ;
+            sdo:name "Spatial Information Queensland" ;
+            sdo:url ""^^xsd:anyURI ] ;
+    sdo:dateCreated "2024-04-19"^^xsd:date ;
+    sdo:dateModified "2024-04-19"^^xsd:date ;
+    sdo:publisher [ a sdo:Organization ;
+            sdo:name "Spatial Information Queensland" ;
+            sdo:url ""^^xsd:anyURI ] ;
+    sdo:version "None" .

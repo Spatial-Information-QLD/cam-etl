@@ -1,0 +1,35 @@
+PREFIX : <https://linked.data.gov.au/def/gn-cardinal-direction-prefixes/>
+PREFIX cs: <https://linked.data.gov.au/def/gn-cardinal-direction-prefixes>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+:cs a skos:ConceptScheme ;
+    skos:hasTopConcept :northern,
+        :eastern,
+        :southern,
+        :western ;
+    skos:prefLabel "Geographical Names Cardinal Direction Prefixes"
+.
+
+:northern a skos:Concept ;
+    skos:inScheme :cs ;
+    skos:topConceptOf :cs ;
+    skos:prefLabel "Northern" ;
+.
+
+:eastern a skos:Concept ;
+    skos:inScheme :cs ;
+    skos:topConceptOf :cs ;
+    skos:prefLabel "Eastern" ;
+.
+
+:southern a skos:Concept ;
+    skos:inScheme :cs ;
+    skos:topConceptOf :cs ;
+    skos:prefLabel "Southern" ;
+.
+
+:western a skos:Concept ;
+    skos:inScheme :cs ;
+    skos:topConceptOf :cs ;
+    skos:prefLabel "Western" ;
+.
