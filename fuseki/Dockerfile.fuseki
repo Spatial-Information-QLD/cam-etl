@@ -8,7 +8,14 @@ ENV FUSEKI_HOME="/opt/fuseki"
 ENV FUSEKI_BASE="/fuseki"
 ENV JAVA_OPTIONS="-Xmx2048m -Xms2048m"
 
-RUN apk add --no-cache bash
+RUN apk add --no-cache \
+        bash \
+        # curl used for container health check
+        curl \
+        # jq required for tdb2.xloader
+        jq \
+        # coreutils required for tdb2.xloader with an updated version of sort with parallel support
+        coreutils
 
 # Fuseki
 RUN wget --quiet https://dlcdn.apache.org/jena/binaries/apache-jena-fuseki-${JENA_VERSION}.tar.gz -O /tmp/apache-jena-fuseki.tar.gz && \
