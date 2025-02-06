@@ -80,14 +80,18 @@ tasks:
       # restart fuseki to get bind mount to refresh data
       - task: fuseki:down
       - task: fuseki:up
-      - docker compose exec fuseki /bin/bash -c 'tdb2.tdbloader --loader=parallel --loc /fuseki/databases/qali /tmp/fuseki-import/data.nq.gz'
-      - task: fuseki:qali:index
+      # - docker compose exec fuseki /bin/bash -c 'tdb2.tdbloader --loader=parallel --loc /fuseki/databases/qali /tmp/fuseki-import/data.nq.gz'
+      - docker compose exec fuseki /bin/bash -c 'tdb2.xloader --threads 10 --loc /fuseki/databases/qali /tmp/fuseki-import/data.nq.gz'
       - task: fuseki:qali:create
+      - task: fuseki:qali:index
 
   fuseki:qali:index:
     desc: Text index the qali dataset.
     cmds:
+      - task: fuseki:down
+      - docker compose run --rm fuseki /bin/bash -c 'rm -rf -f /fuseki/databases/qali/lucene'
       - docker compose run --rm fuseki /bin/bash -c 'java -cp $FUSEKI_HOME/fuseki-server.jar jena.textindexer --desc=/fuseki/configuration/qali.ttl'
+      - task: fuseki:up
 
   fuseki:down:
     desc: Stop Fuseki Docker service.
