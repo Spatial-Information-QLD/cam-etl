@@ -158,7 +158,7 @@ def worker(
         locality_iri = get_geographical_name_iri(row[LOCALITY_REF_NO])
         locality_node = BNode(f"{addr_id_uuid}-locality")
         ds.add((addr_iri, SDO.hasPart, locality_node, graph_name))
-        ds.add((locality_node, SDO.additionalType, ADDR_PT.geographicName, graph_name))
+        ds.add((locality_node, SDO.additionalType, ADDR_PT.locality, graph_name))
         ds.add((locality_node, SDO.value, locality_iri, graph_name))
 
         # street
