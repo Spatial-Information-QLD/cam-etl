@@ -68,14 +68,17 @@ tasks:
   fuseki:bash:
     cmd: docker compose run --rm fuseki /bin/bash
 
-  fuseki:qali:load:
-    desc: Load the qali dataset into Fuseki.
+  fuseki:qali:gzip:
     cmds:
       - mkdir -p fuseki-import
       - mv pndb-rdf/*.nq fuseki-import
       - mv qrt-rdf/*.nq fuseki-import
       - mv lalf-rdf/*.nq fuseki-import
       - cat fuseki-import/*.nq | gzip > fuseki-import/data.nq.gz
+
+  fuseki:qali:load:
+    desc: Load the qali dataset into Fuseki.
+    cmds:
       - task: fuseki:qali:offline
       # restart fuseki to get bind mount to refresh data
       - task: fuseki:down
