@@ -135,6 +135,16 @@ tasks:
     cmds:
       - docker compose --profile fuseki down -v
 
+  nginx:up:
+    desc: Start Nginx Docker service.
+    cmds:
+      - docker compose --profile nginx up -d
+
+  nginx:down:
+    desc: Stop Nginx Docker service.
+    cmds:
+      - docker compose --profile nginx down
+
   etl:db:qrt:
     desc: Run the ETL for QRT.
     cmds:
