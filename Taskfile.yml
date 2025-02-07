@@ -68,7 +68,7 @@ tasks:
   fuseki:bash:
     cmd: docker compose run --rm fuseki /bin/bash
 
-  fuseki:qali:import:vocabs:
+  fuseki:qali:download:vocabs:
     cmds:
       - mkdir -p vocabs-import
       - curl -o vocabs-import/road-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/road-types.ttl
@@ -87,6 +87,15 @@ tasks:
       - curl -o vocabs-import/addr-status-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-status-types.ttl
       - curl -o vocabs-import/addr-geocode-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/addr-geocode-types.ttl
       - curl -o vocabs-import/addr-level-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-level-types.ttl
+
+  fuseki:qali:import:vocabs:
+    cmds:
+      # addings rdfs prefix as some files are missing it...
+      - |
+        for f in vocabs-import/*.ttl; do
+          sed -i '1i PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' "$f"
+        done
+      - kurra db upload vocabs-import/ http://localhost:3030/qali
 
   fuseki:qali:gzip:
     cmds:
