@@ -1,12 +1,67 @@
-ARG JENA_VERSION=5.3.0
+ARG JENA_COMPOUND_NAMING_VERSION=0.5.1
+ARG JENA_VERSION=5.2.0
+ARG JENA_HOME="/opt/jena"
+ARG FUSEKI_HOME="/opt/fuseki"
+ARG FUSEKI_BASE="/fuseki"
+ARG JAVA_OPTIONS="-Xmx2048m -Xms2048m"
 
-FROM amazoncorretto:17-alpine3.19
+#
+# Builder
+#
+FROM maven:3-eclipse-temurin-17 AS builder
+ARG JENA_VERSION
+ARG JENA_HOME
+ARG FUSEKI_HOME
+ENV JENA_BUILD_DIR="/tmp/jena-build"
+
+RUN apt-get update && \
+    apt-get install -y \
+        bash \
+        curl \ 
+        wget
+
+# Install Node.js and build dependencies
+RUN curl -fsSL https://deb.nodesource.com/setup_23.x -o nodesource_setup.sh && \
+    bash nodesource_setup.sh && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install yarn
+RUN corepack enable && \
+    corepack prepare yarn@stable --activate
+
+# # Download Jena
+RUN wget --quiet https://github.com/apache/jena/archive/refs/tags/jena-${JENA_VERSION}.tar.gz -O /tmp/jena.tar.gz && \
+    mkdir -p ${JENA_BUILD_DIR} && \
+    tar -xzf /tmp/jena.tar.gz --strip-components=1 -C ${JENA_BUILD_DIR} && \
+    rm -f /tmp/jena.tar.gz
+
+# # Build Fuseki
+WORKDIR ${JENA_BUILD_DIR}
+RUN mvn package -Dmaven.javadoc.skip=true -DskipTests
+
+# Extract Fuseki and Jena Cmds
+RUN mkdir -p ${FUSEKI_HOME} && \
+    tar -xzf ${JENA_BUILD_DIR}/jena-fuseki2/apache-jena-fuseki/target/apache-jena-fuseki-${JENA_VERSION}.tar.gz --strip-components=1 -C ${FUSEKI_HOME}
+
+RUN mkdir -p ${JENA_HOME} && \
+    tar -xzf ${JENA_BUILD_DIR}/apache-jena/target/apache-jena-${JENA_VERSION}.tar.gz --strip-components=1 -C ${JENA_HOME}
+
+#
+# Final
+#
+FROM amazoncorretto:17-alpine3.19 AS final
+ARG JENA_COMPOUND_NAMING_VERSION
 ARG JENA_VERSION
 ENV JENA_VERSION=${JENA_VERSION}
-ENV JENA_HOME="/opt/jena"
-ENV FUSEKI_HOME="/opt/fuseki"
-ENV FUSEKI_BASE="/fuseki"
-ENV JAVA_OPTIONS="-Xmx2048m -Xms2048m"
+ARG JENA_HOME
+ENV JENA_HOME=${JENA_HOME}
+ARG FUSEKI_HOME
+ENV FUSEKI_HOME=${FUSEKI_HOME}
+ARG FUSEKI_BASE
+ENV FUSEKI_BASE=${FUSEKI_BASE}
+ARG JAVA_OPTIONS
+ENV JAVA_OPTIONS=${JAVA_OPTIONS}
 
 RUN apk add --no-cache \
         bash \
@@ -17,20 +72,15 @@ RUN apk add --no-cache \
         # coreutils required for tdb2.xloader with an updated version of sort with parallel support
         coreutils
 
-# Fuseki
-RUN wget --quiet https://dlcdn.apache.org/jena/binaries/apache-jena-fuseki-${JENA_VERSION}.tar.gz -O /tmp/apache-jena-fuseki.tar.gz && \
-    mkdir -p ${FUSEKI_HOME} && \
-    tar -xzf /tmp/apache-jena-fuseki.tar.gz --strip-components=1 -C ${FUSEKI_HOME} && \
-    rm -f /tmp/apache-jena-fuseki.tar.gz
-
-# Jena commands
-RUN wget --quiet https://dlcdn.apache.org/jena/binaries/apache-jena-${JENA_VERSION}.tar.gz -O /tmp/apache-jena.tar.gz && \
-    mkdir -p ${JENA_HOME} && \
-    tar -xzf /tmp/apache-jena.tar.gz --strip-components=1 -C ${JENA_HOME} && \
-    rm -f /tmp/apache-jena.tar.gz
+COPY --from=builder ${JENA_HOME} ${JENA_HOME}
+COPY --from=builder ${FUSEKI_HOME} ${FUSEKI_HOME}
 
 ENV PATH="${JENA_HOME}/bin:${FUSEKI_HOME}:${PATH}"
 
-COPY fuseki/shiro.ini ${FUSEKI_BASE}/shiro.ini
+COPY shiro.ini ${FUSEKI_BASE}/shiro.ini
+COPY config.ttl ${FUSEKI_BASE}/config.ttl
+RUN mkdir -p ${FUSEKI_HOME}/lib && \
+    wget --quiet https://github.com/Kurrawong/jena-compound-naming/releases/download/${JENA_COMPOUND_NAMING_VERSION}/compoundnaming-${JENA_COMPOUND_NAMING_VERSION}.jar -O ${FUSEKI_HOME}/lib/compoundnaming.jar
+COPY entrypoint.sh ${FUSEKI_HOME}/entrypoint.sh
 
-CMD ["fuseki-server"]
+CMD ["/opt/fuseki/entrypoint.sh"]
