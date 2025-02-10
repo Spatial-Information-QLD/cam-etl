@@ -136,6 +136,9 @@ services:
       - nginx-data:/data
       - nginx-letsencrypt:/etc/letsencrypt
 
+    profiles:
+      - nginx
+
 volumes:
   postgres-data:
   graphdb-data:
