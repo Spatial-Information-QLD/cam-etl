@@ -80,8 +80,7 @@ def get_query(address_iris: list[str]) -> str:
 def main():
     # TODO: move key to env
     client = meilisearch.Client(
-        "http://127.0.0.1:7700",
-        "eda724c48cdb51bdbfd79fe4b67a7cb6e7ee76985f4d9553e81e57e636653267",
+        "http://localhost:7700",
     )
     index = client.index("addresses")
 

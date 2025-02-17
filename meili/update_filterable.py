@@ -1,7 +1,7 @@
 import meilisearch
 
 client = meilisearch.Client(
-    "http://127.0.0.1:7700",
+    "http://localhost:7700",
 )
 
 index = client.index("addresses")
