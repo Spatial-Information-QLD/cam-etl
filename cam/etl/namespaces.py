@@ -3,8 +3,12 @@ from rdflib.namespace import DefinedNamespace, Namespace
 
 
 sir_id_datatype = URIRef("urn:ladb:sir-id")
-property_datatype = URIRef("https://linked.data.gov.au/dataset/qld-addr/datatype/property")
-lotplan_datatype = URIRef("https://linked.data.gov.au/dataset/qld-addr/datatype/lotplan")
+property_datatype = URIRef(
+    "https://linked.data.gov.au/dataset/qld-addr/datatype/property"
+)
+lotplan_datatype = URIRef(
+    "https://linked.data.gov.au/dataset/qld-addr/datatype/lotplan"
+)
 lot_datatype = URIRef("https://linked.data.gov.au/dataset/qld-addr/datatype/lot")
 plan_datatype = URIRef("https://linked.data.gov.au/dataset/qld-addr/datatype/plan")
 qld_state = URIRef("https://sws.geonames.org/2152274/")
@@ -123,7 +127,7 @@ class ROADS(DefinedNamespace):
     _underscore_num = True
     _NS = Namespace("https://linked.data.gov.au/def/roads/")
 
-    RoadLabel: URIRef
+    RoadName: URIRef
     RoadObject: URIRef
     RoadSegment: URIRef
 

@@ -127,7 +127,7 @@ def transform_row(
     ds.add((lga_right_iri, SDO.name, Literal(row[lga_name_right]), graph_name))
 
     # Road Label
-    ds.add((label_iri, RDF.type, ROADS.RoadLabel, graph_name))
+    ds.add((label_iri, RDF.type, ROADS.RoadName, graph_name))
     ds.add((label_iri, RDF.type, CN.CompoundName, graph_name))
     ds.add((label_iri, CN.isNameFor, iri, graph_name))
     ds.add((label_iri, SDO.name, Literal(row[road_name_full]), graph_name))
