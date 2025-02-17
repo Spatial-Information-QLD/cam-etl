@@ -117,6 +117,8 @@ services:
       - 7700:7700
     volumes:
       - meilisearch-data:/meili_data
+    profiles:
+      - meilisearch
 
   nginx-proxy-manager:
     container_name: nginx-proxy-manager
