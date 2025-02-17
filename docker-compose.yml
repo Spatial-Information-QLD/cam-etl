@@ -116,7 +116,7 @@ services:
     ports:
       - 7700:7700
     volumes:
-      - ./meilisearch-data:/meili_data
+      - meilisearch-data:/meili_data
 
   nginx-proxy-manager:
     container_name: nginx-proxy-manager
@@ -152,6 +152,7 @@ volumes:
   fuseki-data:
   nginx-data:
   nginx-letsencrypt:
+  meilisearch-data:
 
 networks:
   postgres:
