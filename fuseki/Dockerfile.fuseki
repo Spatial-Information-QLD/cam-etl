@@ -1,4 +1,4 @@
-ARG JENA_COMPOUND_NAMING_VERSION=0.5.1
+ARG COMPOUND_NAMING_VERSION=0.6.0
 ARG JENA_VERSION=5.2.0
 ARG JENA_HOME="/opt/jena"
 ARG FUSEKI_HOME="/opt/fuseki"
@@ -51,7 +51,7 @@ RUN mkdir -p ${JENA_HOME} && \
 # Final
 #
 FROM amazoncorretto:17-alpine3.19 AS final
-ARG JENA_COMPOUND_NAMING_VERSION
+ARG COMPOUND_NAMING_VERSION
 ARG JENA_VERSION
 ENV JENA_VERSION=${JENA_VERSION}
 ARG JENA_HOME
@@ -80,7 +80,7 @@ ENV PATH="${JENA_HOME}/bin:${FUSEKI_HOME}:${PATH}"
 COPY shiro.ini ${FUSEKI_BASE}/shiro.ini
 COPY config.ttl ${FUSEKI_BASE}/config.ttl
 RUN mkdir -p ${FUSEKI_HOME}/lib && \
-    wget --quiet https://github.com/Kurrawong/jena-compound-naming/releases/download/${JENA_COMPOUND_NAMING_VERSION}/compoundnaming-${JENA_COMPOUND_NAMING_VERSION}.jar -O ${FUSEKI_HOME}/lib/compoundnaming.jar
+    wget --quiet https://github.com/Kurrawong/jena-compound-naming/releases/download/${COMPOUND_NAMING_VERSION}/compoundnaming-${COMPOUND_NAMING_VERSION}.jar -O ${FUSEKI_HOME}/lib/compoundnaming.jar
 COPY entrypoint.sh ${FUSEKI_HOME}/entrypoint.sh
 
 CMD ["/opt/fuseki/entrypoint.sh"]
