@@ -90,10 +90,12 @@ tasks:
 
   fuseki:qali:import:vocabs:
     cmds:
-      # addings rdfs prefix as some files are missing it...
+      # adding rdfs prefix only if it doesn't already exist
       - |
         for f in vocabs-import/*.ttl; do
-          sed -i '1i PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' "$f"
+          if ! grep -q "PREFIX rdfs:" "$f"; then
+            sed -i '1i PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' "$f"
+          fi
         done
       - kurra db upload vocabs-import/ http://localhost:3030/qali
 
