@@ -9,7 +9,6 @@ from rdflib import (
     Graph,
     URIRef,
     RDF,
-    RDFS,
     Literal,
     SDO,
     TIME,
@@ -22,6 +21,7 @@ from cam.etl import (
     get_vocab_graph,
     worker_wrap,
     serialize,
+    add_additional_property,
 )
 from cam.etl.lalf_address import (
     get_address_iri,
@@ -47,7 +47,7 @@ from cam.etl.settings import settings
 
 dataset_name = "lalf_address"
 output_dir_name = "lalf-rdf"
-graph_name = URIRef("urn:ladb:graph:addresses")
+graph_name = URIRef("urn:qali:graph:addresses")
 
 SUB_ADDRESS_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@2776af7d25b1484b9f7c2886adf5667231deb6ad/vocabs/Addresses/addr-subaddress-types.ttl"
 LEVEL_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@6d2b90a4acb306791922d4649914a03cae5d019d/vocabs/Addresses/addr-level-types.ttl"
@@ -64,7 +64,9 @@ ADDR_CREATE_DATE = "addr_create_date"
 LOCALITY_REF_NO = "locality_ref_no"
 LOCALITY_NAME = "locality_name"
 ROAD_ID = "road_id_1"
+LALF_ROAD_ID = "road_id"
 ROAD_NAME_FULL_1 = "road_name_full_1"
+LALF_ROAD_NAME = "qrt_road_name_basic"
 STREET_NO_LAST_SUFFIX = "street_no_last_suffix"
 STREET_NO_LAST = "street_no_last"
 STREET_NO_FIRST_SUFFIX = "street_no_first_suffix"
@@ -162,7 +164,18 @@ def worker(
         ds.add((locality_node, SDO.value, locality_iri, graph_name))
 
         # street
-        street_iri = get_road_label_iri(row[ROAD_ID])
+        road_id = row[ROAD_ID]
+        if road_id is not None:
+            street_iri = get_road_label_iri(road_id)
+        else:
+            street_iri = get_road_label_iri(row[LALF_ROAD_ID])
+            add_additional_property(
+                addr_iri,
+                "missing_qrt_road",
+                True,
+                ds,
+                graph_name,
+            )
         road_node = BNode(f"{addr_id_uuid}-road")
         ds.add((addr_iri, SDO.hasPart, road_node, graph_name))
         ds.add((road_node, SDO.additionalType, ADDR_PT.road, graph_name))
@@ -356,8 +369,9 @@ def worker(
         # TODO:
 
         # rdfs:label
-        label = f"{level_type_label if level_type_code else ''} {level_no}{level_suffix} {unit_type_label + ' ' if unit_type_code else ''}{unit_no}{unit_suffix}{'/' if unit_no else ''}{street_no_first}{'-' + street_no_last if street_no_last else ''}{street_no_last_suffix} {row[ROAD_NAME_FULL_1]}, {row[LOCALITY_NAME]}, Queensland, Australia".strip()
-        ds.add((addr_iri, RDFS.label, Literal(label, datatype=XSD.string), graph_name))
+        road_name = row[ROAD_NAME_FULL_1] or row[LALF_ROAD_NAME]
+        label = f"{level_type_label if level_type_code else ''} {level_no}{level_suffix} {unit_type_label + ' ' if unit_type_code else ''}{unit_no}{unit_suffix}{'/' if unit_no else ''}{street_no_first}{'-' + street_no_last if street_no_last else ''}{street_no_last_suffix} {road_name}, {row[LOCALITY_NAME]}, Queensland, Australia".strip()
+        ds.add((addr_iri, SDO.name, Literal(label, datatype=XSD.string), graph_name))
 
     output_dir = Path(output_dir_name)
     filename = Path(dataset_name + "-" + str(job_id) + ".nq")
@@ -388,19 +402,17 @@ def main():
                 dedent(
                     """\
                     WITH qrt_road AS (
-                        SELECT DISTINCT road_name_basic_1, locality_left, road_id_1, road_name_full_1
-                        FROM qrt
+                        SELECT DISTINCT road_id as road_id_1, road_name_ as road_name_full_1, road_name1
+                        FROM qrt_spatial
                     )
-                    
-                    SELECT g.geocode_id, p.lot_no, l."pndb.ref_no" as locality_ref_no, l."pndb.place_name" as locality_name, q.road_id_1, q.road_name_basic_1, q.road_name_full_1, p.plan_no, a.*
+                    SELECT p.lot_no, l."pndb.ref_no" as locality_ref_no, l."pndb.place_name" as locality_name, l."pndb.lga_name" as lga_name, r.road_id, r.road_name as lalf_road_name, r.qrt_road_name_basic, r.qrt_road_id as road_id_1, r.qrt_road_name_basic as road_name_basic_1, q.road_name_full_1, p.plan_no, a.*
                     FROM "lalfpdba.lf_address" a
                     JOIN "lalfpdba.lf_site" s ON a.site_id = s.site_id
                     JOIN "lalfpdba.lf_parcel" p ON s.parcel_id = p.parcel_id
-                    LEFT JOIN "lalfpdba.lf_geocode" g ON s.site_id = g.site_id
                     LEFT JOIN "lalfpdba.lf_road" r ON r.road_id = a.road_id
                     LEFT JOIN lalf_pndb_localities_joined l ON r.locality_code = l."lalf.locality_code"
-                    LEFT JOIN qrt_road q ON r.qrt_road_name_basic = q.road_name_basic_1
-                      AND l."pndb.place_name" = q.locality_left
+                    LEFT JOIN qrt_road q ON q.road_id_1 = r.qrt_road_id 
+                        AND q.road_name1 = r.qrt_road_name_basic
                     WHERE a.addr_status_code != 'H'
                 """
                 ),
