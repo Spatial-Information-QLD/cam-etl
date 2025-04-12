@@ -21,7 +21,7 @@ from cam.etl.settings import settings
 
 dataset_name = "lalf_geocode"
 output_dir_name = "lalf-rdf"
-graph_name = URIRef("urn:ladb:graph:addresses")
+graph_name = URIRef("urn:qali:graph:addresses")
 
 GEOCODE_TYPES_URL = "https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@b07763c87f2f872133197e6fb0eb911de85879c6/vocabularies-qsi/addr-geocode-types.ttl"
 
