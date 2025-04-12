@@ -3,7 +3,7 @@ import concurrent.futures
 from textwrap import dedent
 from pathlib import Path
 
-from rdflib import Dataset, Graph, URIRef, RDF, BNode, Literal, SDO, SKOS, RDFS
+from rdflib import Dataset, Graph, URIRef, RDF, BNode, Literal, SDO, SKOS
 
 from cam.etl import (
     add_additional_property,
@@ -21,7 +21,7 @@ from cam.etl.settings import settings
 
 dataset_name = "qrt"
 output_dir_name = "qrt-rdf"
-graph_name = URIRef("urn:ladb:graph:roads")
+graph_name = URIRef("urn:qali:graph:roads")
 
 ROAD_TYPES_URL = "https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@9fa34d76fc0a27d711d8030b934c2c83dd378156/vocabularies-qsi/road-types.ttl"
 GN_AFFIX_URL = "https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@b07763c87f2f872133197e6fb0eb911de85879c6/vocabularies-qsi/gn-affix.ttl"
@@ -61,7 +61,7 @@ def transform_row(
     road_type: str,
     road_suffix: str,
     road_name_basic: str,
-    road_name_source: str,
+    # road_name_source: str,
     ds: Dataset,
     vocab_graph: Graph,
     row: Row,
@@ -131,13 +131,12 @@ def transform_row(
     ds.add((label_iri, RDF.type, CN.CompoundName, graph_name))
     ds.add((label_iri, CN.isNameFor, iri, graph_name))
     ds.add((label_iri, SDO.name, Literal(row[road_name_full]), graph_name))
-    ds.add((label_iri, RDFS.label, Literal(row[road_name_full]), graph_name))
     add_additional_property(
         label_iri, road_name_basic, row[road_name_basic], ds, graph_name
     )
-    add_additional_property(
-        label_iri, road_name_source, row[road_name_source], ds, graph_name
-    )
+    # add_additional_property(
+    #     label_iri, road_name_source, row[road_name_source], ds, graph_name
+    # )
 
     # TODO: add authority
 
@@ -256,7 +255,7 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
     ROAD_TYPE = "road_type_1"
     ROAD_SUFFIX = "road_suffix_1"
     ROAD_NAME_BASIC = "road_name_basic_1"
-    ROAD_NAME_SOURCE = "road_name_1_source"
+    # ROAD_NAME_SOURCE = "road_name_1_source"
 
     ROAD_ID_2 = "road_id_2"
     ROAD_NAME_FULL_2 = "road_name_full_2"
@@ -264,7 +263,7 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
     ROAD_TYPE_2 = "road_type_2"
     ROAD_SUFFIX_2 = "road_suffix_2"
     ROAD_NAME_BASIC_2 = "road_name_basic_2"
-    ROAD_NAME_SOURCE_2 = "road_name_2_source"
+    # ROAD_NAME_SOURCE_2 = "road_name_2_source"
 
     road_type_concept_scheme = URIRef("https://linked.data.gov.au/def/road-types")
     road_suffix_concept_scheme = URIRef("https://linked.data.gov.au/def/gn-affix")
@@ -283,33 +282,33 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
             ROAD_TYPE,
             ROAD_SUFFIX,
             ROAD_NAME_BASIC,
-            ROAD_NAME_SOURCE,
+            # ROAD_NAME_SOURCE,
             ds,
             vocab_graph,
             row,
             road_type_concept_scheme,
             road_suffix_concept_scheme,
         )
-        if row[ROAD_NAME_FULL_2]:
-            transform_row(
-                ROAD_ID_2,
-                ROAD_SEGMENT_ID,
-                LOCALITY_LEFT,
-                LOCALITY_RIGHT,
-                LGA_NAME_LEFT,
-                LGA_NAME_RIGHT,
-                ROAD_NAME_FULL_2,
-                ROAD_NAME_2,
-                ROAD_TYPE_2,
-                ROAD_SUFFIX_2,
-                ROAD_NAME_BASIC_2,
-                ROAD_NAME_SOURCE_2,
-                ds,
-                vocab_graph,
-                row,
-                road_type_concept_scheme,
-                road_suffix_concept_scheme,
-            )
+        # if row[ROAD_NAME_FULL_2]:
+        #     transform_row(
+        #         ROAD_ID_2,
+        #         ROAD_SEGMENT_ID,
+        #         LOCALITY_LEFT,
+        #         LOCALITY_RIGHT,
+        #         LGA_NAME_LEFT,
+        #         LGA_NAME_RIGHT,
+        #         ROAD_NAME_FULL_2,
+        #         ROAD_NAME_2,
+        #         ROAD_TYPE_2,
+        #         ROAD_SUFFIX_2,
+        #         ROAD_NAME_BASIC_2,
+        #         ROAD_NAME_SOURCE_2,
+        #         ds,
+        #         vocab_graph,
+        #         row,
+        #         road_type_concept_scheme,
+        #         road_suffix_concept_scheme,
+        #     )
 
     output_dir = Path(output_dir_name)
     filename = Path(dataset_name + "-" + str(job_id) + ".nq")
@@ -341,9 +340,18 @@ def main():
                 dedent(
                     """\
                     SELECT
-                        *
-                    FROM
-                        "qrt" q
+                        q.segment_id,
+                        q.locality_l as locality_left, 
+                        q.locality_r as locality_right, 
+                        q.lga_name_l as lga_name_left,
+                        q.lga_name_r as lga_name_right,
+                        q.road_id as road_id_1,
+                        q.road_name_ as road_name_full_1,
+                        q.road_name as road_name_1,
+                        q.road_type as road_type_1,
+                        q.road_suffi as road_suffix_1,
+                        q.road_name1 as road_name_basic_1
+                    FROM qrt_spatial q
                 """
                 ),
             )
