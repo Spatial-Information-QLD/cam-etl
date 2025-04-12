@@ -16,7 +16,6 @@ from rdflib import (
     TIME,
     XSD,
     PROV,
-    RDFS,
 )
 from rdflib.namespace import GEO
 
@@ -35,7 +34,7 @@ from cam.etl.settings import settings
 
 dataset_name = "pndb"
 output_dir_name = "pndb-rdf"
-graph_name = URIRef("urn:ladb:graph:geographical-names")
+graph_name = URIRef("urn:qali:graph:geographical-names")
 
 INDIGENOUS_GROUP_IRI = URIRef(
     "https://linked.data.gov.au/def/naming-authority/indigenous-group"
@@ -215,7 +214,6 @@ def add_geographical_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
     ds.add((label_iri, RDF.type, GN.GeographicalName, graph_name))
     ds.add((label_iri, CN.isNameFor, iri, graph_name))
     ds.add((label_iri, SDO.name, Literal(row[PLACE_NAME]), graph_name))
-    ds.add((label_iri, RDFS.label, Literal(row[PLACE_NAME]), graph_name))
 
     # Lifecycle stage
     add_lifecycle_stage(
