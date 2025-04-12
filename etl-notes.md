@@ -25,9 +25,33 @@ docker exec -i cam-etl-postgres-1 psql -d lalfdb -c "CREATE EXTENSION postgis;" 
 
 ## QRT - Queensland Roads and Tracks
 
-Download QRT v2, a new dataset schema created by Anne Goldsack from [R-SI CAM Project Board > General > Stage 3 - Location Addressing Rollout > Legacy DB exports](https://itpqld.sharepoint.com.mcas.ms/sites/R-SICAMProjectBoard/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FR%2DSICAMProjectBoard%2FShared%20Documents%2FGeneral%2FStage%203%20%2D%20Location%20Addressing%20Rollout%2FLegacy%20DB%20exports&viewid=d8225c45%2D5e3a%2D4dda%2Db296%2Db01e4ae1eb77).
+~~Download QRT v2, a new dataset schema created by Anne Goldsack from [R-SI CAM Project Board > General > Stage 3 - Location Addressing Rollout > Legacy DB exports](https://itpqld.sharepoint.com.mcas.ms/sites/R-SICAMProjectBoard/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FR%2DSICAMProjectBoard%2FShared%20Documents%2FGeneral%2FStage%203%20%2D%20Location%20Addressing%20Rollout%2FLegacy%20DB%20exports&viewid=d8225c45%2D5e3a%2D4dda%2Db296%2Db01e4ae1eb77).~~
 
-Use a postgres client to load the flat QRT CSV file into the `lalfdb` database into the `qrt` table. Map all columns to the `text` data type.
+~~Use a postgres client to load the flat QRT CSV file into the `lalfdb` database into the `qrt` table. Map all columns to the `text` data type.~~
+
+Download the QRT Shapefile from [QLD Spatial Catalogue](https://qldspatial.information.qld.gov.au/catalogue/custom/detail.page?fid={CE66D3D5-8740-41A7-8B42-30F5F1691B36}).
+
+Unzip the downloaded zipped file.
+
+```sh
+unzip QSC_Extracted_Data_20250314_144132175583-7180.zip
+```
+
+Update the [docker-compose.yml](./docker-compose.yml) file to mount the QRT Shapefile into the container.
+
+- `- ./QSC_Extracted_Data_20250314_144132175583-7180:/tmp/postgres-data/qrt`
+
+Start the postgres database service.
+
+```sh
+task postgres:up
+```
+
+Exec into the postgres container and load the shapefile using `shp2pgsql`.
+
+```sh
+shp2pgsql -I -s 4283 /tmp/qrt/Queensland_roads_and_tracks.shp public.qrt_spatial | psql -d lalfdb -U postgres
+```
 
 To run the ETL, run the following command.
 
@@ -47,12 +71,79 @@ To be able to get some of the roads data from the LALF and join it together with
 ALTER TABLE "lalfpdba.lf_road"
     ADD COLUMN qrt_road_name_basic text;
 
-UPDATE
+-- first update - add the road name and road type
+update
 	"lalfpdba.lf_road" r
-SET
+set
 	qrt_road_name_basic = r.road_name || ' ' || rnt.road_name_type
-FROM "lalfpdba.lf_road_name_type" rnt
-WHERE rnt.road_name_type_code = r.road_name_type_code;
+from
+	"lalfpdba.lf_road_name_type" rnt
+where
+	rnt.road_name_type_code = r.road_name_type_code;
+
+-- second update - add the road suffix
+update
+	"lalfpdba.lf_road" r
+set
+	qrt_road_name_basic = r.qrt_road_name_basic || ' ' || rns.road_name_suffix
+from
+	"lalfpdba.lf_road_name_suffix" rns
+where
+	rns.road_name_suffix_code = r.road_name_suffix_code;
+
+-- third update - replace 'XXX' with ''
+update "lalfpdba.lf_road" r
+set
+	qrt_road_name_basic = rtrim(replace(r.qrt_road_name_basic, 'XXX', ''), ' ')
+where
+	r.qrt_road_name_basic like '%XXX%';
+
+-- fourth update - remove excess whitespace
+update "lalfpdba.lf_road" r
+set
+	qrt_road_name_basic = regexp_replace(r.qrt_road_name_basic, '\s+', ' ', 'g')
+
+-- fifth update - create geom for each address
+update
+	"lalfpdba.lf_address" a
+set
+	geom = ST_SetSRID(st_makepoint(sp.centroid_lon::double precision, sp.centroid_lat::double precision), 4283)
+from "lalfpdba.lf_site" s
+join "lalfpdba.lf_geocode" g on s.site_id = g.site_id
+join "lalfpdba.sp_survey_point" sp on g.spdb_pid = sp.pid
+where s.site_id = a.site_id
+AND g.geocode_type_code = 'PC'
+AND g.geocode_status_code = 'P';
+
+-- sixth update - create addr geom index
+create index address_geom_idx on "lalfpdba.lf_address" using gist (geom);
+
+-- remove ' - ' ?? - for example, MAREEBA - DIMBULAH ROAD vs MAREEBA DIMBULAH ROAD
+update
+	"lalfpdba.lf_road" r
+set
+	qrt_road_name_basic = rtrim(replace(r.qrt_road_name_basic, ' - ', ' '), ' ')
+where
+	r.qrt_road_name_basic like '% - %'
+
+-- remove "'" ?? - for example, O'NEIL vs ONEIL
+update
+	"lalfpdba.lf_road" r
+set
+	qrt_road_name_basic = rtrim(replace(r.qrt_road_name_basic, '''', ''), ' ')
+where
+	r.qrt_road_name_basic like '%''%'
+
+-- replace "MT " with "MOUNT " - for example, MT MILMAN DRIVE
+
+-- incorrect road type - for example, V GATE LANE instead of V GATE ROAD
+```
+
+Map LF Road to QRT
+
+```sql
+ALTER TABLE "lalfpdba.lf_road"
+    ADD COLUMN qrt_road_id text;
 ```
 
 We also need to align the locality values in QRT and the LALF's locality table. To do this, convert the QRT's `locality_left` column's value to an uppercase and insert it into a new column named `lalf_locality`.
@@ -65,6 +156,111 @@ UPDATE
 	qrt q
 SET
 	lalf_locality = UPPER(q.locality_left);
+```
+
+### Mapping unjoined LALF roads to QRT
+
+Alter the `lf_road` table to add a new column named `qrt_road_id`.
+
+```sql
+alter table "lalfpdba.lf_road"
+add column qrt_road_id text;
+```
+
+Update the `qrt_road_id` column based on the result of the sub query.
+
+```sql
+update "lalfpdba.lf_road" r
+set qrt_road_id = result.road_id
+from (
+    WITH qrt_road AS (
+        SELECT DISTINCT
+            road_name1,
+            locality_l,
+            locality_r,
+            road_id,
+            road_name_
+        FROM qrt_spatial
+    )
+    SELECT
+        r.road_id as lf_road_id,
+        q.road_id
+    FROM "lalfpdba.lf_road" r
+    LEFT JOIN lalf_pndb_localities_joined l
+        ON r.locality_code = l."lalf.locality_code"
+    LEFT JOIN qrt_road q
+        ON r.qrt_road_name_basic = q.road_name1
+        AND l."pndb.place_name" = q.locality_l
+) as result
+WHERE r.road_id = result.lf_road_id;
+```
+
+Add indexes.
+
+```sql
+CREATE INDEX idx_addr_id ON "lalfpdba.lf_address" (addr_id);
+CREATE INDEX idx_road_id ON "lalfpdba.lf_road" (road_id);
+CREATE INDEX idx_qrt_road_id ON "lalfpdba.lf_road" (qrt_road_id);
+```
+
+Processing metadata for `etl_lalf_road_qrt_spatial_match.py`.
+
+```sql
+alter table "lalfpdba.lf_road"
+add column qrt_found bool;
+
+update "lalfpdba.lf_road"
+set qrt_found = true
+where qrt_road_id is not null;
+```
+
+Run the `etl_lalf_road_qrt_spatial_match.py` script to spatially match the remaining roads to QRT.
+
+```
+uv run etl_lalf_road_qrt_spatial_match.py
+```
+
+Note that some QRT roads have two road names:
+
+```sql
+WITH qrt_road AS (
+    SELECT DISTINCT road_id as road_id_1, road_name_ as road_name_full_1
+    FROM qrt_spatial
+)
+select a.addr_id, count(r.road_id)
+FROM "lalfpdba.lf_address" a
+JOIN "lalfpdba.lf_site" s ON a.site_id = s.site_id
+JOIN "lalfpdba.lf_parcel" p ON s.parcel_id = p.parcel_id
+LEFT JOIN "lalfpdba.lf_road" r ON r.road_id = a.road_id
+LEFT JOIN lalf_pndb_localities_joined l ON r.locality_code = l."lalf.locality_code"
+left join qrt_road q on q.road_id_1 = r.qrt_road_id
+WHERE a.addr_status_code != 'H'
+group by a.addr_id
+having count(r.road_id) > 1
+```
+
+Once everything has been applied, running the following query should return the same count as what's in the `lf_address` table where status is not 'H'.
+
+```sql
+select count(*)
+from "lalfpdba.lf_address" a
+where a.addr_status_code != 'H';
+```
+
+```sql
+WITH qrt_road AS (
+    SELECT DISTINCT road_id as road_id_1, road_name_ as road_name_full_1, road_name1
+    FROM qrt_spatial
+)
+select count(*)
+FROM "lalfpdba.lf_address" a
+JOIN "lalfpdba.lf_site" s ON a.site_id = s.site_id
+JOIN "lalfpdba.lf_parcel" p ON s.parcel_id = p.parcel_id
+LEFT JOIN "lalfpdba.lf_road" r ON r.road_id = a.road_id
+LEFT JOIN lalf_pndb_localities_joined l ON r.locality_code = l."lalf.locality_code"
+LEFT JOIN qrt_road q ON q.road_id_1 = r.qrt_road_id
+    AND q.road_name1 = r.qrt_road_name_basic
+WHERE a.addr_status_code != 'H'
 ```
 
 ## Place Names Database
