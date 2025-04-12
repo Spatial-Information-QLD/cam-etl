@@ -4,7 +4,7 @@ import concurrent.futures
 from textwrap import dedent
 from pathlib import Path
 
-from rdflib import Dataset, Graph, URIRef, RDF, RDFS, Literal, SDO, BNode
+from rdflib import Dataset, Graph, URIRef, RDF, Literal, SDO, BNode
 
 from cam.etl import (
     get_db_connection,
@@ -20,7 +20,7 @@ from cam.etl.settings import settings
 
 dataset_name = "lalf_place_name"
 output_dir_name = "lalf-rdf"
-graph_name = URIRef("urn:ladb:graph:geographical-names")
+graph_name = URIRef("urn:qali:graph:geographical-names")
 
 PROPERTY_NAME = "property_name"
 LOT_NO = "lot"
@@ -57,7 +57,16 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
                 graph_name,
             )
         )
-        ds.add((property_name_iri, RDFS.label, Literal(label), graph_name))
+        ds.add((property_name_iri, SDO.name, Literal(label), graph_name))
+        # TODO: Review and create/add to geographical name type vocab
+        ds.add(
+            (
+                property_name_iri,
+                SDO.additionalType,
+                URIRef("https://linked.data.gov.au/def/qld-gnt/PropertyName"),
+                graph_name,
+            )
+        )
 
         # gn - given name
         given_name_node = BNode(f"{prop_uuid}-given-name")
