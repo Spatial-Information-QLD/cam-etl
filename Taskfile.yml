@@ -162,9 +162,10 @@ tasks:
     desc: Run the ETL for LALF.
     cmds:
       - uv run python etl_lalf_parcel.py
-      - uv run python etl_lalf_geocode.py
+      # Geocodes no longer converted over as RDF. They are stored as the source of truth in SIR RTE.
+      # - uv run python etl_lalf_geocode.py
       - uv run python etl_lalf_address.py
-      - uv run python etl_lalf_place_name.py
+      - uv run python etl_lalf_property_name.py
 
   etl:
     desc: Run the ETL.
@@ -193,10 +194,8 @@ tasks:
       - .venv/bin/python -m http.server -d ontodia/
 
   dev:load-db:
-    desc: Clear the locally produced data, recreate data, spin down GraphDB, load data, spin back up GraphDB.
+    desc: Spin down GraphDB, load data, spin back up GraphDB.
     cmds:
-      - task: etl:clean
-      - task: etl
       - task: graphdb:preload
       - task: graphdb:up
 
