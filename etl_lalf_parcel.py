@@ -19,7 +19,7 @@ from cam.etl.settings import settings
 
 dataset_name = "lalf_parcel"
 output_dir_name = "lalf-rdf"
-graph_name = URIRef("urn:ladb:graph:addresses")
+graph_name = URIRef("urn:qali:graph:addresses")
 
 # TODO: ensure this is added to go-categories
 parcel_type = URIRef("https://linked.data.gov.au/def/go-categories/parcel")
@@ -47,7 +47,7 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
         ds.add(
             (
                 parcel_iri,
-                RDFS.label,
+                SDO.name,
                 Literal(f"{row[LOT_NO]}{row[PLAN_NO]}"),
                 graph_name,
             )
