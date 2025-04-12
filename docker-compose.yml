@@ -15,8 +15,7 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      # - ./QSC_Extracted_Data_20241106_194641344180-3412:/tmp/postgres-data/QSC
-      # - ./Postcode_MAY23_QLD_GDA2020_SHP_108:/tmp/postgres-data/postcodes
+      # - ./QSC_Extracted_Data_20250314_144132175583-7180:/tmp/qrt
       # - ./postgres-backup:/tmp/postgres-backup
     ports:
       - 5432:5432
@@ -26,7 +25,7 @@ services:
       - postgres
 
   graphdb:
-    image: ontotext/graphdb:10.8.2
+    image: ontotext/graphdb:10.8.5
     volumes:
       - graphdb-data:/opt/graphdb/home
     ports:
