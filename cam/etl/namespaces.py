@@ -3,6 +3,7 @@ from rdflib.namespace import DefinedNamespace, Namespace
 
 
 sir_id_datatype = URIRef("https://linked.data.gov.au/dataset/qld-addr/datatype/address-pid")
+pndb_datatype = URIRef("https://linked.data.gov.au/dataset/qld-addr/datatype/pndb")
 property_datatype = URIRef(
     "https://linked.data.gov.au/dataset/qld-addr/datatype/property"
 )
