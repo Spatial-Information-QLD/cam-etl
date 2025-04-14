@@ -34,7 +34,7 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
 
     for row in rows:
         prop_id = row[PROP_ID]
-        lot_no = row[LOT_NO]
+        lot_no = row[LOT_NO] if row[LOT_NO] != "0" else "9999"
         plan_no = row[PLAN_NO]
         prop_uuid = uuid.uuid5(property_namespace, prop_id)
 
