@@ -13,7 +13,14 @@ from cam.etl import (
     worker_wrap,
     serialize,
 )
-from cam.etl.namespaces import sir_id_datatype, CN, LC, REG, ROADS, RNPT
+from cam.etl.namespaces import (
+    sir_id_datatype,
+    CN,
+    LC,
+    ROADS,
+    RNPT,
+    lifecycle_stage_current,
+)
 from cam.etl.qrt import get_road_label_iri
 from cam.etl.types import Row
 from cam.etl.settings import settings
@@ -143,7 +150,7 @@ def transform_row(
     # Road Label Lifecycle Stage
     bnode = BNode(f"{row[road_id]}-lifecycle-stage")
     ds.add((label_iri, LC.hasLifecycleStage, bnode, graph_name))
-    ds.add((bnode, SDO.additionalType, REG.accepted, graph_name))
+    ds.add((bnode, SDO.additionalType, lifecycle_stage_current, graph_name))
 
     # Name template
     ds.add(
