@@ -27,7 +27,7 @@ from cam.etl import (
     serialize,
 )
 from cam.etl.pndb import vocab_mapping, get_geographical_name_iri
-from cam.etl.namespaces import GN, sir_id_datatype, CN, LC, GNPT, GN_STATUS
+from cam.etl.namespaces import GN, CN, LC, GNPT, GN_STATUS, pndb_datatype
 from cam.etl.types import Row
 from cam.etl.settings import settings
 
@@ -95,7 +95,7 @@ def add_geographical_object(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
         (
             iri,
             SDO.identifier,
-            Literal(row[REFERENCE_NUMBER], datatype=sir_id_datatype),
+            Literal(row[REFERENCE_NUMBER], datatype=pndb_datatype),
             graph_name,
         )
     )
@@ -137,9 +137,9 @@ def add_lifecycle_stage(
 ) -> None:
     bnode = BNode(bnode_id)
     ds.add((focus_node, LC.hasLifecycleStage, bnode, graph_name))
-    bnode_has_beginning = BNode(bnode_id + "-lifecycle-stage-has-beginning")
-    ds.add((bnode, TIME.hasBeginning, bnode_has_beginning, graph_name))
     if row.get(GAZETTED_DATE):
+        bnode_has_beginning = BNode(bnode_id + "-lifecycle-stage-has-beginning")
+        ds.add((bnode, TIME.hasBeginning, bnode_has_beginning, graph_name))
         ds.add(
             (
                 bnode_has_beginning,
@@ -214,6 +214,15 @@ def add_geographical_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
     ds.add((label_iri, RDF.type, GN.GeographicalName, graph_name))
     ds.add((label_iri, CN.isNameFor, iri, graph_name))
     ds.add((label_iri, SDO.name, Literal(row[PLACE_NAME]), graph_name))
+
+    ds.add(
+        (
+            iri,
+            SDO.identifier,
+            Literal(row[REFERENCE_NUMBER], datatype=pndb_datatype),
+            graph_name,
+        )
+    )
 
     # Lifecycle stage
     add_lifecycle_stage(
