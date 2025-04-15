@@ -63,7 +63,7 @@ PREFIX text:      <http://jena.apache.org/text#>
         text:directory    "/fuseki/databases/qali/lucene";
         text:entityMap    :entity_map;
         text:propLists    ( [ text:propListProp  ex:searchFields;
-                              text:props         ( rdfs:label )
+                              text:props         ( schema:name )
                             ]
                           );
         text:storeValues  true .
@@ -74,7 +74,7 @@ PREFIX text:      <http://jena.apache.org/text#>
         text:graphField    "graph";
         text:langField     "lang";
         text:map           ( [ text:field      "label";
-                               text:predicate  rdfs:label
+                               text:predicate  schema:name
                              ]
                            );
         text:uidField      "uid" .
