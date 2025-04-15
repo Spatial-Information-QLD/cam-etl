@@ -215,15 +215,6 @@ def add_geographical_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
     ds.add((label_iri, CN.isNameFor, iri, graph_name))
     ds.add((label_iri, SDO.name, Literal(row[PLACE_NAME]), graph_name))
 
-    ds.add(
-        (
-            iri,
-            SDO.identifier,
-            Literal(row[REFERENCE_NUMBER], datatype=pndb_datatype),
-            graph_name,
-        )
-    )
-
     # Lifecycle stage
     add_lifecycle_stage(
         label_iri,
