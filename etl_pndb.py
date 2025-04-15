@@ -113,19 +113,20 @@ def add_geographical_object(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
     ds.add((iri, SDO.additionalType, value, graph_name))
 
     # geo:hasGeometry
-    bnode_geometry = BNode(f"go-geo-hasGeometry-{row[REFERENCE_NUMBER]}")
-    ds.add((iri, GEO.hasGeometry, bnode_geometry, graph_name))
-    ds.add(
-        (
-            bnode_geometry,
-            GEO.asWKT,
-            Literal(
-                f"POINT ({row[LONGITUDE_DD]} {row[LATITUDE_DD]})",
-                datatype=GEO.wktLiteral,
-            ),
-            graph_name,
-        )
-    )
+    # TODO: remove as this will be in SIRRTE like the addressing geocodes.
+    # bnode_geometry = BNode(f"go-geo-hasGeometry-{row[REFERENCE_NUMBER]}")
+    # ds.add((iri, GEO.hasGeometry, bnode_geometry, graph_name))
+    # ds.add(
+    #     (
+    #         bnode_geometry,
+    #         GEO.asWKT,
+    #         Literal(
+    #             f"POINT ({row[LONGITUDE_DD]} {row[LATITUDE_DD]})",
+    #             datatype=GEO.wktLiteral,
+    #         ),
+    #         graph_name,
+    #     )
+    # )
 
 
 def add_lifecycle_stage(
@@ -289,7 +290,7 @@ def add_indigenous_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
     label_iri = get_indigenous_label_iri(row[REFERENCE_NUMBER], row[OBJECTID])
 
     # Geographical name
-    ds.add((iri, SDO.name, label_iri, graph_name))
+    ds.add((iri, CN.hasName, label_iri, graph_name))
     ds.add((label_iri, RDF.type, CN.CompoundName, graph_name))
     ds.add((label_iri, RDF.type, GN.GeographicalName, graph_name))
     ds.add((label_iri, CN.isNameFor, iri, graph_name))
