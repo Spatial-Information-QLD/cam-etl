@@ -43,7 +43,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
     skos:prefLabel "Transport and Main Roads"@en ;
     skos:topConceptOf : .
 
-: a skos:ConceptScheme ;
+<https://linked.data.gov.au/def/authorities> a skos:ConceptScheme ;
     owl:versionIRI :None ;
     skos:definition "The authorities code list."@en ;
     skos:hasTopConcept :community-group,
