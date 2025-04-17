@@ -12,9 +12,18 @@ from cam.etl import (
     worker_wrap,
     serialize,
 )
+from cam.etl.lalf_address import get_address_iri, get_address_uuid
 from cam.etl.lalf_parcel import get_parcel_iri
 from cam.etl.lalf_place_name import get_property_name_iri, property_namespace
-from cam.etl.namespaces import GN, CN, property_datatype, GNPT
+from cam.etl.namespaces import (
+    ADDR_PT,
+    GN,
+    CN,
+    LC,
+    property_datatype,
+    GNPT,
+    lifecycle_stage_current,
+)
 from cam.etl.types import Row
 from cam.etl.settings import settings
 
@@ -26,6 +35,7 @@ PROPERTY_NAME = "property_name"
 LOT_NO = "lot"
 PLAN_NO = "plan"
 PROP_ID = "id"
+ADDR_ID = "addr_id"
 
 
 @worker_wrap
@@ -58,15 +68,6 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
             )
         )
         ds.add((property_name_iri, SDO.name, Literal(label), graph_name))
-        # TODO: Review and create/add to geographical name type vocab
-        ds.add(
-            (
-                property_name_iri,
-                SDO.additionalType,
-                URIRef("https://linked.data.gov.au/def/qld-gnt/PropertyName"),
-                graph_name,
-            )
-        )
 
         # gn - given name
         given_name_node = BNode(f"{prop_uuid}-given-name")
@@ -81,7 +82,27 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
         )
         ds.add((given_name_node, SDO.value, Literal(label, lang="en"), graph_name))
 
-        # TODO: lifecycle stage?
+        # Address part
+        addr_id_uuid = get_address_uuid(row[ADDR_ID])
+        addr_id = row[ADDR_ID]
+        addr_iri = get_address_iri(addr_id)
+        property_name_node = BNode(f"{addr_id_uuid}-property-name")
+        ds.add((addr_iri, SDO.hasPart, property_name_node, graph_name))
+        ds.add(
+            (
+                property_name_node,
+                SDO.additionalType,
+                ADDR_PT.propertyName,
+                graph_name,
+            )
+        )
+        ds.add((property_name_node, SDO.value, property_name_iri, graph_name))
+
+        # lifecycle stage
+        bnode_id = f"{addr_id_uuid}-{prop_uuid}-lifecycle"
+        bnode = BNode(bnode_id)
+        ds.add((property_name_iri, LC.hasLifecycleStage, bnode, graph_name))
+        ds.add((bnode, SDO.additionalType, lifecycle_stage_current, graph_name))
 
     output_dir = Path(output_dir_name)
     filename = Path(dataset_name + "-" + str(job_id) + ".nq")
@@ -107,10 +128,13 @@ def main():
             cursor.execute(
                 dedent(
                     """\
-                    SELECT
-                        *
-                    FROM
-                        "lalf_property_address_joined" p
+                    SELECT pa.*, a.addr_id
+                    FROM lalf_property_address_joined pa
+                    JOIN "lalfpdba.lf_parcel" p on p.lot_no = pa.lot and p.plan_no = pa.plan
+                    JOIN "lalfpdba.lf_site" s on s.parcel_id = p.parcel_id
+                    JOIN "lalfpdba.lf_address" a on a.site_id = s.site_id
+                    GROUP BY pa.property_name, pa.lot, pa.plan, pa.id, a.addr_id
+                    limit 1
                 """
                 ),
             )
