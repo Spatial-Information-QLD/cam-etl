@@ -158,6 +158,16 @@ SET
 	lalf_locality = UPPER(q.locality_left);
 ```
 
+With the property names dataset, we need to update the `lot` values from `0` to `9999` to align with the lot and plan identifiers for parcels in LALF.
+
+```sql
+UPDATE "lalf_property_address_joined" p
+SET
+	lot = '9999'
+WHERE
+	p.lot = '0';
+```
+
 ### Mapping unjoined LALF roads to QRT
 
 Alter the `lf_road` table to add a new column named `qrt_road_id`.
