@@ -134,7 +134,6 @@ def main():
                     JOIN "lalfpdba.lf_site" s on s.parcel_id = p.parcel_id
                     JOIN "lalfpdba.lf_address" a on a.site_id = s.site_id
                     GROUP BY pa.property_name, pa.lot, pa.plan, pa.id, a.addr_id
-                    limit 1
                 """
                 ),
             )
