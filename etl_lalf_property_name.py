@@ -82,23 +82,8 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
         )
         ds.add((given_name_node, SDO.value, Literal(label, lang="en"), graph_name))
 
-        # Address part
-        addr_id_uuid = get_address_uuid(row[ADDR_ID])
-        addr_id = row[ADDR_ID]
-        addr_iri = get_address_iri(addr_id)
-        property_name_node = BNode(f"{addr_id_uuid}-property-name")
-        ds.add((addr_iri, SDO.hasPart, property_name_node, graph_name))
-        ds.add(
-            (
-                property_name_node,
-                SDO.additionalType,
-                ADDR_PT.propertyName,
-                graph_name,
-            )
-        )
-        ds.add((property_name_node, SDO.value, property_name_iri, graph_name))
-
         # lifecycle stage
+        addr_id_uuid = get_address_uuid(row[ADDR_ID])
         bnode_id = f"{addr_id_uuid}-{prop_uuid}-lifecycle"
         bnode = BNode(bnode_id)
         ds.add((property_name_iri, LC.hasLifecycleStage, bnode, graph_name))
