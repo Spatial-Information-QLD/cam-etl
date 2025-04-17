@@ -72,13 +72,11 @@ tasks:
     cmds:
       - mkdir -p vocabs-import
       - curl -o vocabs-import/road-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/road-types.ttl
-      - curl -o vocabs-import/gn-affix.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/gn-affix.ttl
       - curl -o vocabs-import/go-categories.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/go-categories.ttl
       - curl -o vocabs-import/addr-geocode-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/addr-geocode-types.ttl
       - curl -o vocabs-import/addr-subaddress-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-subaddress-types.ttl
       - curl -o vocabs-import/addr-level-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-level-types.ttl
       - curl -o vocabs-import/addr-part-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/addr-part-types.ttl
-      - curl -o vocabs-import/reg-statuses.ttl https://agldwg.github.io/reg-statuses/vocabulary.ttl
       - curl -o vocabs-import/lifecycle-stage-types https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/lifeycle-stage-types.ttl
       - curl -o vocabs-import/gn-part-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/gn-part-types.ttl
       - curl -o vocabs-import/gn-affixes.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/GeographicalNames/gn-affix.ttl
@@ -88,15 +86,18 @@ tasks:
       - curl -o vocabs-import/addr-geocode-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/addr-geocode-types.ttl
       - curl -o vocabs-import/addr-level-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-level-types.ttl
 
+  fuseki:qali:vocab:fix:
+    desc: Add rdfs prefix to vocabularies.
+    cmd: |
+      for f in vocabs-import/*.ttl; do
+        if ! grep -q "PREFIX rdfs:" "$f"; then
+          sed -i '1i PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' "$f"
+        fi
+      done
+
   fuseki:qali:import:vocabs:
     cmds:
-      # adding rdfs prefix only if it doesn't already exist
-      - |
-        for f in vocabs-import/*.ttl; do
-          if ! grep -q "PREFIX rdfs:" "$f"; then
-            sed -i '1i PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' "$f"
-          fi
-        done
+      - task: fuseki:qali:vocab:fix
       - kurra db upload vocabs-import/ http://localhost:3030/qali
 
   fuseki:qali:gzip:
