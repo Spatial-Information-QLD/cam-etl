@@ -77,7 +77,7 @@ tasks:
       - curl -o vocabs-import/addr-subaddress-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-subaddress-types.ttl
       - curl -o vocabs-import/addr-level-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-level-types.ttl
       - curl -o vocabs-import/addr-part-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/addr-part-types.ttl
-      - curl -o vocabs-import/lifecycle-stage-types https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/lifeycle-stage-types.ttl
+      - curl -o vocabs-import/lifecycle-stage-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/lifeycle-stage-types.ttl
       - curl -o vocabs-import/gn-part-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/gn-part-types.ttl
       - curl -o vocabs-import/gn-affixes.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/GeographicalNames/gn-affix.ttl
       - curl -o vocabs-import/addr-classes.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-classes.ttl
