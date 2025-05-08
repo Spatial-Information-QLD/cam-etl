@@ -283,13 +283,11 @@ def main():
             cursor.execute(
                 dedent(
                     """\
-                    SELECT
+                    SELECT DISTINCT
                         q.road_id as road_id_1,
-                        q.road_name_ as road_name_full_1,
                         q.road_name as road_name_1,
                         q.road_type as road_type_1,
-                        q.road_suffi as road_suffix_1,
-                        q.road_name1 as road_name_basic_1
+                        q.road_suffi as road_suffix_1
                     FROM qrt_spatial q
                 """
                 ),
