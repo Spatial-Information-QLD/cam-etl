@@ -71,20 +71,19 @@ tasks:
   fuseki:qali:download:vocabs:
     cmds:
       - mkdir -p vocabs-import
-      - curl -o vocabs-import/road-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/road-types.ttl
-      - curl -o vocabs-import/go-categories.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/go-categories.ttl
-      - curl -o vocabs-import/addr-geocode-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/addr-geocode-types.ttl
-      - curl -o vocabs-import/addr-subaddress-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-subaddress-types.ttl
-      - curl -o vocabs-import/addr-level-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-level-types.ttl
-      - curl -o vocabs-import/addr-part-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/addr-part-types.ttl
-      - curl -o vocabs-import/lifecycle-stage-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/lifeycle-stage-types.ttl
+      - curl -o vocabs-import/road-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@c0b59a51f09d1ae4b0a337f0a10747c45b1d44d3/vocabs/TransportNetworks/road-types.ttl
+      - curl -o vocabs-import/go-categories.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@c0b59a51f09d1ae4b0a337f0a10747c45b1d44d3/vocabs/GeographicalNames/go-categories.ttl
+      - curl -o vocabs-import/addr-geocode-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@c0b59a51f09d1ae4b0a337f0a10747c45b1d44d3/vocabs/Addresses/addr-geocode-types.ttl
+      - curl -o vocabs-import/addr-subaddress-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@c0b59a51f09d1ae4b0a337f0a10747c45b1d44d3/vocabs/Addresses/addr-subaddress-types.ttl
+      - curl -o vocabs-import/addr-level-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@c0b59a51f09d1ae4b0a337f0a10747c45b1d44d3/vocabs/Addresses/addr-level-types.ttl
+      - curl -o vocabs-import/addr-part-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@f5650d07288b4879620be924042c73b6dae881e3/vocabs/Addresses/addr-part-types.ttl
+      - curl -o vocabs-import/lifecycle-stage-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@f5650d07288b4879620be924042c73b6dae881e3/vocabs/lifeycle-stage-types.ttl
       - curl -o vocabs-import/gn-part-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/gn-part-types.ttl
-      - curl -o vocabs-import/gn-affixes.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/GeographicalNames/gn-affix.ttl
-      - curl -o vocabs-import/addr-classes.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-classes.ttl
-      - curl -o vocabs-import/addr-part-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/addr-part-types.ttl
-      - curl -o vocabs-import/addr-status-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-status-types.ttl
-      - curl -o vocabs-import/addr-geocode-types.ttl https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@master/vocabularies-qsi/addr-geocode-types.ttl
-      - curl -o vocabs-import/addr-level-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-level-types.ttl
+      - curl -o vocabs-import/gn-affixes.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@f5650d07288b4879620be924042c73b6dae881e3/vocabs/GeographicalNames/gn-affix.ttl
+      - curl -o vocabs-import/addr-classes.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@f5650d07288b4879620be924042c73b6dae881e3/vocabs/Addresses/addr-classes.ttl
+      - curl -o vocabs-import/addr-status-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@f5650d07288b4879620be924042c73b6dae881e3/vocabs/Addresses/addr-status-types.ttl
+      - curl -o vocabs-import/addr-geocode-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@f5650d07288b4879620be924042c73b6dae881e3/vocabs/Addresses/addr-geocode-types.ttl
+      - curl -o vocabs-import/addr-level-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@f5650d07288b4879620be924042c73b6dae881e3/vocabs/Addresses/addr-level-types.ttl
 
   fuseki:qali:vocab:fix:
     desc: Add rdfs prefix to vocabularies.

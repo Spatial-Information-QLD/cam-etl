@@ -1,21 +1,14 @@
-PREFIX : <https://linked.data.gov.au/def/addr-part-types/>
-PREFIX agldwgstatus: <https://linked.data.gov.au/def/reg-statuses/>
-PREFIX dcterms: <http://purl.org/dc/terms/>
-PREFIX droles: <https://linked.data.gov.au/def/data-roles/>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX prov: <http://www.w3.org/ns/prov#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX reg: <http://purl.org/linked-data/registry#>
-PREFIX sdo: <https://schema.org/>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX themes: <https://linked.data.gov.au/def/fsdf/themes/>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX apt: <https://linked.data.gov.au/def/addr-part-types/>
 PREFIX cs: <https://linked.data.gov.au/def/addr-part-types>
 PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX isoroles: <https://linked.data.gov.au/def/data-roles/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX schema: <https://schema.org/>
-
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 apt:addressNumberFirst
     a skos:Concept ;
@@ -87,6 +80,16 @@ apt:buildingLevelType
     skos:topConceptOf cs: ;
 .
 
+apt:buildingName
+    a skos:Concept ;
+    rdfs:isDefinedBy cs: ;
+    skos:definition "The official name or culturally accepted common usage name for a building as defined by https://linked.data.gov.au/def/go-categories/building."@en ;
+    skos:historyNote "From Queensland address data." ;
+    skos:inScheme cs: ;
+    skos:prefLabel "Building Name"@en ;
+    skos:topConceptOf cs: ;
+.
+
 apt:countryName
     a skos:Concept ;
     rdfs:isDefinedBy cs: ;
@@ -104,16 +107,6 @@ apt:geographicName
     skos:historyNote "From Queensland address data. This replaces several ISO19160-1 & GNAF values as this reference can be used to any category of Geographical Object with the name for the object used within the address this part is part of. Geographical Object categories are assgned to the Geographical Object, not any part of this address part or the address it is part of." ;
     skos:inScheme cs: ;
     skos:prefLabel "Geographic Name"@en ;
-    skos:topConceptOf cs: ;
-.
-
-apt:buildingName
-    a skos:Concept ;
-    rdfs:isDefinedBy cs: ;
-    skos:definition "The official name or culturally accepted common usage name for a building as defined by https://linked.data.gov.au/def/go-categories/building."@en ;
-    skos:historyNote "From Queensland address data." ;
-    skos:inScheme cs: ;
-    skos:prefLabel "Building Name"@en ;
     skos:topConceptOf cs: ;
 .
 
@@ -236,6 +229,8 @@ apt:thoroughfareName
 
 cs:
     a skos:ConceptScheme ;
+    dcterms:created "2024-09-18"^^xsd:date ;
+    dcterms:modified "2024-09-18"^^xsd:date ;
     owl:versionIRI apt:None ;
     skos:definition "This vocabulary describes the components for addresses. It is an extended version of ISO19160-1's Address Component Type vocabulary. "@en ;
     skos:hasTopConcept
@@ -246,9 +241,9 @@ cs:
         apt:buildingLevelNumber ,
         apt:buildingLevelNumberSuffix ,
         apt:buildingLevelType ,
+        apt:buildingName ,
         apt:countryName ,
         apt:geographicName ,
-        apt:buildingName ,
         apt:indigenousCountryName ,
         apt:locality ,
         apt:postcode ,
@@ -276,8 +271,6 @@ cs:
             schema:name "Department Of Resources" ;
             schema:url ""^^xsd:anyURI ;
         ] ;
-    dcterms:created "2024-09-18"^^xsd:date ;
-	dcterms:modified "2024-09-18"^^xsd:date ;
     schema:keywords "Address" ;
     schema:publisher
         [
@@ -287,4 +280,3 @@ cs:
         ] ;
     schema:version "None" ;
 .
-
