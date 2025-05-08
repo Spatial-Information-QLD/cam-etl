@@ -171,7 +171,7 @@ def transform_row(
             (
                 bnode,
                 SDO.additionalType,
-                RNPT.RoadGivenName,
+                RNPT.roadGivenName,
                 graph_name,
             )
         )
@@ -186,7 +186,7 @@ def transform_row(
             (
                 bnode,
                 SDO.additionalType,
-                RNPT.RoadType,
+                RNPT.roadType,
                 graph_name,
             )
         )
@@ -231,7 +231,7 @@ def transform_row(
             (
                 bnode,
                 SDO.additionalType,
-                RNPT.RoadSuffix,
+                RNPT.roadSuffix,
                 graph_name,
             )
         )

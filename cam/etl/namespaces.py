@@ -2,7 +2,9 @@ from rdflib import URIRef
 from rdflib.namespace import DefinedNamespace, Namespace
 
 
-sir_id_datatype = URIRef("https://linked.data.gov.au/dataset/qld-addr/datatype/address-pid")
+sir_id_datatype = URIRef(
+    "https://linked.data.gov.au/dataset/qld-addr/datatype/address-pid"
+)
 pndb_datatype = URIRef("https://linked.data.gov.au/dataset/qld-addr/datatype/pndb")
 property_datatype = URIRef(
     "https://linked.data.gov.au/dataset/qld-addr/datatype/property"
@@ -144,6 +146,6 @@ class RNPT(DefinedNamespace):
     _underscore_num = True
     _NS = Namespace("https://linked.data.gov.au/def/road-name-part-types/")
 
-    RoadGivenName: URIRef
-    RoadType: URIRef
-    RoadSuffix: URIRef
+    roadGivenName: URIRef
+    roadType: URIRef
+    roadSuffix: URIRef
