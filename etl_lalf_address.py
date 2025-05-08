@@ -52,11 +52,22 @@ graph_name = URIRef("urn:qali:graph:addresses")
 SUB_ADDRESS_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@2776af7d25b1484b9f7c2886adf5667231deb6ad/vocabs/Addresses/addr-subaddress-types.ttl"
 LEVEL_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@6d2b90a4acb306791922d4649914a03cae5d019d/vocabs/Addresses/addr-level-types.ttl"
 
-address_type_street_iri = URIRef(
-    "https://linked.data.gov.au/def/address-classes/street"
+address_class_non_standard_iri = URIRef(
+    "https://linked.data.gov.au/def/address-classes/non-standard"
 )
+address_class_street_rural_iri = URIRef(
+    "https://linked.data.gov.au/def/address-classes/street-rural"
+)
+address_class_street_urban_iri = URIRef(
+    "https://linked.data.gov.au/def/address-classes/street-urban"
+)
+address_class_unknown_iri = URIRef(
+    "https://linked.data.gov.au/def/address-classes/unknown"
+)
+address_class_water_iri = URIRef("https://linked.data.gov.au/def/address-classes/water")
 
 ADDR_ID = "addr_id"
+ADDR_STANDARD_CODE = "addr_standard_code"
 LOT_NO = "lot_no"
 PLAN_NO = "plan_no"
 ADDR_STATUS_CODE = "addr_status_code"
@@ -116,7 +127,56 @@ def worker(
         ds.add((addr_iri, ADDR.hasStatus, addr_status_iri, graph_name))
 
         # address type - street
-        ds.add((addr_iri, SDO.additionalType, address_type_street_iri, graph_name))
+        if addr_standard_code := row[ADDR_STANDARD_CODE]:
+            if addr_standard_code == "NS":
+                ds.add(
+                    (
+                        addr_iri,
+                        SDO.additionalType,
+                        address_class_non_standard_iri,
+                        graph_name,
+                    )
+                )
+            elif addr_standard_code == "RU":
+                ds.add(
+                    (
+                        addr_iri,
+                        SDO.additionalType,
+                        address_class_street_rural_iri,
+                        graph_name,
+                    )
+                )
+            elif addr_standard_code == "UR":
+                ds.add(
+                    (
+                        addr_iri,
+                        SDO.additionalType,
+                        address_class_street_urban_iri,
+                        graph_name,
+                    )
+                )
+            elif addr_standard_code == "WA":
+                ds.add(
+                    (addr_iri, SDO.additionalType, address_class_water_iri, graph_name)
+                )
+            elif addr_standard_code == "UN":
+                ds.add(
+                    (
+                        addr_iri,
+                        SDO.additionalType,
+                        address_class_unknown_iri,
+                        graph_name,
+                    )
+                )
+            else:
+                ds.add(
+                    (
+                        addr_iri,
+                        SDO.additionalType,
+                        address_class_unknown_iri,
+                        graph_name,
+                    )
+                )
 
         # lifecycle stage
         if addr_create_date := row[ADDR_CREATE_DATE]:
