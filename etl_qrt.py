@@ -21,7 +21,7 @@ from cam.etl.namespaces import (
     RNPT,
     lifecycle_stage_current,
 )
-from cam.etl.qrt import get_road_label_iri
+from cam.etl.qrt import get_road_name_iri
 from cam.etl.types import Row
 from cam.etl.settings import settings
 
@@ -36,12 +36,6 @@ GN_AFFIX_URL = "https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/voca
 
 def get_iri(road_id: str):
     return URIRef(f"https://linked.data.gov.au/dataset/qld-addr/road/{road_id}")
-
-
-def get_segment_iri(segment_id: str):
-    return URIRef(
-        f"https://linked.data.gov.au/dataset/qld-addr/road-segment/{segment_id}"
-    )
 
 
 def get_locality_iri(value: str):
@@ -76,8 +70,7 @@ def transform_row(
     road_suffix_concept_scheme: URIRef,
 ):
     iri = get_iri(row[road_id])
-    segment_iri = get_segment_iri(row[road_segment_id])
-    label_iri = get_road_label_iri(row[road_id])
+    label_iri = get_road_name_iri(row[road_id])
 
     # Road Object
     ds.add((iri, RDF.type, ROADS.RoadObject, graph_name))
@@ -89,63 +82,7 @@ def transform_row(
             graph_name,
         )
     )
-    ds.add((iri, SDO.hasPart, segment_iri, graph_name))
     ds.add((iri, CN.hasName, label_iri, graph_name))
-
-    # Road Segment
-    ds.add((segment_iri, RDF.type, ROADS.RoadSegment, graph_name))
-    ds.add(
-        (
-            segment_iri,
-            SDO.identifier,
-            Literal(row[road_segment_id], datatype=sir_id_datatype),
-            graph_name,
-        )
-    )
-    ds.add((segment_iri, SDO.isPartOf, iri, graph_name))
-
-    add_additional_property(
-        segment_iri, locality_left, row[locality_left], ds, graph_name
-    )
-    add_additional_property(
-        segment_iri, locality_right, row[locality_right], ds, graph_name
-    )
-    add_additional_property(
-        segment_iri, lga_name_left, row[lga_name_left], ds, graph_name
-    )
-    add_additional_property(
-        segment_iri, lga_name_right, row[lga_name_right], ds, graph_name
-    )
-
-    locality_left_iri = get_locality_iri(row[locality_left])
-    ds.add((segment_iri, ROADS.localityLeft, locality_left_iri, graph_name))
-    ds.add((locality_left_iri, SDO.name, Literal(row[locality_left]), graph_name))
-
-    locality_right_iri = get_locality_iri(row[locality_right])
-    ds.add((segment_iri, ROADS.localityRight, locality_right_iri, graph_name))
-    ds.add((locality_right_iri, SDO.name, Literal(row[locality_right]), graph_name))
-
-    lga_left_iri = get_lga_iri(row[lga_name_left])
-    ds.add((segment_iri, ROADS.lgaLeft, lga_left_iri, graph_name))
-    ds.add((lga_left_iri, SDO.name, Literal(row[lga_name_left]), graph_name))
-
-    lga_right_iri = get_lga_iri(row[lga_name_right])
-    ds.add((segment_iri, ROADS.lgaRight, lga_right_iri, graph_name))
-    ds.add((lga_right_iri, SDO.name, Literal(row[lga_name_right]), graph_name))
-
-    # Road Label
-    ds.add((label_iri, RDF.type, ROADS.RoadName, graph_name))
-    ds.add((label_iri, RDF.type, CN.CompoundName, graph_name))
-    ds.add((label_iri, CN.isNameFor, iri, graph_name))
-    ds.add((label_iri, SDO.name, Literal(row[road_name_full]), graph_name))
-    add_additional_property(
-        label_iri, road_name_basic, row[road_name_basic], ds, graph_name
-    )
-    # add_additional_property(
-    #     label_iri, road_name_source, row[road_name_source], ds, graph_name
-    # )
-
-    # TODO: add authority
 
     # Road Label Lifecycle Stage
     bnode = BNode(f"{row[road_id]}-lifecycle-stage")
@@ -347,11 +284,6 @@ def main():
                 dedent(
                     """\
                     SELECT
-                        q.segment_id,
-                        q.locality_l as locality_left, 
-                        q.locality_r as locality_right, 
-                        q.lga_name_l as lga_name_left,
-                        q.lga_name_r as lga_name_right,
                         q.road_id as road_id_1,
                         q.road_name_ as road_name_full_1,
                         q.road_name as road_name_1,

@@ -41,7 +41,7 @@ from cam.etl.namespaces import (
     qld_state,
 )
 from cam.etl.pndb import get_geographical_name_iri
-from cam.etl.qrt import get_road_label_iri
+from cam.etl.qrt import get_road_name_iri
 from cam.etl.types import Row
 from cam.etl.settings import settings
 
@@ -226,9 +226,9 @@ def worker(
         # street
         road_id = row[ROAD_ID]
         if road_id is not None:
-            street_iri = get_road_label_iri(road_id)
+            street_iri = get_road_name_iri(road_id)
         else:
-            street_iri = get_road_label_iri(row[LALF_ROAD_ID])
+            street_iri = get_road_name_iri(row[LALF_ROAD_ID])
             add_additional_property(
                 addr_iri,
                 "missing_qrt_road",
