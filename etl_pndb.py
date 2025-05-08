@@ -60,6 +60,7 @@ ORIGIN = "origin"
 HISTORY = "history"
 LINKS = "links"
 LANGUAGE = "language"
+LGA = "lga"
 PRONUNCIATION = "pronunciation"
 SOURCE = "source"
 DATE_ADDED = "date_added"
@@ -283,6 +284,8 @@ def add_geographical_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
         add_additional_property(
             label_iri, PLACE_CURRENCY, place_currency, ds, graph_name
         )
+    if lga := row[LGA]:
+        add_additional_property(label_iri, "local_authority", lga, ds, graph_name)
 
 
 def add_indigenous_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
