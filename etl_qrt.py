@@ -52,11 +52,6 @@ def get_lga_iri(value: str):
 
 def transform_row(
     road_id: str,
-    road_segment_id: str,
-    locality_left: str,
-    locality_right: str,
-    lga_name_left: str,
-    lga_name_right: str,
     road_name_full: str,
     road_name: str,
     road_type: str,
@@ -184,21 +179,20 @@ def transform_row(
             )
         ds.add((bnode, SDO.value, concept, graph_name))
 
+    # Road Name
+    ds.add((label_iri, RDF.type, ROADS.RoadName, graph_name))
+    ds.add((label_iri, RDF.type, CN.CompoundName, graph_name))
+    ds.add((label_iri, CN.isNameFor, iri, graph_name))
+    ds.add((label_iri, SDO.name, Literal(row[road_name_full]), graph_name))
+
 
 @worker_wrap
 def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
-    ROAD_SEGMENT_ID = "segment_id"
-    LOCALITY_LEFT = "locality_left"
-    LOCALITY_RIGHT = "locality_right"
-    LGA_NAME_LEFT = "lga_name_left"
-    LGA_NAME_RIGHT = "lga_name_right"
-
     ROAD_ID = "road_id_1"
     ROAD_NAME_FULL = "road_name_full_1"
     ROAD_NAME = "road_name_1"
     ROAD_TYPE = "road_type_1"
     ROAD_SUFFIX = "road_suffix_1"
-    ROAD_NAME_BASIC = "road_name_basic_1"
     # ROAD_NAME_SOURCE = "road_name_1_source"
 
     ROAD_ID_2 = "road_id_2"
@@ -206,7 +200,6 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
     ROAD_NAME_2 = "road_name_2"
     ROAD_TYPE_2 = "road_type_2"
     ROAD_SUFFIX_2 = "road_suffix_2"
-    ROAD_NAME_BASIC_2 = "road_name_basic_2"
     # ROAD_NAME_SOURCE_2 = "road_name_2_source"
 
     road_type_concept_scheme = URIRef("https://linked.data.gov.au/def/road-types")
@@ -216,16 +209,10 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
     for row in rows:
         transform_row(
             ROAD_ID,
-            ROAD_SEGMENT_ID,
-            LOCALITY_LEFT,
-            LOCALITY_RIGHT,
-            LGA_NAME_LEFT,
-            LGA_NAME_RIGHT,
             ROAD_NAME_FULL,
             ROAD_NAME,
             ROAD_TYPE,
             ROAD_SUFFIX,
-            ROAD_NAME_BASIC,
             # ROAD_NAME_SOURCE,
             ds,
             vocab_graph,
@@ -236,11 +223,6 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
         # if row[ROAD_NAME_FULL_2]:
         #     transform_row(
         #         ROAD_ID_2,
-        #         ROAD_SEGMENT_ID,
-        #         LOCALITY_LEFT,
-        #         LOCALITY_RIGHT,
-        #         LGA_NAME_LEFT,
-        #         LGA_NAME_RIGHT,
         #         ROAD_NAME_FULL_2,
         #         ROAD_NAME_2,
         #         ROAD_TYPE_2,
@@ -285,6 +267,7 @@ def main():
                     """\
                     SELECT DISTINCT
                         q.road_id as road_id_1,
+                        q.road_name_ as road_name_full_1,
                         q.road_name as road_name_1,
                         q.road_type as road_type_1,
                         q.road_suffi as road_suffix_1
