@@ -167,7 +167,7 @@ tasks:
       - uv run python etl_lalf_address.py
       - uv run python etl_lalf_property_name.py
       - uv run python etl_lalf_property_name_on_address.py
-
+      - uv run python etl_lalf_road_missing_qrt.py
   etl:
     desc: Run the ETL.
     cmds:

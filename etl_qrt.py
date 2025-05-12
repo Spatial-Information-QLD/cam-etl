@@ -6,7 +6,6 @@ from pathlib import Path
 from rdflib import Dataset, Graph, URIRef, RDF, BNode, Literal, SDO, SKOS
 
 from cam.etl import (
-    add_additional_property,
     get_db_connection,
     get_concept_from_vocab,
     get_vocab_graph,
@@ -21,7 +20,7 @@ from cam.etl.namespaces import (
     RNPT,
     lifecycle_stage_current,
 )
-from cam.etl.qrt import get_road_name_iri
+from cam.etl.qrt import get_road_name_iri, get_road_object_iri
 from cam.etl.types import Row
 from cam.etl.settings import settings
 
@@ -32,10 +31,6 @@ graph_name = URIRef("urn:qali:graph:roads")
 
 ROAD_TYPES_URL = "https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@9fa34d76fc0a27d711d8030b934c2c83dd378156/vocabularies-qsi/road-types.ttl"
 GN_AFFIX_URL = "https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@b07763c87f2f872133197e6fb0eb911de85879c6/vocabularies-qsi/gn-affix.ttl"
-
-
-def get_iri(road_id: str):
-    return URIRef(f"https://linked.data.gov.au/dataset/qld-addr/road/{road_id}")
 
 
 def get_locality_iri(value: str):
@@ -63,7 +58,7 @@ def transform_row(
     road_type_concept_scheme: URIRef,
     road_suffix_concept_scheme: URIRef,
 ):
-    iri = get_iri(row[road_id])
+    iri = get_road_object_iri(row[road_id])
     label_iri = get_road_name_iri(row[road_id])
 
     # Road Object
@@ -88,7 +83,7 @@ def transform_row(
         (
             label_iri,
             CN.nameTemplate,
-            Literal(f"{{RNPT.RoadGivenName}} {{RNPT.RoadType}} {{RNPT.RoadSuffix}}"),
+            Literal(f"{{RNPT.roadGivenName}} {{RNPT.roadType}} {{RNPT.roadSuffix}}"),
             graph_name,
         )
     )

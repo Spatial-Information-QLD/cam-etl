@@ -3,6 +3,7 @@ import concurrent.futures
 from textwrap import dedent
 from pathlib import Path
 
+from psycopg import Cursor
 from rdflib import (
     BNode,
     Dataset,
@@ -22,6 +23,7 @@ from cam.etl import (
     worker_wrap,
     serialize,
     add_additional_property,
+    get_concept_from_vocab,
 )
 from cam.etl.lalf_address import (
     get_address_iri,
@@ -39,18 +41,23 @@ from cam.etl.namespaces import (
     ADDR_PT,
     aus_country,
     qld_state,
+    ROADS,
+    RNPT,
 )
 from cam.etl.pndb import get_geographical_name_iri
-from cam.etl.qrt import get_road_name_iri
+from cam.etl.qrt import get_road_name_iri, get_road_object_iri
 from cam.etl.types import Row
 from cam.etl.settings import settings
 
 dataset_name = "lalf_address"
 output_dir_name = "lalf-rdf"
 graph_name = URIRef("urn:qali:graph:addresses")
+road_graph_name = URIRef("urn:qali:graph:roads")
 
 SUB_ADDRESS_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@2776af7d25b1484b9f7c2886adf5667231deb6ad/vocabs/Addresses/addr-subaddress-types.ttl"
 LEVEL_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@6d2b90a4acb306791922d4649914a03cae5d019d/vocabs/Addresses/addr-level-types.ttl"
+ROAD_NAME_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@c0b59a51f09d1ae4b0a337f0a10747c45b1d44d3/vocabs/TransportNetworks/road-types.ttl"
+ROAD_NAME_SUFFIXES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@f5650d07288b4879620be924042c73b6dae881e3/vocabs/GeographicalNames/gn-affix.ttl"
 
 address_class_non_standard_iri = URIRef(
     "https://linked.data.gov.au/def/address-classes/non-standard"
@@ -90,348 +97,581 @@ LEVEL_NO = "level_no"
 LEVEL_TYPE_CODE = "level_type_code"
 
 
+def transform_road(
+    road_id: str,
+    road_iri: URIRef,
+    ds: Dataset,
+    cursor: Cursor,
+    road_name_types_graph: Graph,
+    road_name_suffixes_graph: Graph,
+):
+    road_type_concept_scheme = URIRef("https://linked.data.gov.au/def/road-types")
+    road_suffix_concept_scheme = URIRef("https://linked.data.gov.au/def/gn-affix")
+
+    # Get road data from LALF road
+    cursor.execute(
+        dedent(
+            """\
+            select r.road_name, r.road_name_type_code, r.road_name_suffix_code, r.qrt_road_name_basic as road_name_full
+            from "lalfpdba.lf_road" r
+            WHERE r.road_id = %s
+            """
+        ),
+        (road_id,),
+    )
+    road_row = cursor.fetchone()
+    if road_row is None:
+        raise Exception(f"Road {road_id} not found")
+
+    ROAD_NAME = "road_name"
+    ROAD_NAME_TYPE_CODE = "road_name_type_code"
+    ROAD_NAME_SUFFIX_CODE = "road_name_suffix_code"
+    ROAD_NAME_FULL = "road_name_full"
+    # Road object
+    road_object_iri = get_road_object_iri(road_id)
+    ds.add((road_object_iri, RDF.type, ROADS.RoadObject, road_graph_name))
+    ds.add(
+        (
+            road_object_iri,
+            SDO.identifier,
+            Literal(road_id, datatype=sir_id_datatype),
+            road_graph_name,
+        )
+    )
+    ds.add((road_object_iri, CN.hasName, road_iri, road_graph_name))
+
+    # Additional property - missing QRT road
+    add_additional_property(
+        road_iri,
+        "missing_qrt_road",
+        True,
+        ds,
+        road_graph_name,
+    )
+    add_additional_property(
+        road_object_iri,
+        "missing_qrt_road",
+        True,
+        ds,
+        road_graph_name,
+    )
+
+    # Road name lifecycle stage
+    bnode = BNode(f"{road_id}-lifecycle-stage")
+    ds.add((road_iri, LC.hasLifecycleStage, bnode, road_graph_name))
+    ds.add((bnode, SDO.additionalType, lifecycle_stage_current, road_graph_name))
+
+    # Name template
+    ds.add(
+        (
+            road_iri,
+            CN.nameTemplate,
+            Literal(f"{{RNPT.roadGivenName}} {{RNPT.roadType}} {{RNPT.roadSuffix}}"),
+            road_graph_name,
+        )
+    )
+
+    # Road given name
+    road_name_value = road_row[ROAD_NAME]
+    if road_name_value:
+        bnode = BNode(f"{road_id}-road-name")
+        ds.add((road_iri, SDO.hasPart, bnode, road_graph_name))
+        ds.add(
+            (
+                bnode,
+                SDO.additionalType,
+                RNPT.roadGivenName,
+                road_graph_name,
+            )
+        )
+        ds.add((bnode, SDO.value, Literal(road_name_value), road_graph_name))
+
+    # Road type
+    road_type_value = road_row[ROAD_NAME_TYPE_CODE]
+    if road_type_value and road_type_value != "XXX":
+        bnode = BNode(f"{road_id}-road-type")
+        ds.add((road_iri, SDO.hasPart, bnode, road_graph_name))
+        ds.add(
+            (
+                bnode,
+                SDO.additionalType,
+                RNPT.roadType,
+                road_graph_name,
+            )
+        )
+
+        concept = get_concept_from_vocab(
+            SKOS.altLabel,
+            Literal(road_type_value, lang="en"),
+            road_type_concept_scheme,
+            road_name_types_graph,
+        )
+        if concept is None:
+            concept = get_concept_from_vocab(
+                SKOS.altLabel,
+                Literal(road_type_value, lang="en-AU"),
+                road_type_concept_scheme,
+                road_name_types_graph,
+            )
+        if not concept:
+            raise Exception(
+                f"Concept IRI not found for road type value '{road_type_value}'"
+            )
+        ds.add((bnode, SDO.value, concept, road_graph_name))
+
+    # Road suffix
+    road_suffix_value = road_row[ROAD_NAME_SUFFIX_CODE]
+    if road_suffix_value:
+        bnode = BNode(f"{road_id}-road-suffix")
+        ds.add((road_iri, SDO.hasPart, bnode, road_graph_name))
+        ds.add(
+            (
+                bnode,
+                SDO.additionalType,
+                RNPT.roadSuffix,
+                road_graph_name,
+            )
+        )
+        concept = get_concept_from_vocab(
+            SKOS.altLabel,
+            Literal(road_suffix_value, lang="en"),
+            road_suffix_concept_scheme,
+            road_name_suffixes_graph,
+        )
+        if not concept:
+            raise Exception(
+                f"Concept IRI not found for road suffix value '{road_suffix_value}'"
+            )
+        ds.add((bnode, SDO.value, concept, road_graph_name))
+
+    # Road name
+    ds.add((road_iri, RDF.type, ROADS.RoadName, road_graph_name))
+    ds.add((road_iri, RDF.type, CN.CompoundName, road_graph_name))
+    ds.add((road_iri, CN.isNameFor, road_object_iri, road_graph_name))
+    ds.add((road_iri, SDO.name, Literal(road_row[ROAD_NAME_FULL]), road_graph_name))
+
+
 @worker_wrap
 def worker(
     rows: list[Row],
     job_id: int,
     sub_address_types_graph: Graph,
     level_types_graph: Graph,
+    road_name_types_graph: Graph,
+    road_name_suffixes_graph: Graph,
 ):
     ds = Dataset(store="Oxigraph")
 
-    for row in rows:
-        # use this for bnode identifiers that are compatible with oxigraph
-        addr_id_uuid = get_address_uuid(row[ADDR_ID])
+    with get_db_connection(
+        host=settings.etl.db.host,
+        port=settings.etl.db.port,
+        dbname=settings.etl.db.name,
+        user=settings.etl.db.user,
+        password=settings.etl.db.password,
+    ) as connection:
+        with connection.cursor() as cursor:
+            for row in rows:
+                # use this for bnode identifiers that are compatible with oxigraph
+                addr_id_uuid = get_address_uuid(row[ADDR_ID])
 
-        # address
-        addr_iri = get_address_iri(row[ADDR_ID])
-        ds.add((addr_iri, RDF.type, ADDR.Address, graph_name))
-        ds.add((addr_iri, RDF.type, CN.CompoundName, graph_name))
-        ds.add(
-            (
-                addr_iri,
-                SDO.identifier,
-                Literal(row[ADDR_ID], datatype=sir_id_datatype),
-                graph_name,
-            )
-        )
-
-        # link to parcel
-        parcel_iri = get_parcel_iri(row[LOT_NO], row[PLAN_NO])
-        ds.add((addr_iri, CN.isNameFor, parcel_iri, graph_name))
-        ds.add((parcel_iri, CN.hasName, addr_iri, graph_name))
-
-        # address status
-        address_status = row[ADDR_STATUS_CODE]
-        addr_status_iri = addr_status_vocab_mapping[address_status]
-        ds.add((addr_iri, ADDR.hasStatus, addr_status_iri, graph_name))
-
-        # address type - street
-        if addr_standard_code := row[ADDR_STANDARD_CODE]:
-            if addr_standard_code == "NS":
+                # address
+                addr_iri = get_address_iri(row[ADDR_ID])
+                ds.add((addr_iri, RDF.type, ADDR.Address, graph_name))
+                ds.add((addr_iri, RDF.type, CN.CompoundName, graph_name))
                 ds.add(
                     (
                         addr_iri,
-                        SDO.additionalType,
-                        address_class_non_standard_iri,
-                        graph_name,
-                    )
-                )
-            elif addr_standard_code == "RU":
-                ds.add(
-                    (
-                        addr_iri,
-                        SDO.additionalType,
-                        address_class_street_rural_iri,
-                        graph_name,
-                    )
-                )
-            elif addr_standard_code == "UR":
-                ds.add(
-                    (
-                        addr_iri,
-                        SDO.additionalType,
-                        address_class_street_urban_iri,
-                        graph_name,
-                    )
-                )
-            elif addr_standard_code == "WA":
-                ds.add(
-                    (addr_iri, SDO.additionalType, address_class_water_iri, graph_name)
-                )
-            elif addr_standard_code == "UN":
-                ds.add(
-                    (
-                        addr_iri,
-                        SDO.additionalType,
-                        address_class_unknown_iri,
-                        graph_name,
-                    )
-                )
-            else:
-                ds.add(
-                    (
-                        addr_iri,
-                        SDO.additionalType,
-                        address_class_unknown_iri,
+                        SDO.identifier,
+                        Literal(row[ADDR_ID], datatype=sir_id_datatype),
                         graph_name,
                     )
                 )
 
-        # lifecycle stage
-        if addr_create_date := row[ADDR_CREATE_DATE]:
-            lifecycle_node = BNode(f"{addr_id_uuid}-lifecycle")
-            lifecycle_time_node = BNode(f"{addr_id_uuid}-lifecycle-time")
-            ds.add((addr_iri, LC.hasLifecycleStage, lifecycle_node, graph_name))
-            ds.add((lifecycle_node, TIME.hasBeginning, lifecycle_time_node, graph_name))
-            ds.add(
-                (
-                    lifecycle_time_node,
-                    TIME.inXSDDateTime,
-                    Literal(addr_create_date, datatype=XSD.dateTime),
-                    graph_name,
-                )
-            )
-            ds.add(
-                (
-                    lifecycle_node,
-                    SDO.additionalType,
-                    lifecycle_stage_current,
-                    graph_name,
-                )
-            )
+                # link to parcel
+                parcel_iri = get_parcel_iri(row[LOT_NO], row[PLAN_NO])
+                ds.add((addr_iri, CN.isNameFor, parcel_iri, graph_name))
+                ds.add((parcel_iri, CN.hasName, addr_iri, graph_name))
 
-        # country
-        country_node = BNode(f"{addr_id_uuid}-country")
-        ds.add((addr_iri, SDO.hasPart, country_node, graph_name))
-        ds.add((country_node, SDO.additionalType, ADDR_PT.countryName, graph_name))
-        ds.add((country_node, SDO.value, aus_country, graph_name))
+                # address status
+                address_status = row[ADDR_STATUS_CODE]
+                addr_status_iri = addr_status_vocab_mapping[address_status]
+                ds.add((addr_iri, ADDR.hasStatus, addr_status_iri, graph_name))
 
-        # state
-        state_node = BNode(f"{addr_id_uuid}-state")
-        ds.add((addr_iri, SDO.hasPart, state_node, graph_name))
-        ds.add((state_node, SDO.additionalType, ADDR_PT.stateOrTerritory, graph_name))
-        ds.add((state_node, SDO.value, qld_state, graph_name))
+                # address type - street
+                if addr_standard_code := row[ADDR_STANDARD_CODE]:
+                    if addr_standard_code == "NS":
+                        ds.add(
+                            (
+                                addr_iri,
+                                SDO.additionalType,
+                                address_class_non_standard_iri,
+                                graph_name,
+                            )
+                        )
+                    elif addr_standard_code == "RU":
+                        ds.add(
+                            (
+                                addr_iri,
+                                SDO.additionalType,
+                                address_class_street_rural_iri,
+                                graph_name,
+                            )
+                        )
+                    elif addr_standard_code == "UR":
+                        ds.add(
+                            (
+                                addr_iri,
+                                SDO.additionalType,
+                                address_class_street_urban_iri,
+                                graph_name,
+                            )
+                        )
+                    elif addr_standard_code == "WA":
+                        ds.add(
+                            (
+                                addr_iri,
+                                SDO.additionalType,
+                                address_class_water_iri,
+                                graph_name,
+                            )
+                        )
+                    elif addr_standard_code == "UN":
+                        ds.add(
+                            (
+                                addr_iri,
+                                SDO.additionalType,
+                                address_class_unknown_iri,
+                                graph_name,
+                            )
+                        )
+                    else:
+                        ds.add(
+                            (
+                                addr_iri,
+                                SDO.additionalType,
+                                address_class_unknown_iri,
+                                graph_name,
+                            )
+                        )
 
-        # postcode
-        # TODO:
+                # lifecycle stage
+                if addr_create_date := row[ADDR_CREATE_DATE]:
+                    lifecycle_node = BNode(f"{addr_id_uuid}-lifecycle")
+                    lifecycle_time_node = BNode(f"{addr_id_uuid}-lifecycle-time")
+                    ds.add((addr_iri, LC.hasLifecycleStage, lifecycle_node, graph_name))
+                    ds.add(
+                        (
+                            lifecycle_node,
+                            TIME.hasBeginning,
+                            lifecycle_time_node,
+                            graph_name,
+                        )
+                    )
+                    ds.add(
+                        (
+                            lifecycle_time_node,
+                            TIME.inXSDDateTime,
+                            Literal(addr_create_date, datatype=XSD.dateTime),
+                            graph_name,
+                        )
+                    )
+                    ds.add(
+                        (
+                            lifecycle_node,
+                            SDO.additionalType,
+                            lifecycle_stage_current,
+                            graph_name,
+                        )
+                    )
 
-        # locality
-        locality_iri = get_geographical_name_iri(row[LOCALITY_REF_NO])
-        locality_node = BNode(f"{addr_id_uuid}-locality")
-        ds.add((addr_iri, SDO.hasPart, locality_node, graph_name))
-        ds.add((locality_node, SDO.additionalType, ADDR_PT.locality, graph_name))
-        ds.add((locality_node, SDO.value, locality_iri, graph_name))
-
-        # street
-        road_id = row[ROAD_ID]
-        if road_id is not None:
-            street_iri = get_road_name_iri(road_id)
-        else:
-            street_iri = get_road_name_iri(row[LALF_ROAD_ID])
-            add_additional_property(
-                addr_iri,
-                "missing_qrt_road",
-                True,
-                ds,
-                graph_name,
-            )
-        road_node = BNode(f"{addr_id_uuid}-road")
-        ds.add((addr_iri, SDO.hasPart, road_node, graph_name))
-        ds.add((road_node, SDO.additionalType, ADDR_PT.road, graph_name))
-        ds.add((road_node, SDO.value, street_iri, graph_name))
-
-        # street no last suffix
-        if street_no_last_suffix := row[STREET_NO_LAST_SUFFIX]:
-            street_no_last_suffix_node = BNode(f"{addr_id_uuid}-street-no-last-suffix")
-            ds.add((addr_iri, SDO.hasPart, street_no_last_suffix_node, graph_name))
-            ds.add(
-                (
-                    street_no_last_suffix_node,
-                    SDO.additionalType,
-                    ADDR_PT.addressNumberLastSuffix,
-                    graph_name,
+                # country
+                country_node = BNode(f"{addr_id_uuid}-country")
+                ds.add((addr_iri, SDO.hasPart, country_node, graph_name))
+                ds.add(
+                    (country_node, SDO.additionalType, ADDR_PT.countryName, graph_name)
                 )
-            )
-            ds.add(
-                (
-                    street_no_last_suffix_node,
-                    SDO.value,
-                    Literal(street_no_last_suffix),
-                    graph_name,
-                )
-            )
+                ds.add((country_node, SDO.value, aus_country, graph_name))
 
-        # street no last
-        if street_no_last := row[STREET_NO_LAST]:
-            street_no_last_node = BNode(f"{addr_id_uuid}-street-no-last")
-            ds.add((addr_iri, SDO.hasPart, street_no_last_node, graph_name))
-            ds.add(
-                (
-                    street_no_last_node,
-                    SDO.additionalType,
-                    ADDR_PT.addressNumberLast,
-                    graph_name,
+                # state
+                state_node = BNode(f"{addr_id_uuid}-state")
+                ds.add((addr_iri, SDO.hasPart, state_node, graph_name))
+                ds.add(
+                    (
+                        state_node,
+                        SDO.additionalType,
+                        ADDR_PT.stateOrTerritory,
+                        graph_name,
+                    )
                 )
-            )
-            ds.add(
-                (street_no_last_node, SDO.value, Literal(street_no_last), graph_name)
-            )
+                ds.add((state_node, SDO.value, qld_state, graph_name))
 
-        # street no first suffix
-        if street_no_first_suffix := row[STREET_NO_FIRST_SUFFIX]:
-            street_no_first_suffix_node = BNode(
-                f"{addr_id_uuid}-street-no-first-suffix"
-            )
-            ds.add((addr_iri, SDO.hasPart, street_no_first_suffix_node, graph_name))
-            ds.add(
-                (
-                    street_no_first_suffix_node,
-                    SDO.additionalType,
-                    ADDR_PT.addressNumberFirstSuffix,
-                    graph_name,
-                )
-            )
-            ds.add(
-                (
-                    street_no_first_suffix_node,
-                    SDO.value,
-                    Literal(street_no_first_suffix),
-                    graph_name,
-                )
-            )
+                # postcode
+                # TODO:
 
-        # street no first
-        if street_no_first := row[STREET_NO_FIRST]:
-            street_no_first_node = BNode(f"{addr_id_uuid}-street-no-first")
-            ds.add((addr_iri, SDO.hasPart, street_no_first_node, graph_name))
-            ds.add(
-                (
-                    street_no_first_node,
-                    SDO.additionalType,
-                    ADDR_PT.addressNumberFirst,
-                    graph_name,
+                # locality
+                locality_iri = get_geographical_name_iri(row[LOCALITY_REF_NO])
+                locality_node = BNode(f"{addr_id_uuid}-locality")
+                ds.add((addr_iri, SDO.hasPart, locality_node, graph_name))
+                ds.add(
+                    (locality_node, SDO.additionalType, ADDR_PT.locality, graph_name)
                 )
-            )
-            ds.add(
-                (street_no_first_node, SDO.value, Literal(street_no_first), graph_name)
-            )
+                ds.add((locality_node, SDO.value, locality_iri, graph_name))
 
-        # sub-address number suffix
-        if unit_suffix := row[UNIT_SUFFIX]:
-            unit_suffix_node = BNode(f"{addr_id_uuid}-unit-suffix")
-            ds.add((addr_iri, SDO.hasPart, unit_suffix_node, graph_name))
-            ds.add(
-                (
-                    unit_suffix_node,
-                    SDO.additionalType,
-                    ADDR_PT.subaddressNumberSuffix,
-                    graph_name,
-                )
-            )
-            ds.add((unit_suffix_node, SDO.value, Literal(unit_suffix), graph_name))
+                # street
+                road_id = row[ROAD_ID]
+                if road_id is not None:
+                    street_iri = get_road_name_iri(road_id)
+                else:
+                    street_iri = get_road_name_iri(row[LALF_ROAD_ID])
+                    add_additional_property(
+                        addr_iri,
+                        "missing_qrt_road",
+                        True,
+                        ds,
+                        graph_name,
+                    )
 
-        # sub-address number
-        if unit_no := row[UNIT_NO]:
-            unit_no_node = BNode(f"{addr_id_uuid}-unit-no")
-            ds.add((addr_iri, SDO.hasPart, unit_no_node, graph_name))
-            ds.add(
-                (unit_no_node, SDO.additionalType, ADDR_PT.subaddressNumber, graph_name)
-            )
-            ds.add((unit_no_node, SDO.value, Literal(unit_no), graph_name))
+                road_node = BNode(f"{addr_id_uuid}-road")
+                ds.add((addr_iri, SDO.hasPart, road_node, graph_name))
+                ds.add((road_node, SDO.additionalType, ADDR_PT.road, graph_name))
+                ds.add((road_node, SDO.value, street_iri, graph_name))
 
-        # sub-address type
-        if unit_type_code := row[UNIT_TYPE_CODE]:
-            unit_type_code_node = BNode(f"{addr_id_uuid}-unit-type-code")
-            unit_type_iri = sub_address_types_graph.value(
-                predicate=SKOS.altLabel, object=Literal(unit_type_code, lang="en")
-            )
-            if unit_type_iri is None:
-                raise Exception(
-                    f"No sub-address type concept matched for value {unit_type_code}."
-                )
-            ds.add((addr_iri, SDO.hasPart, unit_type_code_node, graph_name))
-            ds.add(
-                (
-                    unit_type_code_node,
-                    SDO.additionalType,
-                    ADDR_PT.subaddressType,
-                    graph_name,
-                )
-            )
-            ds.add((unit_type_code_node, SDO.value, unit_type_iri, graph_name))
-            unit_type_label = sub_address_types_graph.value(
-                unit_type_iri, SKOS.prefLabel
-            )
-            if unit_type_label is None:
-                raise Exception("No unit type label found for value {unit_type_code}")
-            unit_type_label = str(unit_type_label)
+                # street no last suffix
+                if street_no_last_suffix := row[STREET_NO_LAST_SUFFIX]:
+                    street_no_last_suffix_node = BNode(
+                        f"{addr_id_uuid}-street-no-last-suffix"
+                    )
+                    ds.add(
+                        (addr_iri, SDO.hasPart, street_no_last_suffix_node, graph_name)
+                    )
+                    ds.add(
+                        (
+                            street_no_last_suffix_node,
+                            SDO.additionalType,
+                            ADDR_PT.addressNumberLastSuffix,
+                            graph_name,
+                        )
+                    )
+                    ds.add(
+                        (
+                            street_no_last_suffix_node,
+                            SDO.value,
+                            Literal(street_no_last_suffix),
+                            graph_name,
+                        )
+                    )
 
-        # building level number suffix
-        if level_suffix := row[LEVEL_SUFFIX]:
-            level_suffix_node = BNode(f"{addr_id_uuid}-level-suffix")
-            ds.add((addr_iri, SDO.hasPart, level_suffix_node, graph_name))
-            ds.add(
-                (
-                    level_suffix_node,
-                    SDO.additionalType,
-                    ADDR_PT.buildingLevelNumberSuffix,
-                    graph_name,
-                )
-            )
-            ds.add((level_suffix_node, SDO.value, Literal(level_suffix), graph_name))
+                # street no last
+                if street_no_last := row[STREET_NO_LAST]:
+                    street_no_last_node = BNode(f"{addr_id_uuid}-street-no-last")
+                    ds.add((addr_iri, SDO.hasPart, street_no_last_node, graph_name))
+                    ds.add(
+                        (
+                            street_no_last_node,
+                            SDO.additionalType,
+                            ADDR_PT.addressNumberLast,
+                            graph_name,
+                        )
+                    )
+                    ds.add(
+                        (
+                            street_no_last_node,
+                            SDO.value,
+                            Literal(street_no_last),
+                            graph_name,
+                        )
+                    )
 
-        # building level number
-        if level_no := row[LEVEL_NO]:
-            level_no_node = BNode(f"{addr_id_uuid}-level-no")
-            ds.add((addr_iri, SDO.hasPart, level_no_node, graph_name))
-            ds.add(
-                (
-                    level_no_node,
-                    SDO.additionalType,
-                    ADDR_PT.buildingLevelNumber,
-                    graph_name,
-                )
-            )
-            ds.add((level_no_node, SDO.value, Literal(level_no), graph_name))
+                # street no first suffix
+                if street_no_first_suffix := row[STREET_NO_FIRST_SUFFIX]:
+                    street_no_first_suffix_node = BNode(
+                        f"{addr_id_uuid}-street-no-first-suffix"
+                    )
+                    ds.add(
+                        (addr_iri, SDO.hasPart, street_no_first_suffix_node, graph_name)
+                    )
+                    ds.add(
+                        (
+                            street_no_first_suffix_node,
+                            SDO.additionalType,
+                            ADDR_PT.addressNumberFirstSuffix,
+                            graph_name,
+                        )
+                    )
+                    ds.add(
+                        (
+                            street_no_first_suffix_node,
+                            SDO.value,
+                            Literal(street_no_first_suffix),
+                            graph_name,
+                        )
+                    )
 
-        # building level type
-        if level_type_code := row[LEVEL_TYPE_CODE]:
-            level_type_code_node = BNode(f"{addr_id_uuid}-level-type-code")
-            if level_type_code == "L":
-                level_type_iri = addr_level_type_vocab_mapping[level_type_code]
-            else:
-                level_type_iri = level_types_graph.value(
-                    predicate=SKOS.altLabel, object=Literal(level_type_code, lang="en")
-                )
-            if level_type_iri is None:
-                raise Exception(
-                    f"No level type concept matched for value {level_type_code}."
-                )
-            ds.add((addr_iri, SDO.hasPart, level_type_code_node, graph_name))
-            ds.add(
-                (
-                    level_type_code_node,
-                    SDO.additionalType,
-                    ADDR_PT.buildingLevelType,
-                    graph_name,
-                )
-            )
-            ds.add((level_type_code_node, SDO.value, level_type_iri, graph_name))
-            level_type_label = level_types_graph.value(level_type_iri, SKOS.prefLabel)
-            if level_type_label is None:
-                raise Exception(
-                    f"No level type label found for value {level_type_code}"
-                )
-            level_type_label = str(level_type_label)
+                # street no first
+                if street_no_first := row[STREET_NO_FIRST]:
+                    street_no_first_node = BNode(f"{addr_id_uuid}-street-no-first")
+                    ds.add((addr_iri, SDO.hasPart, street_no_first_node, graph_name))
+                    ds.add(
+                        (
+                            street_no_first_node,
+                            SDO.additionalType,
+                            ADDR_PT.addressNumberFirst,
+                            graph_name,
+                        )
+                    )
+                    ds.add(
+                        (
+                            street_no_first_node,
+                            SDO.value,
+                            Literal(street_no_first),
+                            graph_name,
+                        )
+                    )
 
-        # geographical name
-        # TODO:
+                # sub-address number suffix
+                if unit_suffix := row[UNIT_SUFFIX]:
+                    unit_suffix_node = BNode(f"{addr_id_uuid}-unit-suffix")
+                    ds.add((addr_iri, SDO.hasPart, unit_suffix_node, graph_name))
+                    ds.add(
+                        (
+                            unit_suffix_node,
+                            SDO.additionalType,
+                            ADDR_PT.subaddressNumberSuffix,
+                            graph_name,
+                        )
+                    )
+                    ds.add(
+                        (unit_suffix_node, SDO.value, Literal(unit_suffix), graph_name)
+                    )
 
-        # rdfs:label
-        road_name = row[ROAD_NAME_FULL_1] or row[LALF_ROAD_NAME]
-        label = f"{level_type_label if level_type_code else ''} {level_no}{level_suffix} {unit_type_label + ' ' if unit_type_code else ''}{unit_no}{unit_suffix}{'/' if unit_no else ''}{street_no_first}{'-' + street_no_last if street_no_last else ''}{street_no_last_suffix} {road_name}, {row[LOCALITY_NAME]}, Queensland, Australia".strip()
-        ds.add((addr_iri, SDO.name, Literal(label, datatype=XSD.string), graph_name))
+                # sub-address number
+                if unit_no := row[UNIT_NO]:
+                    unit_no_node = BNode(f"{addr_id_uuid}-unit-no")
+                    ds.add((addr_iri, SDO.hasPart, unit_no_node, graph_name))
+                    ds.add(
+                        (
+                            unit_no_node,
+                            SDO.additionalType,
+                            ADDR_PT.subaddressNumber,
+                            graph_name,
+                        )
+                    )
+                    ds.add((unit_no_node, SDO.value, Literal(unit_no), graph_name))
+
+                # sub-address type
+                if unit_type_code := row[UNIT_TYPE_CODE]:
+                    unit_type_code_node = BNode(f"{addr_id_uuid}-unit-type-code")
+                    unit_type_iri = sub_address_types_graph.value(
+                        predicate=SKOS.altLabel,
+                        object=Literal(unit_type_code, lang="en"),
+                    )
+                    if unit_type_iri is None:
+                        raise Exception(
+                            f"No sub-address type concept matched for value {unit_type_code}."
+                        )
+                    ds.add((addr_iri, SDO.hasPart, unit_type_code_node, graph_name))
+                    ds.add(
+                        (
+                            unit_type_code_node,
+                            SDO.additionalType,
+                            ADDR_PT.subaddressType,
+                            graph_name,
+                        )
+                    )
+                    ds.add((unit_type_code_node, SDO.value, unit_type_iri, graph_name))
+                    unit_type_label = sub_address_types_graph.value(
+                        unit_type_iri, SKOS.prefLabel
+                    )
+                    if unit_type_label is None:
+                        raise Exception(
+                            "No unit type label found for value {unit_type_code}"
+                        )
+                    unit_type_label = str(unit_type_label)
+
+                # building level number suffix
+                if level_suffix := row[LEVEL_SUFFIX]:
+                    level_suffix_node = BNode(f"{addr_id_uuid}-level-suffix")
+                    ds.add((addr_iri, SDO.hasPart, level_suffix_node, graph_name))
+                    ds.add(
+                        (
+                            level_suffix_node,
+                            SDO.additionalType,
+                            ADDR_PT.buildingLevelNumberSuffix,
+                            graph_name,
+                        )
+                    )
+                    ds.add(
+                        (
+                            level_suffix_node,
+                            SDO.value,
+                            Literal(level_suffix),
+                            graph_name,
+                        )
+                    )
+
+                # building level number
+                if level_no := row[LEVEL_NO]:
+                    level_no_node = BNode(f"{addr_id_uuid}-level-no")
+                    ds.add((addr_iri, SDO.hasPart, level_no_node, graph_name))
+                    ds.add(
+                        (
+                            level_no_node,
+                            SDO.additionalType,
+                            ADDR_PT.buildingLevelNumber,
+                            graph_name,
+                        )
+                    )
+                    ds.add((level_no_node, SDO.value, Literal(level_no), graph_name))
+
+                # building level type
+                if level_type_code := row[LEVEL_TYPE_CODE]:
+                    level_type_code_node = BNode(f"{addr_id_uuid}-level-type-code")
+                    if level_type_code == "L":
+                        level_type_iri = addr_level_type_vocab_mapping[level_type_code]
+                    else:
+                        level_type_iri = level_types_graph.value(
+                            predicate=SKOS.altLabel,
+                            object=Literal(level_type_code, lang="en"),
+                        )
+                    if level_type_iri is None:
+                        raise Exception(
+                            f"No level type concept matched for value {level_type_code}."
+                        )
+                    ds.add((addr_iri, SDO.hasPart, level_type_code_node, graph_name))
+                    ds.add(
+                        (
+                            level_type_code_node,
+                            SDO.additionalType,
+                            ADDR_PT.buildingLevelType,
+                            graph_name,
+                        )
+                    )
+                    ds.add(
+                        (level_type_code_node, SDO.value, level_type_iri, graph_name)
+                    )
+                    level_type_label = level_types_graph.value(
+                        level_type_iri, SKOS.prefLabel
+                    )
+                    if level_type_label is None:
+                        raise Exception(
+                            f"No level type label found for value {level_type_code}"
+                        )
+                    level_type_label = str(level_type_label)
+
+                # geographical name
+                # TODO:
+
+                # rdfs:label
+                road_name = row[ROAD_NAME_FULL_1] or row[LALF_ROAD_NAME]
+                label = f"{level_type_label if level_type_code else ''} {level_no}{level_suffix} {unit_type_label + ' ' if unit_type_code else ''}{unit_no}{unit_suffix}{'/' if unit_no else ''}{street_no_first}{'-' + street_no_last if street_no_last else ''}{street_no_last_suffix} {road_name}, {row[LOCALITY_NAME]}, Queensland, Australia".strip()
+                ds.add(
+                    (
+                        addr_iri,
+                        SDO.name,
+                        Literal(label, datatype=XSD.string),
+                        graph_name,
+                    )
+                )
 
     output_dir = Path(output_dir_name)
     filename = Path(dataset_name + "-" + str(job_id) + ".nq")
@@ -443,10 +683,18 @@ def main():
 
     sub_address_types_graph = get_vocab_graph([SUB_ADDRESS_TYPES_VOCAB_URL])
     level_types_graph = get_vocab_graph([LEVEL_TYPES_VOCAB_URL])
+    road_name_types_graph = get_vocab_graph([ROAD_NAME_TYPES_VOCAB_URL])
+    road_name_suffixes_graph = get_vocab_graph([ROAD_NAME_SUFFIXES_VOCAB_URL])
     print(
         f"Remotely fetched {len(sub_address_types_graph)} statements for sub_address_types_graph"
     )
     print(f"Remotely fetched {len(level_types_graph)} statements for level_types_graph")
+    print(
+        f"Remotely fetched {len(road_name_types_graph)} statements for road_name_types_graph"
+    )
+    print(
+        f"Remotely fetched {len(road_name_suffixes_graph)} statements for road_name_suffixes_graph"
+    )
 
     with get_db_connection(
         host=settings.etl.db.host,
@@ -493,6 +741,8 @@ def main():
                             job_id,
                             sub_address_types_graph,
                             level_types_graph,
+                            road_name_types_graph,
+                            road_name_suffixes_graph,
                         )
                     )
 
