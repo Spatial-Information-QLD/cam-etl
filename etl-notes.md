@@ -160,6 +160,8 @@ SET
 
 With the property names dataset, we need to update the `lot` values from `0` to `9999` to align with the lot and plan identifiers for parcels in LALF.
 
+Note: This is no longer required. The updated file (`LALF place name de-duplication.csv`) provided by Michael has the correct 9999 values.
+
 ```sql
 UPDATE "lalf_property_address_joined" p
 SET
@@ -440,6 +442,8 @@ The place names data in the LALF is separate to the PNDB. These place names are 
 The `lalfpdba.lf_place_name` table contains the place names, but the same name for the same entity is duplicated over the `pl_name_id` for each associated site.
 
 #### Place Name De-duplication
+
+**Note that the below is outdated**. We have a new file now called `LALF place name de-duplication.csv`. Load this file into the `lalf_property_address_joined` table.
 
 The place names for large complexes are duplicated with multiple identifiers in the `lf_place_name` table. Ashlee and Michael have provided a de-duplicated dataset called `lalf_property_address_joined.csv`. We load this data in as `lalf_property_address_joined` table.
 
