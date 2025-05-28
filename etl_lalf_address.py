@@ -36,7 +36,7 @@ from cam.etl.namespaces import (
     ADDR,
     CN,
     LC,
-    sir_id_datatype,
+    address_pid_datatype,
     lifecycle_stage_current,
     ADDR_PT,
     aus_country,
@@ -134,7 +134,7 @@ def transform_road(
         (
             road_object_iri,
             SDO.identifier,
-            Literal(road_id, datatype=sir_id_datatype),
+            Literal(road_id, datatype=address_pid_datatype),
             road_graph_name,
         )
     )
@@ -282,7 +282,7 @@ def worker(
                     (
                         addr_iri,
                         SDO.identifier,
-                        Literal(row[ADDR_ID], datatype=sir_id_datatype),
+                        Literal(row[ADDR_ID], datatype=address_pid_datatype),
                         graph_name,
                     )
                 )

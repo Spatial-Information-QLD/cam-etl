@@ -25,7 +25,7 @@ from cam.etl import (
 from cam.etl.namespaces import (
     CN,
     LC,
-    sir_id_datatype,
+    qrt_datatype,
     lifecycle_stage_current,
     ROADS,
     RNPT,
@@ -51,7 +51,6 @@ road_type_concept_scheme = URIRef("https://linked.data.gov.au/def/road-types")
 road_suffix_concept_scheme = URIRef("https://linked.data.gov.au/def/gn-affix")
 
 
-
 @worker_wrap
 def worker(
     rows: list[Row],
@@ -64,7 +63,7 @@ def worker(
     for road_row in rows:
         road_id = road_row[ROAD_ID]
         road_iri = get_road_name_iri(road_id)
-    
+
         # Road object
         road_object_iri = get_road_object_iri(road_id)
         ds.add((road_object_iri, RDF.type, ROADS.RoadObject, road_graph_name))
@@ -72,7 +71,7 @@ def worker(
             (
                 road_object_iri,
                 SDO.identifier,
-                Literal(road_id, datatype=sir_id_datatype),
+                Literal(road_id, datatype=qrt_datatype),
                 road_graph_name,
             )
         )
@@ -104,7 +103,9 @@ def worker(
             (
                 road_iri,
                 CN.nameTemplate,
-                Literal(f"{{RNPT.roadGivenName}} {{RNPT.roadType}} {{RNPT.roadSuffix}}"),
+                Literal(
+                    f"{{RNPT.roadGivenName}} {{RNPT.roadType}} {{RNPT.roadSuffix}}"
+                ),
                 road_graph_name,
             )
         )
@@ -187,7 +188,6 @@ def worker(
         ds.add((road_iri, RDF.type, CN.CompoundName, road_graph_name))
         ds.add((road_iri, CN.isNameFor, road_object_iri, road_graph_name))
         ds.add((road_iri, SDO.name, Literal(road_row[ROAD_NAME_FULL]), road_graph_name))
-
 
     output_dir = Path(output_dir_name)
     filename = Path(dataset_name + "-" + str(job_id) + ".nq")

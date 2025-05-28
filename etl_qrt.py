@@ -13,7 +13,7 @@ from cam.etl import (
     serialize,
 )
 from cam.etl.namespaces import (
-    sir_id_datatype,
+    qrt_datatype,
     CN,
     LC,
     ROADS,
@@ -67,7 +67,7 @@ def transform_row(
         (
             iri,
             SDO.identifier,
-            Literal(row[road_id], datatype=sir_id_datatype),
+            Literal(row[road_id], datatype=qrt_datatype),
             graph_name,
         )
     )
