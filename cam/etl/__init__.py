@@ -32,7 +32,9 @@ def worker_wrap(f):
 
 
 @contextmanager
-def get_db_connection(host: str, port: int, dbname: str, user: str, password: str) -> Iterator[psycopg.Connection]:
+def get_db_connection(
+    host: str, port: int, dbname: str, user: str, password: str
+) -> Iterator[psycopg.Connection]:
     """
     Get a database connection with a context manager.
     """
@@ -70,14 +72,18 @@ def get_concept_from_vocab(
 
 
 def add_additional_property(
-    focus_node: URIRef | BNode, property_key: str, property_value: str, graph: Dataset, graph_name: URIRef
+    focus_node: URIRef | BNode,
+    property_key: str,
+    property_value: str,
+    graph: Dataset,
+    graph_name: URIRef,
 ):
     """
     Create a schema.org sdo:PropertyValue object linked from the focus node with sdo:additionalProperty.
     """
 
     # Create a positive value that is compatible with oxigraph blank nodes based on the hash of the string identifier.
-    safe_id = f"b{hash(str(focus_node) + property_key) & 0xFFFFFFFF:x}"
+    safe_id = f"_bnode{hash(str(focus_node) + property_key)}"
     bnode = BNode(safe_id)
     graph.add((focus_node, SDO.additionalProperty, bnode, graph_name))
     graph.add((bnode, SDO.propertyID, Literal(property_key), graph_name))
