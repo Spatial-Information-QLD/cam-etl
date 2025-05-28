@@ -84,7 +84,7 @@ tasks:
       - curl -o vocabs-import/addr-status-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@f5650d07288b4879620be924042c73b6dae881e3/vocabs/Addresses/addr-status-types.ttl
       - curl -o vocabs-import/addr-geocode-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@f5650d07288b4879620be924042c73b6dae881e3/vocabs/Addresses/addr-geocode-types.ttl
       - curl -o vocabs-import/addr-level-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@f5650d07288b4879620be924042c73b6dae881e3/vocabs/Addresses/addr-level-types.ttl
-      - curl -o vocabs-import/naming-authority.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@999ee51fb369353a6439fe879dac994a593be90b/vocabs/naming-authority.ttl
+      - curl -o vocabs-import/naming-authority.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/naming-authority.ttl
 
   fuseki:qali:vocab:fix:
     desc: Add rdfs prefix to vocabularies.
