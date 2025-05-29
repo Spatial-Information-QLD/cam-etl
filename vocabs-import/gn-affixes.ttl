@@ -304,11 +304,14 @@ cs:
         :south-west ,
         :upper ,
         :west ;
-    skos:historyNote "This vocabulary replaces and extends the Road Suffixes used in the Queensland Roads and Tracks dataset. "@en ;
+    skos:historyNote """2025-05 NJC: Added status experimental
+2025-05 EC: Added SIR datatype codes
+
+This vocabulary replaces and extends the Road Suffixes used in the Queensland Roads and Tracks dataset.""" ;
     skos:prefLabel "Geographical Name Affix"@en ;
     prov:qualifiedAttribution
         [
-            dcat:hadRole isoroles:custodian ;
+            prov:hadRole isoroles:custodian ;
             prov:agent
                 [
                     a schema:Person ;
@@ -316,20 +319,11 @@ cs:
                     schema:name "ICSM" ;
                 ] ;
         ] ;
-    schema:creator
-        [
-            a schema:Organization ;
-            schema:name "Department Of Resources" ;
-            schema:url "https://www.nrmmrrd.qld.gov.au/"^^xsd:anyURI ;
-        ] ;
+    schema:creator <https://linked.data.gov.au/org/qld-resources> ;
     schema:dateCreated "2024-06-11"^^xsd:date ;
-    schema:dateModified "2025-02-21"^^xsd:date ;
+    schema:dateModified "2025-05-23"^^xsd:date ;
     schema:keywords unggim:GeographicalNames ;
-    schema:publisher
-        [
-            a schema:Organization ;
-            schema:name "ICSM" ;
-            schema:url "https://www.icsm.gov.au/"^^xsd:anyURI ;
-        ] ;
+    schema:publisher <https://linked.data.gov.au/org/icsm> ;
     schema:version "1.0" ;
+    schema:status <https://linked.data.gov.au/def/reg-statuses/experimental> ;
 .
