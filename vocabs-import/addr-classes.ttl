@@ -1,6 +1,5 @@
-PREFIX : <https://linked.data.gov.au/def/address-classes/>
-PREFIX astatus: <https://linked.data.gov.au/def/reg-statuses/>
-PREFIX cs: <https://linked.data.gov.au/def/address-classes>
+PREFIX : <https://linked.data.gov.au/def/addr-classes/>
+PREFIX cs: <https://linked.data.gov.au/def/addr-classes>
 PREFIX droles: <https://linked.data.gov.au/def/data-roles/>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX prov: <http://www.w3.org/ns/prov#>
@@ -139,7 +138,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 cs:
     a skos:ConceptScheme ;
-    reg:status astatus:experimental ;
+    reg:status <https://linked.data.gov.au/def/reg-statuses/experimental> ;
     owl:versionIRI :1.0 ;
     owl:versionInfo "1.0" ;
     skos:definition "This vocabulary describes the address classes or types used in address allocation. "@en ;
@@ -149,7 +148,10 @@ cs:
         :postal ,
         :thoroughfare ,
         :unknown ;
-    skos:historyNote "This vocabulary was created by the Queensland Spatial Information services." ;
+    skos:historyNote """2025-05 NJC: Added status experimental
+2025-05 EC: Added SIR datatype codes
+
+This vocabulary was created by the Queensland Spatial Information services.""" ;
     skos:prefLabel "Address Classes"@en ;
     prov:qualifiedAttribution
         [
@@ -158,8 +160,8 @@ cs:
         ] ;
     schema:creator <https://linked.data.gov.au/org/qsi> ;
     schema:dateCreated "2023-06-01"^^xsd:date ;
-    schema:dateModified "2023-11-30"^^xsd:date ;
-    schema:identifier "address-classes"^^xsd:token ;
+    schema:dateModified "2025-05-23"^^xsd:date ;
     schema:keywords unggim:Addresses ;
     schema:publisher <https://linked.data.gov.au/org/icsm> ;
+    schema:status <https://linked.data.gov.au/def/reg-statuses/experimental> ;
 .
