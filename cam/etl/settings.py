@@ -4,7 +4,12 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class DatabaseSettings(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix="cam_etl_db__", extra="allow")
+    model_config = SettingsConfigDict(
+        env_prefix="cam_etl_db__",
+        extra="allow",
+        env_file=".env",
+        env_file_encoding="utf-8",
+    )
 
     host: str = "localhost"
     port: int = 5432
@@ -14,7 +19,12 @@ class DatabaseSettings(BaseSettings):
 
 
 class ETLSettings(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix="cam_etl__", extra="allow")
+    model_config = SettingsConfigDict(
+        env_prefix="cam_etl__",
+        extra="allow",
+        env_file=".env",
+        env_file_encoding="utf-8",
+    )
 
     batch_size: int = 10_000
 
