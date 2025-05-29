@@ -1,5 +1,4 @@
 PREFIX : <https://linked.data.gov.au/def/subaddress-types/>
-PREFIX astatus: <https://linked.data.gov.au/def/reg-statuses/>
 PREFIX cs: <https://linked.data.gov.au/def/subaddress-types>
 PREFIX droles: <https://linked.data.gov.au/def/data-roles/>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -690,7 +689,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 cs:
     a skos:ConceptScheme ;
-    reg:status astatus:experimental ;
+    reg:status <https://linked.data.gov.au/def/reg-statuses/experimental> ;
     owl:versionIRI :1.0 ;
     owl:versionInfo "1.0" ;
     skos:definition "This vocabulary describes types of sub-address. A sub-address distinguishes the type of separately identifiable portion within a building, complex or marina. These are sometimes referred to as sub-dwelling types or unit types. "@en ;
@@ -747,7 +746,10 @@ cs:
         :ward ,
         :warehouse ,
         :workshop ;
-    skos:historyNote "This vocabulary has been derived from the Australian Standards AS 4590 with a few additions from the G-NAF dataset and Queensland's address database" ;
+    skos:historyNote """2025-05 NJC: Added status experimental
+2025-05 EC: Added SIR datatype codes
+
+This vocabulary has been derived from the Australian Standards AS 4590 with a few additions from the G-NAF dataset and Queensland's address database""" ;
     skos:prefLabel "Sub-Address Types"@en ;
     prov:qualifiedAttribution
         [
@@ -756,8 +758,8 @@ cs:
         ] ;
     schema:creator <https://linked.data.gov.au/org/qsi> ;
     schema:dateCreated "2023-05-12"^^xsd:date ;
-    schema:dateModified "2023-11-30"^^xsd:date ;
-    schema:identifier "subaddress-types"^^xsd:token ;
+    schema:dateModified "2025-05-23"^^xsd:date ;
     schema:keywords unggim:Addresses ;
     schema:publisher <https://linked.data.gov.au/org/icsm> ;
+    schema:status <https://linked.data.gov.au/def/reg-statuses/experimental> ;
 .
