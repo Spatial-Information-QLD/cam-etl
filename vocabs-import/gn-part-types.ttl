@@ -1,15 +1,13 @@
 PREFIX : <https://linked.data.gov.au/def/gn-part-types/>
-PREFIX agldwgstatus: <https://linked.data.gov.au/def/reg-statuses/>
 PREFIX cs: <https://linked.data.gov.au/def/gn-part-types>
-PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX droles: <https://linked.data.gov.au/def/data-roles/>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX prov: <http://www.w3.org/ns/prov#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX reg: <http://purl.org/linked-data/registry#>
-PREFIX sdo: <https://schema.org/>
+PREFIX schema: <https://schema.org/>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX themes: <https://linked.data.gov.au/def/fsdf/themes/>
+PREFIX unggim: <https://linked.data.gov.au/def/unggim-themes/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 :geographicalGivenName
@@ -42,26 +40,11 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
     skos:topConceptOf cs: ;
 .
 
-<https://linked.data.gov.au/org/qsi>
-    a sdo:Organization ;
-    sdo:name "Queensland Spatial Information" ;
-    sdo:url "https://www.resources.qld.gov.au/data-mapping"^^xsd:anyURI ;
-.
-
-<https://linked.data.gov.au/org/icsm>
-    a sdo:Organization ;
-    sdo:name "Intergovernmental Committee on Surveying & Mapping" ;
-    sdo:url "https://icsm.gov.au"^^xsd:anyURI ;
-.
+:1.0 schema:name "1.0" .
 
 cs:
     a skos:ConceptScheme ;
-    sdo:keywords themes:place-names ;
-    dcterms:created "2023-06-12"^^xsd:date ;
-    dcterms:creator <https://linked.data.gov.au/org/qsi> ;
-    dcterms:modified "2023-11-30"^^xsd:date ;
-    dcterms:publisher <https://linked.data.gov.au/org/icsm> ;
-    reg:status agldwgstatus:experimental ;
+    reg:status <https://linked.data.gov.au/def/reg-statuses/experimental> ;
     owl:versionIRI :1.0 ;
     owl:versionInfo "1.0" ;
     skos:definition "This vocabulary describes values of name part types used in geographical naming"@en ;
@@ -73,8 +56,13 @@ cs:
     skos:prefLabel "Geographical Name Part Types"@en ;
     prov:qualifiedAttribution
         [
+            prov:agent <https://linked.data.gov.au/org/icsm> ;
             prov:hadRole droles:custodian ;
-            prov:agent <https://linked.data.gov.au/org/icsm>
         ] ;
+    schema:creator <https://linked.data.gov.au/org/qsi> ;
+    schema:dateCreated "2023-06-12"^^xsd:date ;
+    schema:dateModified "2025-05-23"^^xsd:date ;
+    schema:keywords unggim:GeographicalNames ;
+    schema:publisher <https://linked.data.gov.au/org/icsm> ;
+    schema:status <https://linked.data.gov.au/def/reg-statuses/experimental> ;
 .
-
