@@ -128,10 +128,20 @@ def main():
                 dedent(
                     """\
                     SELECT
-                        *
-                    FROM
-                        "lalfpdba.lf_parcel" p
-                    WHERE p.parcel_status_code != 'D'
+                    p.parcel_id,
+                    CASE
+                        WHEN p.lot_no = '9999' THEN '0'
+                        ELSE p.lot_no
+                    END AS lot_no,
+                    p.plan_no,
+                    p.parcel_status_code,
+                    p.parcel_create_date,
+                    p.parcel_org_source_code,
+                    p.parcel_data_source_code,
+                    p.parcel_data_source_date
+                FROM
+                    "lalfpdba.lf_parcel" p
+                WHERE p.parcel_status_code != 'D'
                 """
                 ),
             )
