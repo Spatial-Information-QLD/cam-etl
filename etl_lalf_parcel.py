@@ -124,14 +124,19 @@ def main():
 
         with connection.cursor(name="main", scrollable=False) as cursor:
             cursor.itersize = settings.etl.batch_size
+            # Note: the plan_no exception list here contains valid 9999 lot numbers.
             cursor.execute(
                 dedent(
                     """\
                     SELECT
                     p.parcel_id,
                     CASE
-                        WHEN p.lot_no = '9999' THEN '0'
-                        ELSE p.lot_no
+                        WHEN
+                            p.lot_no = '9999' AND p.plan_no NOT IN ('SP292760', 'SP304737', 'SP288122', 'SP260341', 'SP245185', 'SP271925')
+                        THEN
+                            '0'
+                        ELSE 
+                            p.lot_no
                     END AS lot_no,
                     p.plan_no,
                     p.parcel_status_code,
