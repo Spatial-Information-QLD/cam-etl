@@ -54,24 +54,24 @@ output_dir_name = "lalf-rdf"
 graph_name = URIRef("urn:qali:graph:addresses")
 road_graph_name = URIRef("urn:qali:graph:roads")
 
-SUB_ADDRESS_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@2776af7d25b1484b9f7c2886adf5667231deb6ad/vocabs/Addresses/addr-subaddress-types.ttl"
-LEVEL_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@6d2b90a4acb306791922d4649914a03cae5d019d/vocabs/Addresses/addr-level-types.ttl"
-ROAD_NAME_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@c0b59a51f09d1ae4b0a337f0a10747c45b1d44d3/vocabs/TransportNetworks/road-types.ttl"
-ROAD_NAME_SUFFIXES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@f5650d07288b4879620be924042c73b6dae881e3/vocabs/GeographicalNames/gn-affix.ttl"
+SUB_ADDRESS_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/subaddress-types.ttl"
+LEVEL_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/building-level-types.ttl"
+ROAD_NAME_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/TransportNetworks/road-types.ttl"
+ROAD_NAME_SUFFIXES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/GeographicalNames/gn-affix.ttl"
 
 address_class_non_standard_iri = URIRef(
-    "https://linked.data.gov.au/def/address-classes/non-standard"
+    "https://linked.data.gov.au/def/addr-classes/non-standard"
 )
 address_class_street_rural_iri = URIRef(
-    "https://linked.data.gov.au/def/address-classes/street-rural"
+    "https://linked.data.gov.au/def/addr-classes/street-rural"
 )
 address_class_street_urban_iri = URIRef(
-    "https://linked.data.gov.au/def/address-classes/street-urban"
+    "https://linked.data.gov.au/def/addr-classes/street-urban"
 )
 address_class_unknown_iri = URIRef(
-    "https://linked.data.gov.au/def/address-classes/unknown"
+    "https://linked.data.gov.au/def/addr-classes/unknown"
 )
-address_class_water_iri = URIRef("https://linked.data.gov.au/def/address-classes/water")
+address_class_water_iri = URIRef("https://linked.data.gov.au/def/addr-classes/water")
 
 ADDR_ID = "addr_id"
 ADDR_STANDARD_CODE = "addr_standard_code"

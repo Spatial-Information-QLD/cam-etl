@@ -7,10 +7,10 @@ qld_addr_namespace = uuid.uuid5(
 )
 
 addr_status_vocab_mapping = {
-    "A": URIRef("https://linked.data.gov.au/def/address-status-type/alternative"),
-    "P": URIRef("https://linked.data.gov.au/def/address-status-type/primary"),
-    "U": URIRef("https://linked.data.gov.au/def/address-status-type/unknown"),
-    "X": URIRef("https://linked.data.gov.au/def/address-status-type/unofficial"),
+    "A": URIRef("https://linked.data.gov.au/def/addr-status-type/alternative"),
+    "P": URIRef("https://linked.data.gov.au/def/addr-status-type/primary"),
+    "U": URIRef("https://linked.data.gov.au/def/addr-status-type/unknown"),
+    "X": URIRef("https://linked.data.gov.au/def/addr-status-type/unofficial"),
 }
 
 addr_level_type_vocab_mapping = {
