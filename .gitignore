@@ -1,3 +1,9 @@
+LALF/
+new-fuseki-data/
+QSC_*
+*.log
+*.zip
+
 .DS_Store
 venv/
 __pycache__/
