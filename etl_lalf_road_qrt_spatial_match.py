@@ -174,7 +174,7 @@ def process_address_chunk(
 
 def main():
     start_time = time.time()
-    num_workers = 3
+    num_workers = 10
 
     try:
         with get_db_connection(

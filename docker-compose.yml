@@ -15,7 +15,7 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      # - ./QSC_Extracted_Data_20250314_144132175583-7180:/tmp/qrt
+      - ./QSC_Extracted_Data_20250601_025732710091-5076:/tmp/qrt
       # - ./postgres-backup:/tmp/postgres-backup
     ports:
       - 5432:5432
@@ -32,7 +32,7 @@ services:
       - 7200:7200
     environment:
       GDB_JAVA_OPTS: >-
-        -Xmx8g -Xms2g
+        -Xmx16g -Xms4g
         -Dgraphdb.home=/opt/graphdb/home
         -Dgraphdb.workbench.importDirectory=/opt/graphdb/home/graphdb-import
         -Dgraphdb.workbench.cors.enable=true
@@ -62,7 +62,7 @@ services:
       ]
     environment:
       GDB_JAVA_OPTS: >-
-        -Xmx8g -Xms2g
+        -Xmx16g -Xms4g
         -Dgraphdb.home=/opt/graphdb/home
         -Dgraphdb.workbench.importDirectory=/opt/graphdb/home/graphdb-import
         -Dgraphdb.workbench.cors.enable=true
@@ -100,7 +100,7 @@ services:
       - fuseki-data:/fuseki
       - ./fuseki-import:/tmp/fuseki-import
     environment:
-      - JAVA_OPTIONS=-Xmx4096m -Xms4096m
+      - JAVA_OPTIONS=-Xmx8192m -Xms8192m
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3030/$/ping"]
       interval: 10s

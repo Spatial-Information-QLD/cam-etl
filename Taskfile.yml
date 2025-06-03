@@ -39,6 +39,16 @@ tasks:
       - task: graphdb:down
       - docker compose --profile graphdb:preload up
       - docker compose --profile graphdb:preload down
+      - task: graphdb:up
+      - sleep 60
+      - task: graphdb:qali:vocabs
+
+  graphdb:qali:vocabs:
+    cmd: |
+      for f in vocabs-import/*.ttl; do
+        echo "Uploading $f"
+        curl -X POST -H "Content-Type: text/turtle" --data-binary @$f 'http://localhost:7200/repositories/addressing/rdf-graphs/service?graph=urn:qali:graph:vocabs'
+      done
 
   graphdb:down:
     desc: Stop GraphDB Docker service.
@@ -84,18 +94,8 @@ tasks:
       - curl -o vocabs-import/building-level-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/building-level-types.ttl
       - curl -o vocabs-import/naming-authority.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/naming-authority.ttl
 
-  fuseki:qali:vocab:fix:
-    desc: Add rdfs prefix to vocabularies.
-    cmd: |
-      for f in vocabs-import/*.ttl; do
-        if ! grep -q "PREFIX rdfs:" "$f"; then
-          sed -i '1i PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' "$f"
-        fi
-      done
-
   fuseki:qali:import:vocabs:
     cmds:
-      - task: fuseki:qali:vocab:fix
       - kurra db upload vocabs-import/ http://localhost:3030/qali
 
   fuseki:qali:gzip:
@@ -192,22 +192,6 @@ tasks:
     desc: Run ontodia server.
     cmds:
       - .venv/bin/python -m http.server -d ontodia/
-
-  dev:load-db:
-    desc: Spin down GraphDB, load data, spin back up GraphDB.
-    cmds:
-      - task: graphdb:preload
-      - task: graphdb:up
-
-  dev:clean:
-    cmds:
-      - task: etl:clean
-      - task: etl
-
-  dev:
-    desc: Alias for etl task.
-    cmds:
-      - task: etl
 
   web:up:
     cmds:

@@ -50,6 +50,10 @@ task postgres:up
 Exec into the postgres container and load the shapefile using `shp2pgsql`.
 
 ```sh
+docker compose exec -it postgres /bin/bash
+```
+
+```sh
 shp2pgsql -I -s 4283 /tmp/qrt/Queensland_roads_and_tracks.shp public.qrt_spatial | psql -d lalfdb -U postgres
 ```
 
@@ -60,6 +64,8 @@ task etl:db:qrt
 ```
 
 ### Mapping between LALF Roads and QRT
+
+**Note: Load LALF data first and come back to this.**
 
 - Map road name and locality from LALF to QRT.
 - There's an existing mapping process in FME already. Dig out this logic and implement the same here.
@@ -104,6 +110,9 @@ set
 	qrt_road_name_basic = regexp_replace(r.qrt_road_name_basic, '\s+', ' ', 'g')
 
 -- fifth update - create geom for each address
+ALTER TABLE "lalfpdba.lf_address"
+ADD COLUMN geom geometry(Point, 4283);
+
 update
 	"lalfpdba.lf_address" a
 set
@@ -149,13 +158,13 @@ ALTER TABLE "lalfpdba.lf_road"
 We also need to align the locality values in QRT and the LALF's locality table. To do this, convert the QRT's `locality_left` column's value to an uppercase and insert it into a new column named `lalf_locality`.
 
 ```sql
-ALTER TABLE qrt
+ALTER TABLE qrt_spatial
 	ADD COLUMN lalf_locality text;
 
 UPDATE
-	qrt q
+	qrt_spatial q
 SET
-	lalf_locality = UPPER(q.locality_left);
+	lalf_locality = UPPER(q.locality_l);
 ```
 
 With the property names dataset, we need to update the `lot` values from `0` to `9999` to align with the lot and plan identifiers for parcels in LALF.
@@ -765,6 +774,11 @@ The above Windsor code `LGA_0313` is problematic. It is not a code in the PNDB. 
 Note: there may be some localities that don't map to the PNDB. For example, K'gari.
 
 Michael has sent two files over. `lalf-pndb_localities_joined.csv` and `lalf_localities_unjoined.csv`. I have uploaded them to the project's SharePoint.
+
+Load them into the database.
+
+- `lalf-pndb_localities_joined.csv` - `lalf_pndb_localities_joined`
+- `lalf_localities_unjoined.csv` - `lalf_localities_unjoined` (not used)
 
 ### Parcel, Site, Address cardinality
 
