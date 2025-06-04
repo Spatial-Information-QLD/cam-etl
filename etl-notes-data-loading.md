@@ -58,39 +58,55 @@ time rsync -avz --progress new-fuseki-data.zip cam-itp-dev-fuseki:/data
 
 If the transfer is interrupted, you can resume it using the `-P` flag.
 
-## Fuseki Full-Text Indexing
+Unzip the file on the remote server.
 
-We need to stop the database to release the file lock on the full-text index on disk.
+```sh
+unzip new-fuseki-data.zip
+```
+
+Stop the database.
 
 ```sh
 sudo systemctl stop container-fuseki.service
 ```
 
-Now run the full-text indexer. Notice that we volume mount the data directory and the `config.ttl` into the container.
+Delete the old database.
+
+```sh
+sudo rm -rf /data/fuseki-data/databases/ds
+```
+
+Move the unzipped data to the fuseki data directory.
+
+```sh
+mv new-fuseki-data/qali /data/fuseki-data/databases/ds
+```
+
+Run the full-text indexer.
 
 ```sh
 sudo podman run --rm -v /data/fuseki-data:/fuseki -v /etc/fuseki/config.ttl:/opt/rdf-delta/config.ttl ghcr.io/kurrawong/rdf-delta:0.1.12 /bin/bash -c 'java -cp rdf-delta-fuseki-server.jar:compoundnaming.jar jena.textindexer --desc=config.ttl'
 ```
 
-Start the database after indexing is complete.
+Start the database.
 
 ```sh
 sudo systemctl start container-fuseki.service
 ```
 
+Test that the full-text index is working.
+
 ## Loading Auxiliary Data
-
-Install `uv`.
-Using `uv`, install `kurra`.
-
-```sh
-uv tool install kurra
-```
 
 ### Loading Vocab Data
 
+In the cam-etl repo, run the following with curl to load the vocabs into a named graph.
+
 ```sh
-kurra db upload vocabs-import/ http://localhost:3030/ds
+for f in vocabs-import/*.ttl; do
+    echo "Uploading $f"
+    curl -X POST -H "Content-Type: text/turtle" --data-binary @$f 'http://localhost:3030/ds/update?graph=urn:qali:graph:vocabs'
+done
 ```
 
 ### Loading User Data
