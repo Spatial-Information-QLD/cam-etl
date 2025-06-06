@@ -288,7 +288,19 @@ def worker(
                 )
 
                 # link to parcel
-                parcel_iri = get_parcel_iri(row[LOT_NO], row[PLAN_NO])
+                lot_no = row[LOT_NO]
+                plan_no = row[PLAN_NO]
+                if lot_no == "9999" and plan_no not in (
+                    "SP292760",
+                    "SP304737",
+                    "SP288122",
+                    "SP260341",
+                    "SP245185",
+                    "SP271925",
+                ):
+                    lot_no = "0"
+
+                parcel_iri = get_parcel_iri(lot_no, plan_no)
                 ds.add((addr_iri, CN.isNameFor, parcel_iri, graph_name))
                 ds.add((parcel_iri, CN.hasName, addr_iri, graph_name))
 
