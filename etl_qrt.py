@@ -11,6 +11,7 @@ from cam.etl import (
     get_vocab_graph,
     worker_wrap,
     serialize,
+    add_additional_property,
 )
 from cam.etl.namespaces import (
     qrt_datatype,
@@ -51,6 +52,7 @@ def transform_row(
     road_name: str,
     road_type: str,
     road_suffix: str,
+    locality_code: str,
     # road_name_source: str,
     ds: Dataset,
     vocab_graph: Graph,
@@ -179,6 +181,10 @@ def transform_row(
     ds.add((label_iri, CN.isNameFor, iri, graph_name))
     ds.add((label_iri, SDO.name, Literal(row[road_name_full]), graph_name))
 
+    # Locality
+    if locality := row[locality_code]:
+        add_additional_property(iri, "locality_code", locality, ds, graph_name)
+
 
 @worker_wrap
 def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
@@ -187,6 +193,7 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
     ROAD_NAME = "road_name_1"
     ROAD_TYPE = "road_type_1"
     ROAD_SUFFIX = "road_suffix_1"
+    LOCALITY_CODE = "locality_code"
     # ROAD_NAME_SOURCE = "road_name_1_source"
 
     ROAD_ID_2 = "road_id_2"
@@ -207,6 +214,7 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
             ROAD_NAME,
             ROAD_TYPE,
             ROAD_SUFFIX,
+            LOCALITY_CODE,
             # ROAD_NAME_SOURCE,
             ds,
             vocab_graph,
@@ -263,8 +271,10 @@ def main():
                         q.road_name_ as road_name_full_1,
                         q.road_name as road_name_1,
                         q.road_type as road_type_1,
-                        q.road_suffi as road_suffix_1
+                        q.road_suffi as road_suffix_1,
+                        r.locality_code
                     FROM qrt_spatial q
+                    LEFT JOIN "lalfpdba.lf_road" r ON q.road_id = r.qrt_road_id
                 """
                 ),
             )
