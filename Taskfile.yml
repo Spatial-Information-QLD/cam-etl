@@ -154,8 +154,9 @@ tasks:
   etl:db:pndb:
     desc: Run the ETL for PNDB.
     cmds:
-      - uv run python etl_pndb_pre_validate.py
-      - uv run python etl_pndb.py
+      # - uv run python etl_pndb_pre_validate.py
+      # - uv run python etl_pndb.py
+      - uv run python etl_pndb_localities.py
 
   etl:db:lalf:
     desc: Run the ETL for LALF.

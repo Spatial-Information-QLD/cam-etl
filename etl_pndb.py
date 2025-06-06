@@ -42,7 +42,7 @@ INDIGENOUS_GROUP_IRI = URIRef(
 PLACE_NAMES_ACT_IRI = URIRef(
     "https://linked.data.gov.au/def/naming-authority/qld-pn-act-1994"
 )
-GO_CATEGORIES_URL = "https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@b07763c87f2f872133197e6fb0eb911de85879c6/vocabularies-qsi/go-categories.ttl"
+GO_CATEGORIES_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/GeographicalNames/go-categories.ttl"
 
 OBJECTID = "objectid"
 REFERENCE_NUMBER = "reference_number"
@@ -81,10 +81,6 @@ def get_indigenous_label_iri(reference_number: str, objectid: str):
     return URIRef(
         f"https://linked.data.gov.au/dataset/qld-addr/gn/{reference_number}-{objectid}"
     )
-
-
-def transform_row():
-    pass
 
 
 def add_geographical_object(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
