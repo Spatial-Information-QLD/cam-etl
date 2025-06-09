@@ -42,6 +42,7 @@ C_REF_NO = "pndb.ref_no"
 C_LALF_LOCALITY_CODE = "lalf.locality_code"
 C_PLACE_NAME = "pndb.place_name"
 C_GAZETTED_DATE = "pndb.gazetted_date"
+C_LOC_EFF_DATE = "lalf.loc_eff_date"
 C_HISTORY = "pndb.history"
 C_COMMENTS = "pndb.comments"
 C_STATUS = "pndb.status"
@@ -99,14 +100,27 @@ def add_lifecycle_stage(
     ds.add((focus_node, LC.hasLifecycleStage, bnode, graph_name))
     bnode_has_beginning = BNode(bnode_id + "-lifecycle-stage-has-beginning")
     ds.add((bnode, TIME.hasBeginning, bnode_has_beginning, graph_name))
-    ds.add(
-        (
-            bnode_has_beginning,
-            TIME.inXSDDate,
-            Literal(row[C_GAZETTED_DATE], datatype=XSD.date),
-            graph_name,
+
+    if gazetted_date := row[C_GAZETTED_DATE]:
+        ds.add(
+            (
+                bnode_has_beginning,
+                TIME.inXSDDate,
+                Literal(gazetted_date, datatype=XSD.date),
+                graph_name,
+            )
         )
-    )
+    elif loc_eff_date := row[C_LOC_EFF_DATE]:
+        ds.add(
+            (
+                bnode_has_beginning,
+                TIME.inXSDDate,
+                Literal(loc_eff_date, datatype=XSD.date),
+                graph_name,
+            )
+        )
+    else:
+        raise ValueError(f"No gazetted or loc_eff_date for {bnode_id}")
 
     # All status and currency are Y Y.
     ds.add((bnode, SDO.additionalType, GN_STATUS.gazetted, graph_name))
@@ -240,6 +254,7 @@ def main():
                         -- name
                         l."pndb.place_name",
                         l."pndb.gazetted_date",
+                        l."lalf.loc_eff_date",
                         -- additional attributes
                         l."pndb.history",
                         l."pndb.comments",
