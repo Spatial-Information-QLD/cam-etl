@@ -96,6 +96,10 @@ sudo systemctl start container-fuseki.service
 
 Test that the full-text index is working.
 
+```sh
+curl -X POST http://localhost:3030/ds -H "Content-Type: application/sparql-query" --data 'SELECT * WHERE { GRAPH <urn:qali:graph:addresses> { (?iri ?score ?value) <http://jena.apache.org/text#query> (<https://schema.org/identifier> "SP11950*" 1000) . } } ORDER BY DESC(?score) LIMIT 10' | jq
+```
+
 ## Loading Auxiliary Data
 
 ### Loading Vocab Data
