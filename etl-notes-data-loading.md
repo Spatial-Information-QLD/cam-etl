@@ -85,7 +85,7 @@ mv new-fuseki-data/qali /data/fuseki-data/databases/ds
 Run the full-text indexer.
 
 ```sh
-sudo podman run --rm -v /data/fuseki-data:/fuseki -v /etc/fuseki/config.ttl:/opt/rdf-delta/config.ttl ghcr.io/kurrawong/rdf-delta:0.1.12 /bin/bash -c 'java -cp rdf-delta-fuseki-server.jar:compoundnaming.jar jena.textindexer --desc=config.ttl'
+sudo podman run --rm -v /data/fuseki-data:/fuseki -v /etc/fuseki/config.ttl:/opt/rdf-delta/config.ttl ghcr.io/kurrawong/rdf-delta:0.2.2 /bin/bash -c 'java -cp rdf-delta-fuseki-server.jar:compoundnaming.jar jena.textindexer --desc=config.ttl'
 ```
 
 Start the database.
