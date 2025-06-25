@@ -1,3 +1,7 @@
+"""
+This ETL adds a property name as a compound name part to the address.
+"""
+
 import time
 import concurrent.futures
 from textwrap import dedent
@@ -21,9 +25,6 @@ dataset_name = "lalf_property_name_on_address"
 output_dir_name = "lalf-rdf"
 graph_name = URIRef("urn:qali:graph:addresses")
 
-PROPERTY_NAME = "property_name"
-LOT_NO = "lot"
-PLAN_NO = "plan"
 PROP_ID = "id"
 ADDR_ID = "addr_id"
 
@@ -40,7 +41,7 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
         addr_id_uuid = get_address_uuid(row[ADDR_ID])
         addr_id = row[ADDR_ID]
         addr_iri = get_address_iri(addr_id)
-        property_name_node = BNode(f"{addr_id_uuid}-property-name")
+        property_name_node = BNode(f"{addr_id_uuid}-{prop_id}-property-name")
         ds.add((addr_iri, SDO.hasPart, property_name_node, graph_name))
         ds.add(
             (
@@ -59,7 +60,6 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
 
 def main():
     start_time = time.time()
-
     vocab_graph = get_vocab_graph([])
     print(f"Remotely fetched {len(vocab_graph)} statements for vocab_graph")
 
@@ -76,12 +76,9 @@ def main():
             cursor.execute(
                 dedent(
                     """\
-                    SELECT pa.*, a.addr_id
-                    FROM lalf_property_address_joined pa
-                    JOIN "lalfpdba.lf_parcel" p on p.lot_no = pa.lot and p.plan_no = pa.plan
-                    JOIN "lalfpdba.lf_site" s on s.parcel_id = p.parcel_id
-                    JOIN "lalfpdba.lf_address" a on a.site_id = s.site_id
-                    GROUP BY pa.property_name, pa.lot, pa.plan, pa.id, a.addr_id
+                    SELECT pn.pl_name_id AS id, pn.addr_id AS addr_id
+                    FROM lalf_place_names_joined_to_lalf_addr_id pn
+                    JOIN "lalfpdba.lf_address" a on pn.addr_id = a.addr_id
                 """
                 ),
             )

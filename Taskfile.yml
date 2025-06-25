@@ -55,6 +55,13 @@ tasks:
     cmds:
       - docker compose --profile graphdb down
 
+  fuseki:qali:vocabs:
+    cmd: |
+      for f in vocabs-import/*.ttl; do
+        echo "Uploading $f"
+        curl -X POST -H "Content-Type: text/turtle" --data-binary @$f 'http://localhost:3030/qali?graph=urn:qali:graph:vocabs'
+      done
+
   fuseki:up:
     desc: Start Fuseki Docker service.
     cmds:
@@ -154,8 +161,8 @@ tasks:
   etl:db:pndb:
     desc: Run the ETL for PNDB.
     cmds:
-      # - uv run python etl_pndb_pre_validate.py
-      # - uv run python etl_pndb.py
+      - uv run python etl_pndb_pre_validate.py
+      - uv run python etl_pndb.py
       - uv run python etl_pndb_localities.py
 
   etl:db:lalf:
@@ -165,8 +172,8 @@ tasks:
       # Geocodes no longer converted over as RDF. They are stored as the source of truth in SIR RTE.
       # - uv run python etl_lalf_geocode.py
       - uv run python etl_lalf_address.py
-      # - uv run python etl_lalf_property_name.py
-      # - uv run python etl_lalf_property_name_on_address.py
+      - uv run python etl_lalf_property_name.py
+      - uv run python etl_lalf_property_name_on_address.py
       - uv run python etl_lalf_road_missing_qrt.py
   etl:
     desc: Run the ETL.

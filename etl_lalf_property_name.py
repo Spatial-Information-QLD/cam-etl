@@ -112,12 +112,10 @@ def main():
             cursor.execute(
                 dedent(
                     """\
-                    SELECT pa.*, a.addr_id
-                    FROM lalf_property_address_joined pa
-                    JOIN "lalfpdba.lf_parcel" p on p.lot_no = pa.lot and p.plan_no = pa.plan
-                    JOIN "lalfpdba.lf_site" s on s.parcel_id = p.parcel_id
-                    JOIN "lalfpdba.lf_address" a on a.site_id = s.site_id
-                    GROUP BY pa.property_name, pa.lot, pa.plan, pa.id, a.addr_id
+                    SELECT pn.pl_name_id AS id, pn.pl_name AS property_name, pn.addr_id AS addr_id, p.lot_no AS lot, p.plan_no AS plan
+                    FROM lalf_place_names_joined_to_lalf_addr_id pn
+                    JOIN "lalfpdba.lf_site" s on pn.site_id = s.site_id
+                    JOIN "lalfpdba.lf_parcel" p on s.parcel_id = p.parcel_id
                 """
                 ),
             )

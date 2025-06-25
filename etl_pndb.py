@@ -17,7 +17,6 @@ from rdflib import (
     XSD,
     PROV,
 )
-from rdflib.namespace import GEO
 
 from cam.etl import (
     add_additional_property,
@@ -449,13 +448,18 @@ def main():
 
         with connection.cursor(name="main", scrollable=False) as cursor:
             cursor.itersize = settings.etl.batch_size
+            # Here, we only process LOCB that do not have a status and currency of Y and
+            # any other pn types that are not LOCB.
+            # We process the LOCB that have a status and currency of Y in etl_pndb_localities.py
             cursor.execute(
                 dedent(
                     """\
                     SELECT
                         pn.*
-                    FROM
-                        "pndb.place_name" pn
+                    FROM "pndb.place_name" pn
+                    WHERE
+                        pn."type" = 'LOCB' AND (pn.status != 'Y' OR pn.currency != 'Y')
+                        OR pn."type" != 'LOCB'
                 """
                 ),
             )
