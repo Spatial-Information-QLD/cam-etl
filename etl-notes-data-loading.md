@@ -109,7 +109,7 @@ In the cam-etl repo, run the following with curl to load the vocabs into a named
 ```sh
 for f in vocabs-import/*.ttl; do
     echo "Uploading $f"
-    curl -X POST -H "Content-Type: text/turtle" --data-binary @$f 'http://localhost:3030/ds/update?graph=urn:qali:graph:vocabs'
+    curl -X POST -H "Content-Type: text/turtle" --data-binary @$f 'http://localhost:3030/ds?graph=urn:qali:graph:vocabs'
 done
 ```
 
@@ -120,4 +120,31 @@ Create a `users.trig` file and upload it **using curl**. The reason why we use c
 ```sh
 curl -X POST http://localhost:3030/ds -H "Content-Type: text/trig" --data-binary @./users.trig
 
+```
+
+### Test the Compound Naming Function
+
+```sh
+curl -X POST http://localhost:3030/ds \
+  -H "Content-Type: application/sparql-query" \
+  --data 'PREFIX addr: <https://linked.data.gov.au/def/addr/>
+PREFIX cn: <https://linked.data.gov.au/def/cn/>
+PREFIX cnf: <https://linked.data.gov.au/def/cn/func/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sdo: <https://schema.org/>
+PREFIX text: <http://jena.apache.org/text#>
+
+SELECT ?address ?partIds ?partTypes ?partValuePredicate ?partValue
+WHERE {
+  GRAPH <urn:qali:graph:addresses> {
+    {
+      SELECT ?address
+      WHERE {
+        ?address a addr:Address
+      }
+      limit 1
+    }
+    ?address cnf:getParts (?partIds ?partTypes ?partValuePredicate ?partValue) .
+  }
+}' | jq
 ```

@@ -97,8 +97,7 @@ services:
     ports:
       - 3030:3030
     volumes:
-      - fuseki-data:/fuseki
-      - ./fuseki-import:/tmp/fuseki-import
+      - ./fuseki-data:/fuseki
     environment:
       - JAVA_OPTIONS=-Xmx8192m -Xms8192m
     healthcheck:
@@ -150,7 +149,6 @@ services:
 volumes:
   postgres-data:
   graphdb-data:
-  fuseki-data:
   nginx-data:
   nginx-letsencrypt:
   meilisearch-data:
