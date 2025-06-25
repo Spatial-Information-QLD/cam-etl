@@ -457,9 +457,11 @@ def main():
                     SELECT
                         pn.*
                     FROM "pndb.place_name" pn
+                    LEFT JOIN lalf_pndb_localities_joined pnl ON pn.reference_number = pnl."pndb.ref_no"
                     WHERE
-                        pn."type" = 'LOCB' AND (pn.status != 'Y' OR pn.currency != 'Y')
-                        OR pn."type" != 'LOCB'
+                        pnl."pndb.ref_no" is null AND
+                        (pn."type" = 'LOCB' AND (pn.status != 'Y' OR pn.currency != 'Y')
+                        OR pn."type" != 'LOCB')
                 """
                 ),
             )
