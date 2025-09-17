@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 
 from rdflib import Graph
-from pyoxigraph import Store, serialize
+from pyoxigraph import Store, serialize, Triple
 from pyspark.sql import SparkSession, DataFrame
 
 
@@ -33,8 +33,9 @@ class Table(ABC):
     def to_file(table_name: str, graph: Graph):
         output_dir = Path("output")
         output_dir.mkdir(exist_ok=True)
-        filename = Path(table_name + "-" + str(os.getpid()) + ".nq")
+        filename = Path(table_name + "-" + str(os.getpid()) + ".nt")
 
         store: Store = graph.store._inner
         quads = store.quads_for_pattern(None, None, None)
-        serialize(quads, str(output_dir / filename), "application/n-quads")
+        triples = (Triple(quad.subject, quad.predicate, quad.object) for quad in quads)
+        serialize(triples, str(output_dir / filename), "application/n-triples")

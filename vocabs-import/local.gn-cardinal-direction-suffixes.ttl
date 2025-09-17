@@ -1,0 +1,36 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX : <https://linked.data.gov.au/def/gn-cardinal-direction-suffixes/>
+PREFIX cs: <https://linked.data.gov.au/def/gn-cardinal-direction-suffixes>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+:cs a skos:ConceptScheme ;
+    skos:hasTopConcept :north,
+        :east,
+        :south,
+        :west ;
+    skos:prefLabel "Geographical Names Cardinal Direction Suffixes"
+.
+
+:north a skos:Concept ;
+    skos:inScheme :cs ;
+    skos:topConceptOf :cs ;
+    skos:prefLabel "North" ;
+.
+
+:east a skos:Concept ;
+    skos:inScheme :cs ;
+    skos:topConceptOf :cs ;
+    skos:prefLabel "East" ;
+.
+
+:south a skos:Concept ;
+    skos:inScheme :cs ;
+    skos:topConceptOf :cs ;
+    skos:prefLabel "South" ;
+.
+
+:west a skos:Concept ;
+    skos:inScheme :cs ;
+    skos:topConceptOf :cs ;
+    skos:prefLabel "West" ;
+.

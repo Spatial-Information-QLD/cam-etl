@@ -1,0 +1,217 @@
+PREFIX : <https://linked.data.gov.au/def/building-level-types/>
+PREFIX astatus: <https://linked.data.gov.au/def/reg-statuses/>
+PREFIX cs: <https://linked.data.gov.au/def/building-level-types>
+PREFIX droles: <https://linked.data.gov.au/def/data-roles/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX reg: <http://purl.org/linked-data/registry#>
+PREFIX schema: <https://schema.org/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX unggim: <https://linked.data.gov.au/def/unggim-themes/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+:1.0
+    skos:prefLabel "1.0" ;
+.
+
+:basement
+    a skos:Concept ;
+    skos:altLabel "B"@en ;
+    skos:definition "A Level below the ground floor of a building"@en ;
+    skos:inScheme cs: ;
+    skos:notation "B"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Basement"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "AS4590.1:2017 & AS/NZS 4819:2011 - Standards Australia" ;
+.
+
+:floor
+    a skos:Concept ;
+    skos:altLabel "FL"@en ;
+    skos:definition "A Level whose order in a building is indicated by a number or other relative marker such as Ground"@en ;
+    skos:inScheme cs: ;
+    skos:notation "FL"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Floor"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "AS4590.1:2017 & AS/NZS 4819:2011 - Standards Australia" ;
+.
+
+:ground
+    a skos:Concept ;
+    skos:altLabel "G"@en ;
+    skos:definition "A Level directly accessible from ground"@en ;
+    skos:inScheme cs: ;
+    skos:notation "G"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Ground"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "AS4590.1:2017 & AS/NZS 4819:2011 - Standards Australia" ;
+.
+
+:level
+    a skos:Concept ;
+    skos:altLabel "L"@en ;
+    skos:definition "A generic building level"@en ;
+    skos:inScheme cs: ;
+    skos:notation "L"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Level"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "AS4590.1:2017 & AS/NZS 4819:2011 - Standards Australia" ;
+.
+
+:lower-ground-floor
+    a skos:Concept ;
+    skos:altLabel "LG"@en ;
+    skos:definition "A Level directly accessible from ground which is lower than another Level that is also accessible from ground"@en ;
+    skos:inScheme cs: ;
+    skos:notation "LG"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Lower Ground Floor"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "AS4590.1:2017 & AS/NZS 4819:2011 - Standards Australia" ;
+.
+
+:lower-level
+    a skos:Concept ;
+    skos:altLabel "LL"@en ;
+    skos:definition "A Level relatively lower than a ground or main level"@en ;
+    skos:inScheme cs: ;
+    skos:prefLabel "Lower Level"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "AS4590.1:2017 - Standards Australia" ;
+.
+
+:mezzanine
+    a skos:Concept ;
+    skos:altLabel "M"@en ;
+    skos:definition "An intermediate Level in a building"@en ;
+    skos:inScheme cs: ;
+    skos:notation "M"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Mezzanine"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "AS4590.1:2017 & AS/NZS 4819:2011 - Standards Australia" ;
+.
+
+:observation-deck
+    a skos:Concept ;
+    skos:altLabel "OD"@en ;
+    skos:definition "A Level, usually at the top of or high up on, a building that can be used for viewing the outside world from a height"@en ;
+    skos:inScheme cs: ;
+    skos:notation "OD"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Observation Deck"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "AS4590.1:2017 & AS/NZS 4819:2011 - Standards Australia" ;
+.
+
+:parking
+    a skos:Concept ;
+    skos:altLabel "P"@en ;
+    skos:definition "A Level used for parking vehicles"@en ;
+    skos:inScheme cs: ;
+    skos:notation "P"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Parking"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "AS4590.1:2017 & AS/NZS 4819:2011 - Standards Australia" ;
+.
+
+:penthouse
+    a skos:Concept ;
+    skos:altLabel "PTHS"@en ;
+    skos:definition "A Level, often with a terrace, on the top floor or floors of a building"@en ;
+    skos:inScheme cs: ;
+    skos:prefLabel "Penthouse"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "AS4590.1:2017 - Standards Australia" ;
+.
+
+:platform
+    a skos:Concept ;
+    skos:altLabel "PLF"@en ;
+    skos:definition "A generic platform Level"@en ;
+    skos:inScheme cs: ;
+    skos:prefLabel "Platform"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "AS4590.1:2017 - Standards Australia" ;
+.
+
+:podium
+    a skos:Concept ;
+    skos:altLabel "PDM"@en ;
+    skos:definition "A generic podium Level"@en ;
+    skos:inScheme cs: ;
+    skos:notation "PD"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Podium"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "AS4590.1:2017 & AS/NZS 4819:2011 - Standards Australia" ;
+.
+
+:rooftop
+    a skos:Concept ;
+    skos:altLabel "RT"@en ;
+    skos:definition "A Level that is on top of a building"@en ;
+    skos:inScheme cs: ;
+    skos:notation "RT"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Rooftop"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "AS4590.1:2017 & AS/NZS 4819:2011 - Standards Australia" ;
+.
+
+:sub-basement
+    a skos:Concept ;
+    skos:altLabel "SB"@en ;
+    skos:definition "A lower or partial Basement level"@en ;
+    skos:inScheme cs: ;
+    skos:notation "SB"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Sub-basement"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "AS4590.1:2017 - Standards Australia" ;
+.
+
+:upper-ground-floor
+    a skos:Concept ;
+    skos:altLabel "UG"@en ;
+    skos:definition "A Level directly accessible from ground which is higher than another Level that is also accessible from ground"@en ;
+    skos:inScheme cs: ;
+    skos:notation "UG"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Upper Ground Floor"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "AS4590.1:2017 & AS/NZS 4819:2011 - Standards Australia" ;
+.
+
+cs:
+    a skos:ConceptScheme ;
+    reg:status <https://linked.data.gov.au/def/reg-statuses/experimental> ;
+    owl:versionIRI :1.0 ;
+    owl:versionInfo "1.0" ;
+    skos:definition "This vocabulary describes types of levels within a building"@en ;
+    skos:hasTopConcept
+        :basement ,
+        :floor ,
+        :ground ,
+        :level ,
+        :lower-ground-floor ,
+        :lower-level ,
+        :mezzanine ,
+        :observation-deck ,
+        :parking ,
+        :penthouse ,
+        :platform ,
+        :podium ,
+        :rooftop ,
+        :sub-basement ,
+        :upper-ground-floor ;
+    skos:historyNote """2025-05 NJC: Added status experimental
+2025-05 EC: Added SIR datatype codes
+
+This vocabulary has been derived from the Australian Standards AS 4590, AS 4189""" ;
+    skos:prefLabel "Building Level Types"@en ;
+    prov:qualifiedAttribution
+        [
+            prov:agent <https://linked.data.gov.au/org/icsm> ;
+            prov:hadRole droles:custodian ;
+        ] ;
+    schema:creator <https://linked.data.gov.au/org/qsi> ;
+    schema:dateCreated "2023-05-15"^^xsd:date ;
+    schema:dateModified "2025-05-23"^^xsd:date ;
+    schema:keywords unggim:Addresses ;
+    schema:publisher <https://linked.data.gov.au/org/icsm> ;
+    schema:status <https://linked.data.gov.au/def/reg-statuses/experimental> ;
+.

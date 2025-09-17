@@ -1,0 +1,24 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX : <https://data.idnau.org/pid/austlang/>
+PREFIX cs: <https://data.idnau.org/pid/austlang>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+cs: a skos:ConceptScheme ;
+    skos:prefLabel "AustLang Codes" ;
+    skos:hasTopConcept :E30 ,
+        :Y75 ;
+.
+
+:E30 a skos:Concept ;
+    skos:prefLabel "Butchulla" ;
+    skos:notation "E30" ;
+    skos:topConceptOf cs: ;
+    skos:inScheme cs:
+.
+
+:Y75 a skos:Concept ;
+    skos:prefLabel "A'ragu" ;
+    skos:notation "Y75" ;
+    skos:topConceptOf :cs ;
+    skos:inScheme :cs
+.

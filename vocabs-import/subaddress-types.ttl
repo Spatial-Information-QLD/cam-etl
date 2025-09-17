@@ -1,0 +1,765 @@
+PREFIX : <https://linked.data.gov.au/def/subaddress-types/>
+PREFIX cs: <https://linked.data.gov.au/def/subaddress-types>
+PREFIX droles: <https://linked.data.gov.au/def/data-roles/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX reg: <http://purl.org/linked-data/registry#>
+PREFIX schema: <https://schema.org/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX unggim: <https://linked.data.gov.au/def/unggim-themes/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+:1.0
+    schema:name "1.0" ;
+.
+
+:antenna
+    a skos:Concept ;
+    skos:altLabel "ANT"@en ;
+    skos:definition "Antenna"@en ;
+    skos:inScheme cs: ;
+    skos:notation "ANT"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Antenna"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:apartment
+    a skos:Concept ;
+    skos:altLabel "APT"@en ;
+    skos:definition "Apartment"@en ;
+    skos:inScheme cs: ;
+    skos:notation "APT"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Apartment"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:automate-teller-machine
+    a skos:Concept ;
+    skos:altLabel "ATM"@en ;
+    skos:definition "Automate Teller Machine"@en ;
+    skos:inScheme cs: ;
+    skos:notation "ATM"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Automate Teller Machine"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:barbecue
+    a skos:Concept ;
+    skos:altLabel "BBQ"@en ;
+    skos:definition "Barbecue"@en ;
+    skos:inScheme cs: ;
+    skos:notation "BBQ"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Barbecue"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:block
+    a skos:Concept ;
+    skos:altLabel "BLCK"@en ;
+    skos:definition "Block"@en ;
+    skos:inScheme cs: ;
+    skos:notation "BLCK"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Block"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "G-NAF" ;
+.
+
+:boatshed
+    a skos:Concept ;
+    skos:altLabel "BTSD"@en ;
+    skos:definition "Boatshed"@en ;
+    skos:inScheme cs: ;
+    skos:notation "BTSD"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Boatshed"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:building
+    a skos:Concept ;
+    skos:altLabel "BLDG"@en ;
+    skos:definition "Building"@en ;
+    skos:inScheme cs: ;
+    skos:notation "BLDG"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Building"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:bungalow
+    a skos:Concept ;
+    skos:altLabel "BNGW"@en ;
+    skos:definition "Bungalow"@en ;
+    skos:inScheme cs: ;
+    skos:notation "BNGW"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Bungalow"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:cage
+    a skos:Concept ;
+    skos:altLabel "CAGE"@en ;
+    skos:definition "Cage"@en ;
+    skos:inScheme cs: ;
+    skos:notation "CAGE"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Cage"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:carpark
+    a skos:Concept ;
+    skos:altLabel "CARP"@en ;
+    skos:definition "Carpark"@en ;
+    skos:inScheme cs: ;
+    skos:notation "CARP"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Carpark"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:carspace
+    a skos:Concept ;
+    skos:altLabel "CARS"@en ;
+    skos:definition "Carspace"@en ;
+    skos:inScheme cs: ;
+    skos:notation "CARS"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Carspace"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:club
+    a skos:Concept ;
+    skos:altLabel "CLUB"@en ;
+    skos:definition "Club"@en ;
+    skos:inScheme cs: ;
+    skos:notation "CLUB"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Club"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:coolroom
+    a skos:Concept ;
+    skos:altLabel "COOL"@en ;
+    skos:definition "Coolroom"@en ;
+    skos:inScheme cs: ;
+    skos:notation "COOL"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Coolroom"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:cottage
+    a skos:Concept ;
+    skos:altLabel "CTGE"@en ;
+    skos:definition "Cottage"@en ;
+    skos:inScheme cs: ;
+    skos:notation "CTGE"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Cottage"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:duplex
+    a skos:Concept ;
+    skos:altLabel "DUPL"@en ;
+    skos:definition "Duplex"@en ;
+    skos:inScheme cs: ;
+    skos:notation "DUPL"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Duplex"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:factory
+    a skos:Concept ;
+    skos:altLabel "FCTY"@en ;
+    skos:definition "Factory"@en ;
+    skos:inScheme cs: ;
+    skos:notation "FCTY"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Factory"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:flat
+    a skos:Concept ;
+    skos:altLabel "FLAT"@en ;
+    skos:definition "Flat"@en ;
+    skos:inScheme cs: ;
+    skos:notation "FLAT"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Flat"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:garage
+    a skos:Concept ;
+    skos:altLabel "GRGE"@en ;
+    skos:definition "Garage"@en ;
+    skos:inScheme cs: ;
+    skos:notation "GRGE"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Garage"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:hall
+    a skos:Concept ;
+    skos:altLabel "HALL"@en ;
+    skos:definition "Hall"@en ;
+    skos:inScheme cs: ;
+    skos:notation "HALL"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Hall"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:house
+    a skos:Concept ;
+    skos:altLabel "HSE"@en ;
+    skos:definition "House"@en ;
+    skos:inScheme cs: ;
+    skos:notation "HSE"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "House"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:kiosk
+    a skos:Concept ;
+    skos:altLabel "KSK"@en ;
+    skos:definition "Kiosk"@en ;
+    skos:inScheme cs: ;
+    skos:notation "KSK"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Kiosk"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:lease
+    a skos:Concept ;
+    skos:altLabel "LSE"@en ;
+    skos:definition "Lease"@en ;
+    skos:inScheme cs: ;
+    skos:notation "LSE"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Lease"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:lobby
+    a skos:Concept ;
+    skos:altLabel "LBBY"@en ;
+    skos:definition "Lobby"@en ;
+    skos:inScheme cs: ;
+    skos:notation "LBBY"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Lobby"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:loft
+    a skos:Concept ;
+    skos:altLabel "LOFT"@en ;
+    skos:definition "Loft"@en ;
+    skos:inScheme cs: ;
+    skos:notation "LOFT"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Loft"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:lot
+    a skos:Concept ;
+    skos:altLabel "LOT"@en ;
+    skos:definition "Lot"@en ;
+    skos:inScheme cs: ;
+    skos:notation "LOT"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Lot"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:maisonette
+    a skos:Concept ;
+    skos:altLabel "MSNT"@en ;
+    skos:definition "Maisonette"@en ;
+    skos:inScheme cs: ;
+    skos:notation "MSNT"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Maisonette"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:marine-berth
+    a skos:Concept ;
+    skos:altLabel "MBTH"@en ;
+    skos:definition "Marine Berth"@en ;
+    skos:inScheme cs: ;
+    skos:notation "MBTH"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Marine Berth"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:office
+    a skos:Concept ;
+    skos:altLabel "OFFC"@en ;
+    skos:definition "Office"@en ;
+    skos:inScheme cs: ;
+    skos:notation "OFFC"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Office"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:penthouse
+    a skos:Concept ;
+    skos:altLabel "PTHS"@en ;
+    skos:definition "Penthouse"@en ;
+    skos:inScheme cs: ;
+    skos:notation "PTHS"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Penthouse"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation "QLD address data" ;
+.
+
+:reserve
+    a skos:Concept ;
+    skos:altLabel "RESV"@en ;
+    skos:definition "Reserve"@en ;
+    skos:inScheme cs: ;
+    skos:notation "RESV"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Reserve"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:room
+    a skos:Concept ;
+    skos:altLabel "ROOM"@en ;
+    skos:definition "Room"@en ;
+    skos:inScheme cs: ;
+    skos:notation "ROOM"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Room"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:shed
+    a skos:Concept ;
+    skos:altLabel "SHED"@en ;
+    skos:definition "Shed"@en ;
+    skos:inScheme cs: ;
+    skos:notation "SHED"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Shed"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:shop
+    a skos:Concept ;
+    skos:altLabel "SHOP"@en ;
+    skos:definition "Shop"@en ;
+    skos:inScheme cs: ;
+    skos:notation "SHOP"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Shop"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:showroom
+    a skos:Concept ;
+    skos:altLabel "SHRM"@en ;
+    skos:definition "Showroom"@en ;
+    skos:inScheme cs: ;
+    skos:notation "SHRM"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Showroom"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:sign
+    a skos:Concept ;
+    skos:altLabel "SIGN"@en ;
+    skos:definition "Sign"@en ;
+    skos:inScheme cs: ;
+    skos:notation "SIGN"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Sign"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:site
+    a skos:Concept ;
+    skos:altLabel "SITE"@en ;
+    skos:definition "Site"@en ;
+    skos:inScheme cs: ;
+    skos:notation "SITE"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Site"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:stall
+    a skos:Concept ;
+    skos:altLabel "STLL"@en ;
+    skos:definition "Stall"@en ;
+    skos:inScheme cs: ;
+    skos:notation "STLL"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Stall"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:store
+    a skos:Concept ;
+    skos:altLabel "STOR"@en ;
+    skos:definition "Store"@en ;
+    skos:inScheme cs: ;
+    skos:notation "STOR"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Store"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:strata-unit
+    a skos:Concept ;
+    skos:altLabel "STR"@en ;
+    skos:definition "Strata unit"@en ;
+    skos:inScheme cs: ;
+    skos:notation "STR"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Strata unit"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:studio
+    a skos:Concept ;
+    skos:altLabel "STU"@en ;
+    skos:definition "Studio"@en ;
+    skos:inScheme cs: ;
+    skos:notation "STU"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Studio"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:studio-apartment
+    a skos:Concept ;
+    skos:altLabel "STUA"@en ;
+    skos:definition "Studio Apartment"@en ;
+    skos:inScheme cs: ;
+    skos:notation "STUA"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Studio Apartment"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:substation
+    a skos:Concept ;
+    skos:altLabel "SUBS"@en ;
+    skos:definition "Substation"@en ;
+    skos:inScheme cs: ;
+    skos:notation "SUBS"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Substation"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:suite
+    a skos:Concept ;
+    skos:altLabel "SE"@en ;
+    skos:definition "Suite"@en ;
+    skos:inScheme cs: ;
+    skos:notation "SE"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Suite"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:tenancy
+    a skos:Concept ;
+    skos:altLabel "TNCY"@en ;
+    skos:definition "Tenancy"@en ;
+    skos:inScheme cs: ;
+    skos:notation "TNCY"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Tenancy"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:tower
+    a skos:Concept ;
+    skos:altLabel "TWR"@en ;
+    skos:definition "Tower"@en ;
+    skos:inScheme cs: ;
+    skos:notation "TWR"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Tower"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:townhouse
+    a skos:Concept ;
+    skos:altLabel "TNHS"@en ;
+    skos:definition "Townhouse"@en ;
+    skos:inScheme cs: ;
+    skos:notation "TNHS"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Townhouse"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:unit
+    a skos:Concept ;
+    skos:altLabel
+        "U"@en ,
+        "UNIT"@en ;
+    skos:definition "Unit"@en ;
+    skos:inScheme cs: ;
+    skos:notation "U"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Unit"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:vault
+    a skos:Concept ;
+    skos:altLabel "VLT"@en ;
+    skos:definition "Vault"@en ;
+    skos:inScheme cs: ;
+    skos:notation "VLT"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Vault"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:villa
+    a skos:Concept ;
+    skos:altLabel "VLLA"@en ;
+    skos:definition "Villa"@en ;
+    skos:inScheme cs: ;
+    skos:notation "VLLA"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Villa"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:ward
+    a skos:Concept ;
+    skos:altLabel "WARD"@en ;
+    skos:definition "Ward"@en ;
+    skos:inScheme cs: ;
+    skos:notation "WARD"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Ward"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:warehouse
+    a skos:Concept ;
+    skos:altLabel "WHSE"@en ;
+    skos:definition "Warehouse"@en ;
+    skos:inScheme cs: ;
+    skos:notation "WHSE"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Warehouse"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+:workshop
+    a skos:Concept ;
+    skos:altLabel "WKSH"@en ;
+    skos:definition "Workshop"@en ;
+    skos:inScheme cs: ;
+    skos:notation "WKSH"^^<https://linked.data.gov.au/dataset/qld-addr/datatype/sir-pub> ;
+    skos:prefLabel "Workshop"@en ;
+    skos:topConceptOf cs: ;
+    schema:citation
+        "https://store.standards.org.au/product/as-4590-1-2017"^^xsd:anyURI ,
+        "AS4590.1:2017" ;
+.
+
+cs:
+    a skos:ConceptScheme ;
+    reg:status <https://linked.data.gov.au/def/reg-statuses/experimental> ;
+    owl:versionIRI :1.0 ;
+    owl:versionInfo "1.0" ;
+    skos:definition "This vocabulary describes types of sub-address. A sub-address distinguishes the type of separately identifiable portion within a building, complex or marina. These are sometimes referred to as sub-dwelling types or unit types. "@en ;
+    skos:hasTopConcept
+        :antenna ,
+        :apartment ,
+        :automate-teller-machine ,
+        :barbecue ,
+        :block ,
+        :boatshed ,
+        :building ,
+        :bungalow ,
+        :cage ,
+        :carpark ,
+        :carspace ,
+        :club ,
+        :coolroom ,
+        :cottage ,
+        :duplex ,
+        :factory ,
+        :flat ,
+        :garage ,
+        :hall ,
+        :house ,
+        :kiosk ,
+        :lease ,
+        :lobby ,
+        :loft ,
+        :lot ,
+        :maisonette ,
+        :marine-berth ,
+        :office ,
+        :penthouse ,
+        :reserve ,
+        :room ,
+        :shed ,
+        :shop ,
+        :showroom ,
+        :sign ,
+        :site ,
+        :stall ,
+        :store ,
+        :strata-unit ,
+        :studio ,
+        :studio-apartment ,
+        :substation ,
+        :suite ,
+        :tenancy ,
+        :tower ,
+        :townhouse ,
+        :unit ,
+        :vault ,
+        :villa ,
+        :ward ,
+        :warehouse ,
+        :workshop ;
+    skos:historyNote """2025-05 NJC: Added status experimental
+2025-05 EC: Added SIR datatype codes
+
+This vocabulary has been derived from the Australian Standards AS 4590 with a few additions from the G-NAF dataset and Queensland's address database""" ;
+    skos:prefLabel "Sub-Address Types"@en ;
+    prov:qualifiedAttribution
+        [
+            prov:agent <https://linked.data.gov.au/org/icsm> ;
+            prov:hadRole droles:custodian ;
+        ] ;
+    schema:creator <https://linked.data.gov.au/org/qsi> ;
+    schema:dateCreated "2023-05-12"^^xsd:date ;
+    schema:dateModified "2025-05-23"^^xsd:date ;
+    schema:keywords unggim:Addresses ;
+    schema:publisher <https://linked.data.gov.au/org/icsm> ;
+    schema:status <https://linked.data.gov.au/def/reg-statuses/experimental> ;
+.

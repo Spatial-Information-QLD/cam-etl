@@ -1,0 +1,3047 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX : <https://linked.data.gov.au/def/iso639-1/>
+PREFIX cs: <https://linked.data.gov.au/def/iso639-1>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX iso: <http://id.loc.gov/vocabulary/iso639-2/>
+PREFIX lang: <http://id.loc.gov/vocabulary/languages/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sdo: <http://www.schema.org/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+:aa a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Afar",
+        "Danakil-Sprache",
+        "afar" ;
+    skos:definition "Afar"@en ;
+    skos:exactMatch iso:aar,
+        lang:aar ;
+    skos:inScheme cs: ;
+    skos:notation "aa" ;
+    skos:prefLabel "Danakil-Sprache"@de,
+        "Afar"@en,
+        "afar"@fr .
+
+:ab a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Abchasisch",
+        "Abkhazian",
+        "abkhaze" ;
+    skos:definition "Abkhazian"@en ;
+    skos:exactMatch iso:abk,
+        lang:abk ;
+    skos:inScheme cs: ;
+    skos:notation "ab" ;
+    skos:prefLabel "Abchasisch"@de,
+        "Abkhazian"@en,
+        "abkhaze"@fr .
+
+:ae a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Avestan",
+        "Avestisch",
+        "avestique" ;
+    skos:definition "Avestan"@en ;
+    skos:exactMatch iso:ave,
+        lang:ave ;
+    skos:inScheme cs: ;
+    skos:notation "ae" ;
+    skos:prefLabel "Avestisch"@de,
+        "Avestan"@en,
+        "avestique"@fr .
+
+:af a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Afrikaans",
+        "afrikaans" ;
+    skos:definition "Afrikaans"@en ;
+    skos:exactMatch iso:afr,
+        lang:afr ;
+    skos:inScheme cs: ;
+    skos:notation "af" ;
+    skos:prefLabel "Afrikaans"@de,
+        "Afrikaans"@en,
+        "afrikaans"@fr .
+
+:ak a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Akan",
+        "Akan-Sprache",
+        "akan" ;
+    skos:definition "Akan"@en ;
+    skos:exactMatch iso:aka,
+        lang:aka ;
+    skos:historyNote "This alpha-2 ISO 639-1 code was approved in 1999 and included in ISO 639-1: 2002. It was mistakenly missing in earlier versions of the tables on the ISO639-2 web site. As of January 2003, it has been included."@en ;
+    skos:inScheme cs: ;
+    skos:notation "ak" ;
+    skos:prefLabel "Akan-Sprache"@de,
+        "Akan"@en,
+        "akan"@fr .
+
+:am a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Amharic",
+        "Amharisch",
+        "amharique" ;
+    skos:definition "Amharic"@en ;
+    skos:exactMatch iso:amh,
+        lang:amh ;
+    skos:inScheme cs: ;
+    skos:notation "am" ;
+    skos:prefLabel "Amharisch"@de,
+        "Amharic"@en,
+        "amharique"@fr .
+
+:an a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Aragonese",
+        "Aragonesisch",
+        "aragonais" ;
+    skos:definition "Aragonese"@en ;
+    skos:exactMatch iso:arg,
+        lang:arg ;
+    skos:inScheme cs: ;
+    skos:notation "an" ;
+    skos:prefLabel "Aragonesisch"@de,
+        "Aragonese"@en,
+        "aragonais"@fr .
+
+:ar a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Arabic",
+        "Arabisch",
+        "arabe" ;
+    skos:definition "Arabic"@en ;
+    skos:exactMatch iso:ara,
+        lang:ara ;
+    skos:inScheme cs: ;
+    skos:notation "ar" ;
+    skos:prefLabel "Arabisch"@de,
+        "Arabic"@en,
+        "arabe"@fr .
+
+:as a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Assamese",
+        "Assamesisch",
+        "assamais" ;
+    skos:definition "Assamese"@en ;
+    skos:exactMatch iso:asm,
+        lang:asm ;
+    skos:inScheme cs: ;
+    skos:notation "as" ;
+    skos:prefLabel "Assamesisch"@de,
+        "Assamese"@en,
+        "assamais"@fr .
+
+:aus a skos:Concept ;
+    dcterms:source "http://id.loc.gov/vocabulary/languages/aus"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Australische Sprachen" ;
+    skos:definition "Australian languages"@en ;
+    skos:inScheme cs: ;
+    skos:notation "aus" ;
+    skos:prefLabel "Australian languages"@en .
+
+:av a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Avaric",
+        "Awarisch",
+        "avar" ;
+    skos:definition "Avaric"@en ;
+    skos:exactMatch iso:ava,
+        lang:ava ;
+    skos:historyNote "This alpha-2 ISO 639-1 code was approved in 1999 and included in ISO 639-1: 2002. It was mistakenly missing in earlier versions of the tables on the ISO639-2 web site. As of January 2003, it has been included."@en ;
+    skos:inScheme cs: ;
+    skos:notation "av" ;
+    skos:prefLabel "Awarisch"@de,
+        "Avaric"@en,
+        "avar"@fr .
+
+:ay a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Aymara",
+        "Aymará-Sprache",
+        "aymara" ;
+    skos:definition "Aymara"@en ;
+    skos:exactMatch iso:aym,
+        lang:aym ;
+    skos:inScheme cs: ;
+    skos:notation "ay" ;
+    skos:prefLabel "Aymará-Sprache"@de,
+        "Aymara"@en,
+        "aymara"@fr .
+
+:az a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Aserbeidschanisch",
+        "Azerbaijani",
+        "azéri" ;
+    skos:definition "Azerbaijani"@en ;
+    skos:exactMatch iso:aze,
+        lang:aze ;
+    skos:inScheme cs: ;
+    skos:notation "az" ;
+    skos:prefLabel "Aserbeidschanisch"@de,
+        "Azerbaijani"@en,
+        "azéri"@fr .
+
+:ba a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Baschkirisch",
+        "Bashkir",
+        "bachkir" ;
+    skos:definition "Bashkir"@en ;
+    skos:exactMatch iso:bak,
+        lang:bak ;
+    skos:inScheme cs: ;
+    skos:notation "ba" ;
+    skos:prefLabel "Baschkirisch"@de,
+        "Bashkir"@en,
+        "bachkir"@fr .
+
+:be a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Belarusian",
+        "Weißrussisch",
+        "biélorusse" ;
+    skos:definition "Belarusian"@en ;
+    skos:exactMatch iso:bel,
+        lang:bel ;
+    skos:inScheme cs: ;
+    skos:notation "be" ;
+    skos:prefLabel "Weißrussisch"@de,
+        "Belarusian"@en,
+        "biélorusse"@fr .
+
+:bg a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Bulgarian",
+        "Bulgarisch",
+        "bulgare" ;
+    skos:definition "Bulgarian"@en ;
+    skos:exactMatch iso:bul,
+        lang:bul ;
+    skos:inScheme cs: ;
+    skos:notation "bg" ;
+    skos:prefLabel "Bulgarisch"@de,
+        "Bulgarian"@en,
+        "bulgare"@fr .
+
+:bh a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Bihari (Andere)",
+        "Bihari languages",
+        "langues biharis" ;
+    skos:definition "Bihari languages"@en ;
+    skos:exactMatch iso:bih,
+        lang:bih ;
+    skos:historyNote "Changed from Bihari; bihari"@en ;
+    skos:inScheme cs: ;
+    skos:notation "bh" ;
+    skos:prefLabel "Bihari (Andere)"@de,
+        "Bihari languages"@en,
+        "langues biharis"@fr .
+
+:bi a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Beach-la-mar",
+        "Bislama",
+        "bichlamar" ;
+    skos:definition "Bislama"@en ;
+    skos:exactMatch iso:bis,
+        lang:bis ;
+    skos:inScheme cs: ;
+    skos:notation "bi" ;
+    skos:prefLabel "Beach-la-mar"@de,
+        "Bislama"@en,
+        "bichlamar"@fr .
+
+:bm a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Bambara",
+        "Bambara-Sprache",
+        "bambara" ;
+    skos:definition "Bambara"@en ;
+    skos:exactMatch iso:bam,
+        lang:bam ;
+    skos:historyNote "This alpha-2 ISO 639-1 code was approved in 1999 and included in ISO 639-1: 2002. It was mistakenly missing in earlier versions of the tables on the ISO639-2 web site. As of January 2003, it has been included."@en ;
+    skos:inScheme cs: ;
+    skos:notation "bm" ;
+    skos:prefLabel "Bambara-Sprache"@de,
+        "Bambara"@en,
+        "bambara"@fr .
+
+:bn a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Bengali",
+        "bengali" ;
+    skos:definition "Bengali"@en ;
+    skos:exactMatch iso:ben,
+        lang:ben ;
+    skos:inScheme cs: ;
+    skos:notation "bn" ;
+    skos:prefLabel "Bengali"@de,
+        "Bengali"@en,
+        "bengali"@fr .
+
+:bo a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Tibetan",
+        "Tibetisch",
+        "tibétain" ;
+    skos:definition "Tibetan"@en ;
+    skos:exactMatch iso:bod,
+        iso:tib,
+        lang:tib ;
+    skos:inScheme cs: ;
+    skos:notation "bo" ;
+    skos:prefLabel "Tibetisch"@de,
+        "Tibetan"@en,
+        "tibétain"@fr .
+
+:br a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Breton",
+        "Bretonisch",
+        "breton" ;
+    skos:definition "Breton"@en ;
+    skos:exactMatch iso:bre,
+        lang:bre ;
+    skos:inScheme cs: ;
+    skos:notation "br" ;
+    skos:prefLabel "Bretonisch"@de,
+        "Breton"@en,
+        "breton"@fr .
+
+:bs a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Bosnian",
+        "Bosnisch",
+        "bosniaque" ;
+    skos:definition "Bosnian"@en ;
+    skos:exactMatch iso:bos,
+        lang:bos ;
+    skos:inScheme cs: ;
+    skos:notation "bs" ;
+    skos:prefLabel "Bosnisch"@de,
+        "Bosnian"@en,
+        "bosniaque"@fr .
+
+:ca a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Catalan",
+        "Katalanisch",
+        "Valencian",
+        "catalan",
+        "valencien" ;
+    skos:definition "Catalan | Valencian"@en ;
+    skos:exactMatch iso:cat,
+        lang:cat ;
+    skos:inScheme cs: ;
+    skos:notation "ca" ;
+    skos:prefLabel "Katalanisch"@de,
+        "Catalan | Valencian"@en,
+        "catalan | valencien"@fr .
+
+:ce a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Chechen",
+        "Tschetschenisch",
+        "tchétchène" ;
+    skos:definition "Chechen"@en ;
+    skos:exactMatch iso:che,
+        lang:che ;
+    skos:inScheme cs: ;
+    skos:notation "ce" ;
+    skos:prefLabel "Tschetschenisch"@de,
+        "Chechen"@en,
+        "tchétchène"@fr .
+
+:ch a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Chamorro",
+        "Chamorro-Sprache",
+        "chamorro" ;
+    skos:definition "Chamorro"@en ;
+    skos:exactMatch iso:cha,
+        lang:cha ;
+    skos:inScheme cs: ;
+    skos:notation "ch" ;
+    skos:prefLabel "Chamorro-Sprache"@de,
+        "Chamorro"@en,
+        "chamorro"@fr .
+
+:co a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Corsican",
+        "Korsisch",
+        "corse" ;
+    skos:definition "Corsican"@en ;
+    skos:exactMatch iso:cos,
+        lang:cos ;
+    skos:inScheme cs: ;
+    skos:notation "co" ;
+    skos:prefLabel "Korsisch"@de,
+        "Corsican"@en,
+        "corse"@fr .
+
+:cr a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Cree",
+        "Cree-Sprache",
+        "cree" ;
+    skos:definition "Cree"@en ;
+    skos:exactMatch iso:cre,
+        lang:cre ;
+    skos:historyNote "This alpha-2 ISO 639-1 code was approved in 1999 and included in ISO 639-1: 2002. It was mistakenly missing in earlier versions of the tables on the ISO639-2 web site. As of January 2003, it has been included."@en ;
+    skos:inScheme cs: ;
+    skos:notation "cr" ;
+    skos:prefLabel "Cree-Sprache"@de,
+        "Cree"@en,
+        "cree"@fr .
+
+:cs a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Czech",
+        "Tschechisch",
+        "tchèque" ;
+    skos:definition "Czech"@en ;
+    skos:exactMatch iso:ces,
+        iso:cze,
+        lang:cze ;
+    skos:inScheme cs: ;
+    skos:notation "cs" ;
+    skos:prefLabel "Tschechisch"@de,
+        "Czech"@en,
+        "tchèque"@fr .
+
+:cu a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Church Slavic",
+        "Church Slavonic",
+        "Kirchenslawisch",
+        "Old Bulgarian",
+        "Old Church Slavonic",
+        "Old Slavonic",
+        "slavon d'église",
+        "slavon liturgique",
+        "vieux bulgare",
+        "vieux slave" ;
+    skos:definition "Church Slavic | Old Slavonic | Church Slavonic | Old Bulgarian | Old Church Slavonic"@en ;
+    skos:exactMatch iso:chu,
+        lang:chu ;
+    skos:inScheme cs: ;
+    skos:notation "cu" ;
+    skos:prefLabel "Kirchenslawisch"@de,
+        "Church Slavic | Old Slavonic | Church Slavonic | Old Bulgarian | Old Church Slavonic"@en,
+        "slavon d'église | vieux slave | slavon liturgique | vieux bulgare"@fr .
+
+:cv a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Chuvash",
+        "Tschuwaschisch",
+        "tchouvache" ;
+    skos:definition "Chuvash"@en ;
+    skos:exactMatch iso:chv,
+        lang:chv ;
+    skos:inScheme cs: ;
+    skos:notation "cv" ;
+    skos:prefLabel "Tschuwaschisch"@de,
+        "Chuvash"@en,
+        "tchouvache"@fr .
+
+:cy a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Kymrisch",
+        "Welsh",
+        "gallois" ;
+    skos:definition "Welsh"@en ;
+    skos:exactMatch iso:cym,
+        iso:wel,
+        lang:wel ;
+    skos:inScheme cs: ;
+    skos:notation "cy" ;
+    skos:prefLabel "Kymrisch"@de,
+        "Welsh"@en,
+        "gallois"@fr .
+
+:da a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Danish",
+        "Dänisch",
+        "danois" ;
+    skos:definition "Danish"@en ;
+    skos:exactMatch iso:dan,
+        lang:dan ;
+    skos:inScheme cs: ;
+    skos:notation "da" ;
+    skos:prefLabel "Dänisch"@de,
+        "Danish"@en,
+        "danois"@fr .
+
+:de a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Deutsch",
+        "German",
+        "allemand" ;
+    skos:definition "German"@en ;
+    skos:exactMatch iso:deu,
+        iso:ger,
+        lang:ger ;
+    skos:inScheme cs: ;
+    skos:notation "de" ;
+    skos:prefLabel "Deutsch"@de,
+        "German"@en,
+        "allemand"@fr .
+
+:dv a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Dhivehi",
+        "Divehi",
+        "Maldivian",
+        "Maledivisch",
+        "maldivien" ;
+    skos:definition "Divehi | Dhivehi | Maldivian"@en ;
+    skos:exactMatch iso:div,
+        lang:div ;
+    skos:historyNote "This alpha-2 ISO 639-1 code was approved in 1999 and included in ISO 639-1: 2002. It was mistakenly missing in earlier versions of the tables on the ISO639-2 web site. As of January 2003, it has been included. Dhivehi, Maldavian added 2006-06-07"@en ;
+    skos:inScheme cs: ;
+    skos:notation "dv" ;
+    skos:prefLabel "Maledivisch"@de,
+        "Divehi | Dhivehi | Maldivian"@en,
+        "maldivien"@fr .
+
+:dz a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Dzongkha",
+        "dzongkha" ;
+    skos:definition "Dzongkha"@en ;
+    skos:exactMatch iso:dzo,
+        lang:dzo ;
+    skos:inScheme cs: ;
+    skos:notation "dz" ;
+    skos:prefLabel "Dzongkha"@de,
+        "Dzongkha"@en,
+        "dzongkha"@fr .
+
+:ee a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Ewe",
+        "Ewe-Sprache",
+        "éwé" ;
+    skos:definition "Ewe"@en ;
+    skos:exactMatch iso:ewe,
+        lang:ewe ;
+    skos:historyNote "This alpha-2 ISO 639-1 code was approved in 1999 and included in ISO 639-1: 2002. It was mistakenly missing in earlier versions of the tables on the ISO639-2 web site. As of January 2003, it has been included."@en ;
+    skos:inScheme cs: ;
+    skos:notation "ee" ;
+    skos:prefLabel "Ewe-Sprache"@de,
+        "Ewe"@en,
+        "éwé"@fr .
+
+:el a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Greek, Modern (1453-)",
+        "Neugriechisch",
+        "grec moderne (après 1453)" ;
+    skos:definition "Greek, Modern (1453-)"@en ;
+    skos:exactMatch iso:ell,
+        iso:gre,
+        lang:gre ;
+    skos:inScheme cs: ;
+    skos:notation "el" ;
+    skos:prefLabel "Neugriechisch"@de,
+        "Greek, Modern (1453-)"@en,
+        "grec moderne (après 1453)"@fr .
+
+:en a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Englisch",
+        "English",
+        "anglais" ;
+    skos:definition "English"@en ;
+    skos:exactMatch iso:eng,
+        lang:eng ;
+    skos:inScheme cs: ;
+    skos:notation "en" ;
+    skos:prefLabel "Englisch"@de,
+        "English"@en,
+        "anglais"@fr .
+
+:eo a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Esperanto",
+        "espéranto" ;
+    skos:definition "Esperanto"@en ;
+    skos:exactMatch iso:epo,
+        lang:epo ;
+    skos:inScheme cs: ;
+    skos:notation "eo" ;
+    skos:prefLabel "Esperanto"@de,
+        "Esperanto"@en,
+        "espéranto"@fr .
+
+:es a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Castilian",
+        "Spanisch",
+        "Spanish",
+        "castillan",
+        "espagnol" ;
+    skos:definition "Spanish | Castilian"@en ;
+    skos:exactMatch iso:spa,
+        lang:spa ;
+    skos:inScheme cs: ;
+    skos:notation "es" ;
+    skos:prefLabel "Spanisch"@de,
+        "Spanish | Castilian"@en,
+        "espagnol | castillan"@fr .
+
+:et a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Estnisch",
+        "Estonian",
+        "estonien" ;
+    skos:definition "Estonian"@en ;
+    skos:exactMatch iso:est,
+        lang:est ;
+    skos:inScheme cs: ;
+    skos:notation "et" ;
+    skos:prefLabel "Estnisch"@de,
+        "Estonian"@en,
+        "estonien"@fr .
+
+:eu a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Baskisch",
+        "Basque",
+        "basque" ;
+    skos:definition "Basque"@en ;
+    skos:exactMatch iso:baq,
+        iso:eus,
+        lang:baq ;
+    skos:inScheme cs: ;
+    skos:notation "eu" ;
+    skos:prefLabel "Baskisch"@de,
+        "Basque"@en,
+        "basque"@fr .
+
+:fa a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Persian",
+        "Persisch",
+        "persan" ;
+    skos:definition "Persian"@en ;
+    skos:exactMatch iso:fas,
+        iso:per,
+        lang:per ;
+    skos:inScheme cs: ;
+    skos:notation "fa" ;
+    skos:prefLabel "Persisch"@de,
+        "Persian"@en,
+        "persan"@fr .
+
+:ff a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Ful",
+        "Fulah",
+        "peul" ;
+    skos:definition "Fulah"@en ;
+    skos:exactMatch iso:ful,
+        lang:ful ;
+    skos:historyNote "This alpha-2 ISO 639-1 code was approved in 1999 and included in ISO 639-1: 2002. It was mistakenly missing in earlier versions of the tables on the ISO639-2 web site. As of January 2003, it has been included."@en ;
+    skos:inScheme cs: ;
+    skos:notation "ff" ;
+    skos:prefLabel "Ful"@de,
+        "Fulah"@en,
+        "peul"@fr .
+
+:fi a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Finnisch",
+        "Finnish",
+        "finnois" ;
+    skos:definition "Finnish"@en ;
+    skos:exactMatch iso:fin,
+        lang:fin ;
+    skos:inScheme cs: ;
+    skos:notation "fi" ;
+    skos:prefLabel "Finnisch"@de,
+        "Finnish"@en,
+        "finnois"@fr .
+
+:fj a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Fidschi-Sprache",
+        "Fijian",
+        "fidjien" ;
+    skos:definition "Fijian"@en ;
+    skos:exactMatch iso:fij,
+        lang:fij ;
+    skos:inScheme cs: ;
+    skos:notation "fj" ;
+    skos:prefLabel "Fidschi-Sprache"@de,
+        "Fijian"@en,
+        "fidjien"@fr .
+
+:fo a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Faroese",
+        "Färöisch",
+        "féroïen" ;
+    skos:definition "Faroese"@en ;
+    skos:exactMatch iso:fao,
+        lang:fao ;
+    skos:inScheme cs: ;
+    skos:notation "fo" ;
+    skos:prefLabel "Färöisch"@de,
+        "Faroese"@en,
+        "féroïen"@fr .
+
+:fr a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Französisch",
+        "French",
+        "français" ;
+    skos:definition "French"@en ;
+    skos:exactMatch iso:fra,
+        iso:fre,
+        lang:fre ;
+    skos:inScheme cs: ;
+    skos:notation "fr" ;
+    skos:prefLabel "Französisch"@de,
+        "French"@en,
+        "français"@fr .
+
+:fy a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Friesisch",
+        "Western Frisian",
+        "frison occidental" ;
+    skos:definition "Western Frisian"@en ;
+    skos:exactMatch iso:fry,
+        lang:fry ;
+    skos:historyNote "Previous usage of code has been for Western Frisian, although language name was \"Frisian\""@en ;
+    skos:inScheme cs: ;
+    skos:notation "fy" ;
+    skos:prefLabel "Friesisch"@de,
+        "Western Frisian"@en,
+        "frison occidental"@fr .
+
+:ga a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Irisch",
+        "Irish",
+        "irlandais" ;
+    skos:definition "Irish"@en ;
+    skos:exactMatch iso:gle,
+        lang:gle ;
+    skos:inScheme cs: ;
+    skos:notation "ga" ;
+    skos:prefLabel "Irisch"@de,
+        "Irish"@en,
+        "irlandais"@fr .
+
+:gd a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Gaelic",
+        "Gälisch-Schottisch",
+        "Scottish Gaelic",
+        "gaélique",
+        "gaélique écossais" ;
+    skos:definition "Gaelic | Scottish Gaelic"@en ;
+    skos:exactMatch iso:gla,
+        lang:gla ;
+    skos:inScheme cs: ;
+    skos:notation "gd" ;
+    skos:prefLabel "Gälisch-Schottisch"@de,
+        "Gaelic | Scottish Gaelic"@en,
+        "gaélique | gaélique écossais"@fr .
+
+:gl a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Galician",
+        "Galicisch",
+        "galicien" ;
+    skos:definition "Galician"@en ;
+    skos:exactMatch iso:glg,
+        lang:glg ;
+    skos:historyNote "Incorrect form of English name (Gallegan) corrected"@en ;
+    skos:inScheme cs: ;
+    skos:notation "gl" ;
+    skos:prefLabel "Galicisch"@de,
+        "Galician"@en,
+        "galicien"@fr .
+
+:gn a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Guarani",
+        "Guaraní-Sprache",
+        "guarani" ;
+    skos:definition "Guarani"@en ;
+    skos:exactMatch iso:grn,
+        lang:grn ;
+    skos:inScheme cs: ;
+    skos:notation "gn" ;
+    skos:prefLabel "Guaraní-Sprache"@de,
+        "Guarani"@en,
+        "guarani"@fr .
+
+:gu a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Gujarati",
+        "Gujarati-Sprache",
+        "goudjrati" ;
+    skos:definition "Gujarati"@en ;
+    skos:exactMatch iso:guj,
+        lang:guj ;
+    skos:inScheme cs: ;
+    skos:notation "gu" ;
+    skos:prefLabel "Gujarati-Sprache"@de,
+        "Gujarati"@en,
+        "goudjrati"@fr .
+
+:gv a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Manx",
+        "mannois",
+        "manx" ;
+    skos:definition "Manx"@en ;
+    skos:exactMatch iso:glv,
+        lang:glv ;
+    skos:inScheme cs: ;
+    skos:notation "gv" ;
+    skos:prefLabel "Manx"@de,
+        "Manx"@en,
+        "manx | mannois"@fr .
+
+:ha a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Hausa",
+        "Haussa-Sprache",
+        "haoussa" ;
+    skos:definition "Hausa"@en ;
+    skos:exactMatch iso:hau,
+        lang:hau ;
+    skos:inScheme cs: ;
+    skos:notation "ha" ;
+    skos:prefLabel "Haussa-Sprache"@de,
+        "Hausa"@en,
+        "haoussa"@fr .
+
+:he a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Hebrew",
+        "Hebräisch",
+        "hébreu" ;
+    skos:definition "Hebrew"@en ;
+    skos:exactMatch iso:heb,
+        lang:heb ;
+    skos:inScheme cs: ;
+    skos:notation "he" ;
+    skos:prefLabel "Hebräisch"@de,
+        "Hebrew"@en,
+        "hébreu"@fr .
+
+:hi a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Hindi",
+        "hindi" ;
+    skos:definition "Hindi"@en ;
+    skos:exactMatch iso:hin,
+        lang:hin ;
+    skos:inScheme cs: ;
+    skos:notation "hi" ;
+    skos:prefLabel "Hindi"@de,
+        "Hindi"@en,
+        "hindi"@fr .
+
+:ho a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Hiri Motu",
+        "Hiri-Motu",
+        "hiri motu" ;
+    skos:definition "Hiri Motu"@en ;
+    skos:exactMatch iso:hmo,
+        lang:hmo ;
+    skos:inScheme cs: ;
+    skos:notation "ho" ;
+    skos:prefLabel "Hiri-Motu"@de,
+        "Hiri Motu"@en,
+        "hiri motu"@fr .
+
+:hr a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Croatian",
+        "Kroatisch",
+        "croate" ;
+    skos:definition "Croatian"@en ;
+    skos:exactMatch iso:hrv,
+        lang:hrv ;
+    skos:inScheme cs: ;
+    skos:notation "hr" ;
+    skos:prefLabel "Kroatisch"@de,
+        "Croatian"@en,
+        "croate"@fr .
+
+:ht a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Haitian",
+        "Haitian Creole",
+        "Haïtien (Haiti-Kreolisch)",
+        "créole haïtien",
+        "haïtien" ;
+    skos:definition "Haitian | Haitian Creole"@en ;
+    skos:exactMatch iso:hat,
+        lang:hat ;
+    skos:inScheme cs: ;
+    skos:notation "ht" ;
+    skos:prefLabel "Haïtien (Haiti-Kreolisch)"@de,
+        "Haitian | Haitian Creole"@en,
+        "haïtien | créole haïtien"@fr .
+
+:hu a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Hungarian",
+        "Ungarisch",
+        "hongrois" ;
+    skos:definition "Hungarian"@en ;
+    skos:exactMatch iso:hun,
+        lang:hun ;
+    skos:inScheme cs: ;
+    skos:notation "hu" ;
+    skos:prefLabel "Ungarisch"@de,
+        "Hungarian"@en,
+        "hongrois"@fr .
+
+:hy a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Armenian",
+        "Armenisch",
+        "arménien" ;
+    skos:definition "Armenian"@en ;
+    skos:exactMatch iso:arm,
+        iso:hye,
+        lang:arm ;
+    skos:inScheme cs: ;
+    skos:notation "hy" ;
+    skos:prefLabel "Armenisch"@de,
+        "Armenian"@en,
+        "arménien"@fr .
+
+:hz a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Herero",
+        "Herero-Sprache",
+        "herero" ;
+    skos:definition "Herero"@en ;
+    skos:exactMatch iso:her,
+        lang:her ;
+    skos:inScheme cs: ;
+    skos:notation "hz" ;
+    skos:prefLabel "Herero-Sprache"@de,
+        "Herero"@en,
+        "herero"@fr .
+
+:ia a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Interlingua",
+        "Interlingua (International Auxiliary Language Association)",
+        "interlingua (langue auxiliaire internationale)" ;
+    skos:definition "Interlingua (International Auxiliary Language Association)"@en ;
+    skos:exactMatch iso:ina,
+        lang:ina ;
+    skos:inScheme cs: ;
+    skos:notation "ia" ;
+    skos:prefLabel "Interlingua"@de,
+        "Interlingua (International Auxiliary Language Association)"@en,
+        "interlingua (langue auxiliaire internationale)"@fr .
+
+:id a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Bahasa Indonesia",
+        "Indonesian",
+        "indonésien" ;
+    skos:definition "Indonesian"@en ;
+    skos:exactMatch iso:ind,
+        lang:ind ;
+    skos:inScheme cs: ;
+    skos:notation "id" ;
+    skos:prefLabel "Bahasa Indonesia"@de,
+        "Indonesian"@en,
+        "indonésien"@fr .
+
+:ie a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Interlingue",
+        "Occidental",
+        "interlingue" ;
+    skos:definition "Interlingue | Occidental"@en ;
+    skos:exactMatch iso:ile,
+        lang:ile ;
+    skos:inScheme cs: ;
+    skos:notation "ie" ;
+    skos:prefLabel "Interlingue"@de,
+        "Interlingue | Occidental"@en,
+        "interlingue"@fr .
+
+:ig a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Ibo-Sprache",
+        "Igbo",
+        "igbo" ;
+    skos:definition "Igbo"@en ;
+    skos:exactMatch iso:ibo,
+        lang:ibo ;
+    skos:historyNote "This alpha-2 ISO 639-1 code was approved in 1999 and included in ISO 639-1: 2002. It was mistakenly missing in earlier versions of the tables on the ISO639-2 web site. As of January 2003, it has been included."@en ;
+    skos:inScheme cs: ;
+    skos:notation "ig" ;
+    skos:prefLabel "Ibo-Sprache"@de,
+        "Igbo"@en,
+        "igbo"@fr .
+
+:ii a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Lalo-Sprache",
+        "Nuosu",
+        "Sichuan Yi",
+        "yi de Sichuan" ;
+    skos:definition "Sichuan Yi | Nuosu"@en ;
+    skos:exactMatch iso:iii,
+        lang:iii ;
+    skos:inScheme cs: ;
+    skos:notation "ii" ;
+    skos:prefLabel "Lalo-Sprache"@de,
+        "Sichuan Yi | Nuosu"@en,
+        "yi de Sichuan"@fr .
+
+:ik a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Inupiaq",
+        "Inupik",
+        "inupiaq" ;
+    skos:definition "Inupiaq"@en ;
+    skos:exactMatch iso:ipk,
+        lang:ipk ;
+    skos:inScheme cs: ;
+    skos:notation "ik" ;
+    skos:prefLabel "Inupik"@de,
+        "Inupiaq"@en,
+        "inupiaq"@fr .
+
+:io a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Ido",
+        "ido" ;
+    skos:definition "Ido"@en ;
+    skos:exactMatch iso:ido,
+        lang:ido ;
+    skos:inScheme cs: ;
+    skos:notation "io" ;
+    skos:prefLabel "Ido"@de,
+        "Ido"@en,
+        "ido"@fr .
+
+:is a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Icelandic",
+        "Isländisch",
+        "islandais" ;
+    skos:definition "Icelandic"@en ;
+    skos:exactMatch iso:ice,
+        iso:isl,
+        lang:ice ;
+    skos:inScheme cs: ;
+    skos:notation "is" ;
+    skos:prefLabel "Isländisch"@de,
+        "Icelandic"@en,
+        "islandais"@fr .
+
+:it a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Italian",
+        "Italienisch",
+        "italien" ;
+    skos:definition "Italian"@en ;
+    skos:exactMatch iso:ita,
+        lang:ita ;
+    skos:inScheme cs: ;
+    skos:notation "it" ;
+    skos:prefLabel "Italienisch"@de,
+        "Italian"@en,
+        "italien"@fr .
+
+:iu a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Inuktitut",
+        "inuktitut" ;
+    skos:definition "Inuktitut"@en ;
+    skos:exactMatch iso:iku,
+        lang:iku ;
+    skos:inScheme cs: ;
+    skos:notation "iu" ;
+    skos:prefLabel "Inuktitut"@de,
+        "Inuktitut"@en,
+        "inuktitut"@fr .
+
+:ja a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Japanese",
+        "Japanisch",
+        "japonais" ;
+    skos:definition "Japanese"@en ;
+    skos:exactMatch iso:jpn,
+        lang:jpn ;
+    skos:inScheme cs: ;
+    skos:notation "ja" ;
+    skos:prefLabel "Japanisch"@de,
+        "Japanese"@en,
+        "japonais"@fr .
+
+:jv a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Javanese",
+        "Javanisch",
+        "javanais" ;
+    skos:definition "Javanese"@en ;
+    skos:exactMatch iso:jav,
+        lang:jav ;
+    skos:inScheme cs: ;
+    skos:notation "jv" ;
+    skos:prefLabel "Javanisch"@de,
+        "Javanese"@en,
+        "javanais"@fr .
+
+:ka a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Georgian",
+        "Georgisch",
+        "géorgien" ;
+    skos:definition "Georgian"@en ;
+    skos:exactMatch iso:geo,
+        iso:kat,
+        lang:geo ;
+    skos:inScheme cs: ;
+    skos:notation "ka" ;
+    skos:prefLabel "Georgisch"@de,
+        "Georgian"@en,
+        "géorgien"@fr .
+
+:kg a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Kongo",
+        "Kongo-Sprache",
+        "kongo" ;
+    skos:definition "Kongo"@en ;
+    skos:exactMatch iso:kon,
+        lang:kon ;
+    skos:historyNote "This alpha-2 ISO 639-1 code was approved in 1999 and included in ISO 639-1: 2002. It was mistakenly missing in earlier versions of the tables on the ISO639-2 web site. As of January 2003, it has been included."@en ;
+    skos:inScheme cs: ;
+    skos:notation "kg" ;
+    skos:prefLabel "Kongo-Sprache"@de,
+        "Kongo"@en,
+        "kongo"@fr .
+
+:ki a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Gikuyu",
+        "Kikuyu",
+        "Kikuyu-Sprache",
+        "kikuyu" ;
+    skos:definition "Kikuyu | Gikuyu"@en ;
+    skos:exactMatch iso:kik,
+        lang:kik ;
+    skos:inScheme cs: ;
+    skos:notation "ki" ;
+    skos:prefLabel "Kikuyu-Sprache"@de,
+        "Kikuyu | Gikuyu"@en,
+        "kikuyu"@fr .
+
+:kj a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Kuanyama",
+        "Kwanyama",
+        "Kwanyama-Sprache",
+        "kuanyama",
+        "kwanyama" ;
+    skos:definition "Kuanyama | Kwanyama"@en ;
+    skos:exactMatch iso:kua,
+        lang:kua ;
+    skos:inScheme cs: ;
+    skos:notation "kj" ;
+    skos:prefLabel "Kwanyama-Sprache"@de,
+        "Kuanyama | Kwanyama"@en,
+        "kuanyama | kwanyama"@fr .
+
+:kk a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Kasachisch",
+        "Kazakh",
+        "kazakh" ;
+    skos:definition "Kazakh"@en ;
+    skos:exactMatch iso:kaz,
+        lang:kaz ;
+    skos:inScheme cs: ;
+    skos:notation "kk" ;
+    skos:prefLabel "Kasachisch"@de,
+        "Kazakh"@en,
+        "kazakh"@fr .
+
+:kl a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Greenlandic",
+        "Grönländisch",
+        "Kalaallisut",
+        "groenlandais" ;
+    skos:definition "Kalaallisut | Greenlandic"@en ;
+    skos:exactMatch iso:kal,
+        lang:kal ;
+    skos:inScheme cs: ;
+    skos:notation "kl" ;
+    skos:prefLabel "Grönländisch"@de,
+        "Kalaallisut | Greenlandic"@en,
+        "groenlandais"@fr .
+
+:km a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Central Khmer",
+        "Kambodschanisch",
+        "khmer central" ;
+    skos:definition "Central Khmer"@en ;
+    skos:exactMatch iso:khm,
+        lang:khm ;
+    skos:historyNote "Name changed from \"Khmer\""@en ;
+    skos:inScheme cs: ;
+    skos:notation "km" ;
+    skos:prefLabel "Kambodschanisch"@de,
+        "Central Khmer"@en,
+        "khmer central"@fr .
+
+:kn a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Kannada",
+        "kannada" ;
+    skos:definition "Kannada"@en ;
+    skos:exactMatch iso:kan,
+        lang:kan ;
+    skos:inScheme cs: ;
+    skos:notation "kn" ;
+    skos:prefLabel "Kannada"@de,
+        "Kannada"@en,
+        "kannada"@fr .
+
+:ko a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Korean",
+        "Koreanisch",
+        "coréen" ;
+    skos:definition "Korean"@en ;
+    skos:exactMatch iso:kor,
+        lang:kor ;
+    skos:inScheme cs: ;
+    skos:notation "ko" ;
+    skos:prefLabel "Koreanisch"@de,
+        "Korean"@en,
+        "coréen"@fr .
+
+:kr a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Kanuri",
+        "Kanuri-Sprache",
+        "kanouri" ;
+    skos:definition "Kanuri"@en ;
+    skos:exactMatch iso:kau,
+        lang:kau ;
+    skos:historyNote "This alpha-2 ISO 639-1 code was approved in 1999 and included in ISO 639-1: 2002. It was mistakenly missing in earlier versions of the tables on the ISO639-2 web site. As of January 2003, it has been included."@en ;
+    skos:inScheme cs: ;
+    skos:notation "kr" ;
+    skos:prefLabel "Kanuri-Sprache"@de,
+        "Kanuri"@en,
+        "kanouri"@fr .
+
+:ks a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Kaschmiri",
+        "Kashmiri",
+        "kashmiri" ;
+    skos:definition "Kashmiri"@en ;
+    skos:exactMatch iso:kas,
+        lang:kas ;
+    skos:inScheme cs: ;
+    skos:notation "ks" ;
+    skos:prefLabel "Kaschmiri"@de,
+        "Kashmiri"@en,
+        "kashmiri"@fr .
+
+:ku a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Kurdisch",
+        "Kurdish",
+        "kurde" ;
+    skos:definition "Kurdish"@en ;
+    skos:exactMatch iso:kur,
+        lang:kur ;
+    skos:inScheme cs: ;
+    skos:notation "ku" ;
+    skos:prefLabel "Kurdisch"@de,
+        "Kurdish"@en,
+        "kurde"@fr .
+
+:kv a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Komi",
+        "Komi-Sprache",
+        "kom" ;
+    skos:definition "Komi"@en ;
+    skos:exactMatch iso:kom,
+        lang:kom ;
+    skos:inScheme cs: ;
+    skos:notation "kv" ;
+    skos:prefLabel "Komi-Sprache"@de,
+        "Komi"@en,
+        "kom"@fr .
+
+:kw a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Cornish",
+        "Kornisch",
+        "cornique" ;
+    skos:definition "Cornish"@en ;
+    skos:exactMatch iso:cor,
+        lang:cor ;
+    skos:inScheme cs: ;
+    skos:notation "kw" ;
+    skos:prefLabel "Kornisch"@de,
+        "Cornish"@en,
+        "cornique"@fr .
+
+:ky a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Kirghiz",
+        "Kirgisisch",
+        "Kyrgyz",
+        "kirghiz" ;
+    skos:definition "Kirghiz | Kyrgyz"@en ;
+    skos:exactMatch iso:kir,
+        lang:kir ;
+    skos:historyNote "Kyrgyz added"@en ;
+    skos:inScheme cs: ;
+    skos:notation "ky" ;
+    skos:prefLabel "Kirgisisch"@de,
+        "Kirghiz | Kyrgyz"@en,
+        "kirghiz"@fr .
+
+:la a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Latein",
+        "Latin",
+        "latin" ;
+    skos:definition "Latin"@en ;
+    skos:exactMatch iso:lat,
+        lang:lat ;
+    skos:inScheme cs: ;
+    skos:notation "la" ;
+    skos:prefLabel "Latein"@de,
+        "Latin"@en,
+        "latin"@fr .
+
+:lb a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Letzeburgesch",
+        "Luxembourgish",
+        "Luxemburgisch",
+        "luxembourgeois" ;
+    skos:definition "Luxembourgish | Letzeburgesch"@en ;
+    skos:exactMatch iso:ltz,
+        lang:ltz ;
+    skos:inScheme cs: ;
+    skos:notation "lb" ;
+    skos:prefLabel "Luxemburgisch"@de,
+        "Luxembourgish | Letzeburgesch"@en,
+        "luxembourgeois"@fr .
+
+:lg a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Ganda",
+        "Ganda-Sprache",
+        "ganda" ;
+    skos:definition "Ganda"@en ;
+    skos:exactMatch iso:lug,
+        lang:lug ;
+    skos:historyNote "This alpha-2 ISO 639-1 code was approved in 1999 and included in ISO 639-1: 2002. It was mistakenly missing in earlier versions of the tables on the ISO639-2 web site. As of January 2003, it has been included."@en ;
+    skos:inScheme cs: ;
+    skos:notation "lg" ;
+    skos:prefLabel "Ganda-Sprache"@de,
+        "Ganda"@en,
+        "ganda"@fr .
+
+:li a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Limburgan",
+        "Limburger",
+        "Limburgisch",
+        "Limburgish",
+        "limbourgeois" ;
+    skos:definition "Limburgan | Limburger | Limburgish"@en ;
+    skos:exactMatch iso:lim,
+        lang:lim ;
+    skos:inScheme cs: ;
+    skos:notation "li" ;
+    skos:prefLabel "Limburgisch"@de,
+        "Limburgan | Limburger | Limburgish"@en,
+        "limbourgeois"@fr .
+
+:ln a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Lingala",
+        "lingala" ;
+    skos:definition "Lingala"@en ;
+    skos:exactMatch iso:lin,
+        lang:lin ;
+    skos:inScheme cs: ;
+    skos:notation "ln" ;
+    skos:prefLabel "Lingala"@de,
+        "Lingala"@en,
+        "lingala"@fr .
+
+:lo a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Lao",
+        "Laotisch",
+        "lao" ;
+    skos:definition "Lao"@en ;
+    skos:exactMatch iso:lao,
+        lang:lao ;
+    skos:inScheme cs: ;
+    skos:notation "lo" ;
+    skos:prefLabel "Laotisch"@de,
+        "Lao"@en,
+        "lao"@fr .
+
+:lt a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Litauisch",
+        "Lithuanian",
+        "lituanien" ;
+    skos:definition "Lithuanian"@en ;
+    skos:exactMatch iso:lit,
+        lang:lit ;
+    skos:inScheme cs: ;
+    skos:notation "lt" ;
+    skos:prefLabel "Litauisch"@de,
+        "Lithuanian"@en,
+        "lituanien"@fr .
+
+:lu a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Luba-Katanga",
+        "Luba-Katanga-Sprache",
+        "luba-katanga" ;
+    skos:definition "Luba-Katanga"@en ;
+    skos:exactMatch iso:lub,
+        lang:lub ;
+    skos:historyNote "This alpha-2 ISO 639-1 code was approved in 1999 and included in ISO 639-1: 2002. It was mistakenly missing in earlier versions of the tables on the ISO639-2 web site. As of January 2003, it has been included."@en ;
+    skos:inScheme cs: ;
+    skos:notation "lu" ;
+    skos:prefLabel "Luba-Katanga-Sprache"@de,
+        "Luba-Katanga"@en,
+        "luba-katanga"@fr .
+
+:lv a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Latvian",
+        "Lettisch",
+        "letton" ;
+    skos:definition "Latvian"@en ;
+    skos:exactMatch iso:lav,
+        lang:lav ;
+    skos:inScheme cs: ;
+    skos:notation "lv" ;
+    skos:prefLabel "Lettisch"@de,
+        "Latvian"@en,
+        "letton"@fr .
+
+:mg a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Malagassi-Sprache",
+        "Malagasy",
+        "malgache" ;
+    skos:definition "Malagasy"@en ;
+    skos:exactMatch iso:mlg,
+        lang:mlg ;
+    skos:inScheme cs: ;
+    skos:notation "mg" ;
+    skos:prefLabel "Malagassi-Sprache"@de,
+        "Malagasy"@en,
+        "malgache"@fr .
+
+:mh a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Marschallesisch",
+        "Marshallese",
+        "marshall" ;
+    skos:definition "Marshallese"@en ;
+    skos:exactMatch iso:mah,
+        lang:mah ;
+    skos:inScheme cs: ;
+    skos:notation "mh" ;
+    skos:prefLabel "Marschallesisch"@de,
+        "Marshallese"@en,
+        "marshall"@fr .
+
+:mi a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Maori",
+        "Maori-Sprache",
+        "maori" ;
+    skos:definition "Maori"@en ;
+    skos:exactMatch iso:mao,
+        iso:mri,
+        lang:mao ;
+    skos:inScheme cs: ;
+    skos:notation "mi" ;
+    skos:prefLabel "Maori-Sprache"@de,
+        "Maori"@en,
+        "maori"@fr .
+
+:mk a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Macedonian",
+        "Makedonisch",
+        "macédonien" ;
+    skos:definition "Macedonian"@en ;
+    skos:exactMatch iso:mac,
+        iso:mkd,
+        lang:mac ;
+    skos:inScheme cs: ;
+    skos:notation "mk" ;
+    skos:prefLabel "Makedonisch"@de,
+        "Macedonian"@en,
+        "macédonien"@fr .
+
+:ml a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Malayalam",
+        "malayalam" ;
+    skos:definition "Malayalam"@en ;
+    skos:exactMatch iso:mal,
+        lang:mal ;
+    skos:inScheme cs: ;
+    skos:notation "ml" ;
+    skos:prefLabel "Malayalam"@de,
+        "Malayalam"@en,
+        "malayalam"@fr .
+
+:mn a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Mongolian",
+        "Mongolisch",
+        "mongol" ;
+    skos:definition "Mongolian"@en ;
+    skos:exactMatch iso:mon,
+        lang:mon ;
+    skos:inScheme cs: ;
+    skos:notation "mn" ;
+    skos:prefLabel "Mongolisch"@de,
+        "Mongolian"@en,
+        "mongol"@fr .
+
+:mr a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Marathi",
+        "marathe" ;
+    skos:definition "Marathi"@en ;
+    skos:exactMatch iso:mar,
+        lang:mar ;
+    skos:inScheme cs: ;
+    skos:notation "mr" ;
+    skos:prefLabel "Marathi"@de,
+        "Marathi"@en,
+        "marathe"@fr .
+
+:ms a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Malaiisch",
+        "Malay",
+        "malais" ;
+    skos:definition "Malay"@en ;
+    skos:exactMatch iso:may,
+        iso:msa,
+        lang:may ;
+    skos:inScheme cs: ;
+    skos:notation "ms" ;
+    skos:prefLabel "Malaiisch"@de,
+        "Malay"@en,
+        "malais"@fr .
+
+:mt a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Maltese",
+        "Maltesisch",
+        "maltais" ;
+    skos:definition "Maltese"@en ;
+    skos:exactMatch iso:mlt,
+        lang:mlt ;
+    skos:inScheme cs: ;
+    skos:notation "mt" ;
+    skos:prefLabel "Maltesisch"@de,
+        "Maltese"@en,
+        "maltais"@fr .
+
+:my a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Birmanisch",
+        "Burmese",
+        "birman" ;
+    skos:definition "Burmese"@en ;
+    skos:exactMatch iso:bur,
+        iso:mya,
+        lang:bur ;
+    skos:inScheme cs: ;
+    skos:notation "my" ;
+    skos:prefLabel "Birmanisch"@de,
+        "Burmese"@en,
+        "birman"@fr .
+
+:na a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Nauru",
+        "Nauruanisch",
+        "nauruan" ;
+    skos:definition "Nauru"@en ;
+    skos:exactMatch iso:nau,
+        lang:nau ;
+    skos:inScheme cs: ;
+    skos:notation "na" ;
+    skos:prefLabel "Nauruanisch"@de,
+        "Nauru"@en,
+        "nauruan"@fr .
+
+:nb a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Bokmål",
+        "Bokmål, Norwegian",
+        "Norwegian Bokmål",
+        "norvégien bokmål" ;
+    skos:definition "Bokmål, Norwegian | Norwegian Bokmål"@en ;
+    skos:exactMatch iso:nob,
+        lang:nob ;
+    skos:inScheme cs: ;
+    skos:notation "nb" ;
+    skos:prefLabel "Bokmål"@de,
+        "Bokmål, Norwegian | Norwegian Bokmål"@en,
+        "norvégien bokmål"@fr .
+
+:nd a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Ndebele, North",
+        "Ndebele-Sprache (Simbabwe)",
+        "North Ndebele",
+        "ndébélé du Nord" ;
+    skos:definition "Ndebele, North | North Ndebele"@en ;
+    skos:exactMatch iso:nde,
+        lang:nde ;
+    skos:inScheme cs: ;
+    skos:notation "nd" ;
+    skos:prefLabel "Ndebele-Sprache (Simbabwe)"@de,
+        "Ndebele, North | North Ndebele"@en,
+        "ndébélé du Nord"@fr .
+
+:ne a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Nepali",
+        "népalais" ;
+    skos:definition "Nepali"@en ;
+    skos:exactMatch iso:nep,
+        lang:nep ;
+    skos:inScheme cs: ;
+    skos:notation "ne" ;
+    skos:prefLabel "Nepali"@de,
+        "Nepali"@en,
+        "népalais"@fr .
+
+:ng a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Ndonga",
+        "ndonga" ;
+    skos:definition "Ndonga"@en ;
+    skos:exactMatch iso:ndo,
+        lang:ndo ;
+    skos:inScheme cs: ;
+    skos:notation "ng" ;
+    skos:prefLabel "Ndonga"@de,
+        "Ndonga"@en,
+        "ndonga"@fr .
+
+:nl a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Dutch",
+        "Flemish",
+        "Niederländisch",
+        "flamand",
+        "néerlandais" ;
+    skos:definition "Dutch | Flemish"@en ;
+    skos:exactMatch iso:dut,
+        iso:nld,
+        lang:dut ;
+    skos:inScheme cs: ;
+    skos:notation "nl" ;
+    skos:prefLabel "Niederländisch"@de,
+        "Dutch | Flemish"@en,
+        "néerlandais | flamand"@fr .
+
+:nn a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Norwegian Nynorsk",
+        "Nynorsk",
+        "Nynorsk, Norwegian",
+        "norvégien nynorsk",
+        "nynorsk, norvégien" ;
+    skos:definition "Norwegian Nynorsk | Nynorsk, Norwegian"@en ;
+    skos:exactMatch iso:nno,
+        lang:nno ;
+    skos:inScheme cs: ;
+    skos:notation "nn" ;
+    skos:prefLabel "Nynorsk"@de,
+        "Norwegian Nynorsk | Nynorsk, Norwegian"@en,
+        "norvégien nynorsk | nynorsk, norvégien"@fr .
+
+:no a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Norwegian",
+        "Norwegisch",
+        "norvégien" ;
+    skos:definition "Norwegian"@en ;
+    skos:exactMatch iso:nor,
+        lang:nor ;
+    skos:inScheme cs: ;
+    skos:notation "no" ;
+    skos:prefLabel "Norwegisch"@de,
+        "Norwegian"@en,
+        "norvégien"@fr .
+
+:nr a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Ndebele, South",
+        "Ndebele-Sprache (Transvaal)",
+        "South Ndebele",
+        "ndébélé du Sud" ;
+    skos:definition "Ndebele, South | South Ndebele"@en ;
+    skos:exactMatch iso:nbl,
+        lang:nbl ;
+    skos:inScheme cs: ;
+    skos:notation "nr" ;
+    skos:prefLabel "Ndebele-Sprache (Transvaal)"@de,
+        "Ndebele, South | South Ndebele"@en,
+        "ndébélé du Sud"@fr .
+
+:nv a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Navaho",
+        "Navajo",
+        "Navajo-Sprache",
+        "navaho" ;
+    skos:definition "Navajo | Navaho"@en ;
+    skos:exactMatch iso:nav,
+        lang:nav ;
+    skos:inScheme cs: ;
+    skos:notation "nv" ;
+    skos:prefLabel "Navajo-Sprache"@de,
+        "Navajo | Navaho"@en,
+        "navaho"@fr .
+
+:ny a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Chewa",
+        "Chichewa",
+        "Nyanja",
+        "Nyanja-Sprache",
+        "chewa",
+        "chichewa",
+        "nyanja" ;
+    skos:definition "Chichewa | Chewa | Nyanja"@en ;
+    skos:exactMatch iso:nya,
+        lang:nya ;
+    skos:inScheme cs: ;
+    skos:notation "ny" ;
+    skos:prefLabel "Nyanja-Sprache"@de,
+        "Chichewa | Chewa | Nyanja"@en,
+        "chichewa | chewa | nyanja"@fr .
+
+:oc a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Occitan (post 1500)",
+        "Okzitanisch",
+        "occitan (après 1500)" ;
+    skos:definition "Occitan (post 1500)"@en ;
+    skos:exactMatch iso:oci,
+        lang:oci ;
+    skos:historyNote "Provençal removed"@en ;
+    skos:inScheme cs: ;
+    skos:notation "oc" ;
+    skos:prefLabel "Okzitanisch"@de,
+        "Occitan (post 1500)"@en,
+        "occitan (après 1500)"@fr .
+
+:oj a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Ojibwa",
+        "Ojibwa-Sprache",
+        "ojibwa" ;
+    skos:definition "Ojibwa"@en ;
+    skos:exactMatch iso:oji,
+        lang:oji ;
+    skos:historyNote "This alpha-2 ISO 639-1 code was approved in 1999 and included in ISO 639-1: 2002. It was mistakenly missing in earlier versions of the tables on the ISO639-2 web site. As of January 2003, it has been included."@en ;
+    skos:inScheme cs: ;
+    skos:notation "oj" ;
+    skos:prefLabel "Ojibwa-Sprache"@de,
+        "Ojibwa"@en,
+        "ojibwa"@fr .
+
+:om a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Galla-Sprache",
+        "Oromo",
+        "galla" ;
+    skos:definition "Oromo"@en ;
+    skos:exactMatch iso:orm,
+        lang:orm ;
+    skos:inScheme cs: ;
+    skos:notation "om" ;
+    skos:prefLabel "Galla-Sprache"@de,
+        "Oromo"@en,
+        "galla"@fr .
+
+:or a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Oriya",
+        "Oriya-Sprache",
+        "oriya" ;
+    skos:definition "Oriya"@en ;
+    skos:exactMatch iso:ori,
+        lang:ori ;
+    skos:inScheme cs: ;
+    skos:notation "or" ;
+    skos:prefLabel "Oriya-Sprache"@de,
+        "Oriya"@en,
+        "oriya"@fr .
+
+:os a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Ossetian",
+        "Ossetic",
+        "Ossetisch",
+        "ossète" ;
+    skos:definition "Ossetian | Ossetic"@en ;
+    skos:exactMatch iso:oss,
+        lang:oss ;
+    skos:historyNote "Ossetian added"@en ;
+    skos:inScheme cs: ;
+    skos:notation "os" ;
+    skos:prefLabel "Ossetisch"@de,
+        "Ossetian | Ossetic"@en,
+        "ossète"@fr .
+
+:pa a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Pandschabi-Sprache",
+        "Panjabi",
+        "Punjabi",
+        "pendjabi" ;
+    skos:definition "Panjabi | Punjabi"@en ;
+    skos:exactMatch iso:pan,
+        lang:pan ;
+    skos:inScheme cs: ;
+    skos:notation "pa" ;
+    skos:prefLabel "Pandschabi-Sprache"@de,
+        "Panjabi | Punjabi"@en,
+        "pendjabi"@fr .
+
+:pi a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Pali",
+        "pali" ;
+    skos:definition "Pali"@en ;
+    skos:exactMatch iso:pli,
+        lang:pli ;
+    skos:inScheme cs: ;
+    skos:notation "pi" ;
+    skos:prefLabel "Pali"@de,
+        "Pali"@en,
+        "pali"@fr .
+
+:pl a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Polish",
+        "Polnisch",
+        "polonais" ;
+    skos:definition "Polish"@en ;
+    skos:exactMatch iso:pol,
+        lang:pol ;
+    skos:inScheme cs: ;
+    skos:notation "pl" ;
+    skos:prefLabel "Polnisch"@de,
+        "Polish"@en,
+        "polonais"@fr .
+
+:ps a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Paschtu",
+        "Pashto",
+        "Pushto",
+        "pachto" ;
+    skos:changeNote "modified" ;
+    skos:definition "Pushto | Pashto"@en ;
+    skos:exactMatch iso:pus,
+        lang:pus ;
+    skos:inScheme cs: ;
+    skos:notation "ps" ;
+    skos:prefLabel "Paschtu"@de,
+        "Pushto | Pashto"@en,
+        "pachto"@fr .
+
+:pt a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Portugiesisch",
+        "Portuguese",
+        "portugais" ;
+    skos:definition "Portuguese"@en ;
+    skos:exactMatch iso:por,
+        lang:por ;
+    skos:inScheme cs: ;
+    skos:notation "pt" ;
+    skos:prefLabel "Portugiesisch"@de,
+        "Portuguese"@en,
+        "portugais"@fr .
+
+:qu a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Quechua",
+        "Quechua-Sprache",
+        "quechua" ;
+    skos:definition "Quechua"@en ;
+    skos:exactMatch iso:que,
+        lang:que ;
+    skos:inScheme cs: ;
+    skos:notation "qu" ;
+    skos:prefLabel "Quechua-Sprache"@de,
+        "Quechua"@en,
+        "quechua"@fr .
+
+:rm a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Romansh",
+        "Rätoromanisch",
+        "romanche" ;
+    skos:definition "Romansh"@en ;
+    skos:exactMatch iso:roh,
+        lang:roh ;
+    skos:historyNote "Name changed from \"Raeto-Romance\""@en ;
+    skos:inScheme cs: ;
+    skos:notation "rm" ;
+    skos:prefLabel "Rätoromanisch"@de,
+        "Romansh"@en,
+        "romanche"@fr .
+
+:rn a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Rundi",
+        "Rundi-Sprache",
+        "rundi" ;
+    skos:definition "Rundi"@en ;
+    skos:exactMatch iso:run,
+        lang:run ;
+    skos:inScheme cs: ;
+    skos:notation "rn" ;
+    skos:prefLabel "Rundi-Sprache"@de,
+        "Rundi"@en,
+        "rundi"@fr .
+
+:ro a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Moldavian",
+        "Moldovan",
+        "Romanian",
+        "Rumänisch",
+        "moldave",
+        "roumain" ;
+    skos:definition "Romanian | Moldavian | Moldovan"@en ;
+    skos:exactMatch iso:ron,
+        iso:rum,
+        lang:rum ;
+    skos:inScheme cs: ;
+    skos:notation "ro" ;
+    skos:prefLabel "Rumänisch"@de,
+        "Romanian | Moldavian | Moldovan"@en,
+        "roumain | moldave"@fr .
+
+:ru a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Russian",
+        "Russisch",
+        "russe" ;
+    skos:definition "Russian"@en ;
+    skos:exactMatch iso:rus,
+        lang:rus ;
+    skos:inScheme cs: ;
+    skos:notation "ru" ;
+    skos:prefLabel "Russisch"@de,
+        "Russian"@en,
+        "russe"@fr .
+
+:rw a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Kinyarwanda",
+        "Rwanda-Sprache",
+        "rwanda" ;
+    skos:definition "Kinyarwanda"@en ;
+    skos:exactMatch iso:kin,
+        lang:kin ;
+    skos:inScheme cs: ;
+    skos:notation "rw" ;
+    skos:prefLabel "Rwanda-Sprache"@de,
+        "Kinyarwanda"@en,
+        "rwanda"@fr .
+
+:sa a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Sanskrit",
+        "sanskrit" ;
+    skos:definition "Sanskrit"@en ;
+    skos:exactMatch iso:san,
+        lang:san ;
+    skos:inScheme cs: ;
+    skos:notation "sa" ;
+    skos:prefLabel "Sanskrit"@de,
+        "Sanskrit"@en,
+        "sanskrit"@fr .
+
+:sc a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Sardinian",
+        "Sardisch",
+        "sarde" ;
+    skos:definition "Sardinian"@en ;
+    skos:exactMatch iso:srd,
+        lang:srd ;
+    skos:inScheme cs: ;
+    skos:notation "sc" ;
+    skos:prefLabel "Sardisch"@de,
+        "Sardinian"@en,
+        "sarde"@fr .
+
+:sd a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Sindhi",
+        "Sindhi-Sprache",
+        "sindhi" ;
+    skos:definition "Sindhi"@en ;
+    skos:exactMatch iso:snd,
+        lang:snd ;
+    skos:inScheme cs: ;
+    skos:notation "sd" ;
+    skos:prefLabel "Sindhi-Sprache"@de,
+        "Sindhi"@en,
+        "sindhi"@fr .
+
+:se a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Nordsaamisch",
+        "Northern Sami",
+        "sami du Nord" ;
+    skos:definition "Northern Sami"@en ;
+    skos:exactMatch iso:sme,
+        lang:sme ;
+    skos:inScheme cs: ;
+    skos:notation "se" ;
+    skos:prefLabel "Nordsaamisch"@de,
+        "Northern Sami"@en,
+        "sami du Nord"@fr .
+
+:sg a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Sango",
+        "Sango-Sprache",
+        "sango" ;
+    skos:definition "Sango"@en ;
+    skos:exactMatch iso:sag,
+        lang:sag ;
+    skos:inScheme cs: ;
+    skos:notation "sg" ;
+    skos:prefLabel "Sango-Sprache"@de,
+        "Sango"@en,
+        "sango"@fr .
+
+:si a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Singhalesisch",
+        "Sinhala",
+        "Sinhalese",
+        "singhalais" ;
+    skos:definition "Sinhala | Sinhalese"@en ;
+    skos:exactMatch iso:sin,
+        lang:sin ;
+    skos:historyNote "Sinhala added"@en ;
+    skos:inScheme cs: ;
+    skos:notation "si" ;
+    skos:prefLabel "Singhalesisch"@de,
+        "Sinhala | Sinhalese"@en,
+        "singhalais"@fr .
+
+:sk a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Slovak",
+        "Slowakisch",
+        "slovaque" ;
+    skos:definition "Slovak"@en ;
+    skos:exactMatch iso:slk,
+        iso:slo,
+        lang:slo ;
+    skos:inScheme cs: ;
+    skos:notation "sk" ;
+    skos:prefLabel "Slowakisch"@de,
+        "Slovak"@en,
+        "slovaque"@fr .
+
+:sl a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Slovenian",
+        "Slowenisch",
+        "slovène" ;
+    skos:definition "Slovenian"@en ;
+    skos:exactMatch iso:slv,
+        lang:slv ;
+    skos:inScheme cs: ;
+    skos:notation "sl" ;
+    skos:prefLabel "Slowenisch"@de,
+        "Slovenian"@en,
+        "slovène"@fr .
+
+:sm a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Samoan",
+        "Samoanisch",
+        "samoan" ;
+    skos:definition "Samoan"@en ;
+    skos:exactMatch iso:smo,
+        lang:smo ;
+    skos:inScheme cs: ;
+    skos:notation "sm" ;
+    skos:prefLabel "Samoanisch"@de,
+        "Samoan"@en,
+        "samoan"@fr .
+
+:sn a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Schona-Sprache",
+        "Shona",
+        "shona" ;
+    skos:definition "Shona"@en ;
+    skos:exactMatch iso:sna,
+        lang:sna ;
+    skos:inScheme cs: ;
+    skos:notation "sn" ;
+    skos:prefLabel "Schona-Sprache"@de,
+        "Shona"@en,
+        "shona"@fr .
+
+:so a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Somali",
+        "somali" ;
+    skos:definition "Somali"@en ;
+    skos:exactMatch iso:som,
+        lang:som ;
+    skos:inScheme cs: ;
+    skos:notation "so" ;
+    skos:prefLabel "Somali"@de,
+        "Somali"@en,
+        "somali"@fr .
+
+:sq a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Albanian",
+        "Albanisch",
+        "albanais" ;
+    skos:definition "Albanian"@en ;
+    skos:exactMatch iso:alb,
+        iso:sqi,
+        lang:alb ;
+    skos:inScheme cs: ;
+    skos:notation "sq" ;
+    skos:prefLabel "Albanisch"@de,
+        "Albanian"@en,
+        "albanais"@fr .
+
+:sr a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Serbian",
+        "Serbisch",
+        "serbe" ;
+    skos:definition "Serbian"@en ;
+    skos:exactMatch iso:srp,
+        lang:srp ;
+    skos:inScheme cs: ;
+    skos:notation "sr" ;
+    skos:prefLabel "Serbisch"@de,
+        "Serbian"@en,
+        "serbe"@fr .
+
+:ss a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Swasi-Sprache",
+        "Swati",
+        "swati" ;
+    skos:definition "Swati"@en ;
+    skos:exactMatch iso:ssw,
+        lang:ssw ;
+    skos:inScheme cs: ;
+    skos:notation "ss" ;
+    skos:prefLabel "Swasi-Sprache"@de,
+        "Swati"@en,
+        "swati"@fr .
+
+:st a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Sotho, Southern",
+        "Süd-Sotho-Sprache",
+        "sotho du Sud" ;
+    skos:definition "Sotho, Southern"@en ;
+    skos:exactMatch iso:sot,
+        lang:sot ;
+    skos:inScheme cs: ;
+    skos:notation "st" ;
+    skos:prefLabel "Süd-Sotho-Sprache"@de,
+        "Sotho, Southern"@en,
+        "sotho du Sud"@fr .
+
+:su a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Sundanese",
+        "Sundanesisch",
+        "soundanais" ;
+    skos:definition "Sundanese"@en ;
+    skos:exactMatch iso:sun,
+        lang:sun ;
+    skos:inScheme cs: ;
+    skos:notation "su" ;
+    skos:prefLabel "Sundanesisch"@de,
+        "Sundanese"@en,
+        "soundanais"@fr .
+
+:sv a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Schwedisch",
+        "Swedish",
+        "suédois" ;
+    skos:definition "Swedish"@en ;
+    skos:exactMatch iso:swe,
+        lang:swe ;
+    skos:inScheme cs: ;
+    skos:notation "sv" ;
+    skos:prefLabel "Schwedisch"@de,
+        "Swedish"@en,
+        "suédois"@fr .
+
+:sw a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Swahili",
+        "swahili" ;
+    skos:definition "Swahili"@en ;
+    skos:exactMatch iso:swa,
+        lang:swa ;
+    skos:inScheme cs: ;
+    skos:notation "sw" ;
+    skos:prefLabel "Swahili"@de,
+        "Swahili"@en,
+        "swahili"@fr .
+
+:ta a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Tamil",
+        "tamoul" ;
+    skos:definition "Tamil"@en ;
+    skos:exactMatch iso:tam,
+        lang:tam ;
+    skos:inScheme cs: ;
+    skos:notation "ta" ;
+    skos:prefLabel "Tamil"@de,
+        "Tamil"@en,
+        "tamoul"@fr .
+
+:te a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Telugu",
+        "Telugu-Sprache",
+        "télougou" ;
+    skos:definition "Telugu"@en ;
+    skos:exactMatch iso:tel,
+        lang:tel ;
+    skos:inScheme cs: ;
+    skos:notation "te" ;
+    skos:prefLabel "Telugu-Sprache"@de,
+        "Telugu"@en,
+        "télougou"@fr .
+
+:tg a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Tadschikisch",
+        "Tajik",
+        "tadjik" ;
+    skos:definition "Tajik"@en ;
+    skos:exactMatch iso:tgk,
+        lang:tgk ;
+    skos:inScheme cs: ;
+    skos:notation "tg" ;
+    skos:prefLabel "Tadschikisch"@de,
+        "Tajik"@en,
+        "tadjik"@fr .
+
+:th a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Thai",
+        "Thailändisch",
+        "thaï" ;
+    skos:definition "Thai"@en ;
+    skos:exactMatch iso:tha,
+        lang:tha ;
+    skos:inScheme cs: ;
+    skos:notation "th" ;
+    skos:prefLabel "Thailändisch"@de,
+        "Thai"@en,
+        "thaï"@fr .
+
+:ti a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Tigrinja-Sprache",
+        "Tigrinya",
+        "tigrigna" ;
+    skos:definition "Tigrinya"@en ;
+    skos:exactMatch iso:tir,
+        lang:tir ;
+    skos:inScheme cs: ;
+    skos:notation "ti" ;
+    skos:prefLabel "Tigrinja-Sprache"@de,
+        "Tigrinya"@en,
+        "tigrigna"@fr .
+
+:tk a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Turkmen",
+        "Turkmenisch",
+        "turkmène" ;
+    skos:definition "Turkmen"@en ;
+    skos:exactMatch iso:tuk,
+        lang:tuk ;
+    skos:inScheme cs: ;
+    skos:notation "tk" ;
+    skos:prefLabel "Turkmenisch"@de,
+        "Turkmen"@en,
+        "turkmène"@fr .
+
+:tl a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Tagalog",
+        "tagalog" ;
+    skos:definition "Tagalog"@en ;
+    skos:exactMatch iso:tgl,
+        lang:tgl ;
+    skos:inScheme cs: ;
+    skos:notation "tl" ;
+    skos:prefLabel "Tagalog"@de,
+        "Tagalog"@en,
+        "tagalog"@fr .
+
+:tn a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Tswana",
+        "Tswana-Sprache",
+        "tswana" ;
+    skos:definition "Tswana"@en ;
+    skos:exactMatch iso:tsn,
+        lang:tsn ;
+    skos:inScheme cs: ;
+    skos:notation "tn" ;
+    skos:prefLabel "Tswana-Sprache"@de,
+        "Tswana"@en,
+        "tswana"@fr .
+
+:to a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Tonga (Tonga Islands)",
+        "Tongaisch",
+        "tongan (Îles Tonga)" ;
+    skos:definition "Tonga (Tonga Islands)"@en ;
+    skos:exactMatch iso:ton,
+        lang:ton ;
+    skos:inScheme cs: ;
+    skos:notation "to" ;
+    skos:prefLabel "Tongaisch"@de,
+        "Tonga (Tonga Islands)"@en,
+        "tongan (Îles Tonga)"@fr .
+
+:tr a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Turkish",
+        "Türkisch",
+        "turc" ;
+    skos:definition "Turkish"@en ;
+    skos:exactMatch iso:tur,
+        lang:tur ;
+    skos:inScheme cs: ;
+    skos:notation "tr" ;
+    skos:prefLabel "Türkisch"@de,
+        "Turkish"@en,
+        "turc"@fr .
+
+:ts a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Tsonga",
+        "Tsonga-Sprache",
+        "tsonga" ;
+    skos:definition "Tsonga"@en ;
+    skos:exactMatch iso:tso,
+        lang:tso ;
+    skos:inScheme cs: ;
+    skos:notation "ts" ;
+    skos:prefLabel "Tsonga-Sprache"@de,
+        "Tsonga"@en,
+        "tsonga"@fr .
+
+:tt a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Tatar",
+        "Tatarisch",
+        "tatar" ;
+    skos:definition "Tatar"@en ;
+    skos:exactMatch iso:tat,
+        lang:tat ;
+    skos:inScheme cs: ;
+    skos:notation "tt" ;
+    skos:prefLabel "Tatarisch"@de,
+        "Tatar"@en,
+        "tatar"@fr .
+
+:tw a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Twi",
+        "Twi-Sprache",
+        "twi" ;
+    skos:definition "Twi"@en ;
+    skos:exactMatch iso:twi,
+        lang:twi ;
+    skos:inScheme cs: ;
+    skos:notation "tw" ;
+    skos:prefLabel "Twi-Sprache"@de,
+        "Twi"@en,
+        "twi"@fr .
+
+:ty a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Tahitian",
+        "Tahitisch",
+        "tahitien" ;
+    skos:definition "Tahitian"@en ;
+    skos:exactMatch iso:tah,
+        lang:tah ;
+    skos:inScheme cs: ;
+    skos:notation "ty" ;
+    skos:prefLabel "Tahitisch"@de,
+        "Tahitian"@en,
+        "tahitien"@fr .
+
+:ug a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Uighur",
+        "Uigurisch",
+        "Uyghur",
+        "ouïgour" ;
+    skos:definition "Uighur | Uyghur"@en ;
+    skos:exactMatch iso:uig,
+        lang:uig ;
+    skos:inScheme cs: ;
+    skos:notation "ug" ;
+    skos:prefLabel "Uigurisch"@de,
+        "Uighur | Uyghur"@en,
+        "ouïgour"@fr .
+
+:uk a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Ukrainian",
+        "Ukrainisch",
+        "ukrainien" ;
+    skos:definition "Ukrainian"@en ;
+    skos:exactMatch iso:ukr,
+        lang:ukr ;
+    skos:inScheme cs: ;
+    skos:notation "uk" ;
+    skos:prefLabel "Ukrainisch"@de,
+        "Ukrainian"@en,
+        "ukrainien"@fr .
+
+:ur a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Urdu",
+        "ourdou" ;
+    skos:definition "Urdu"@en ;
+    skos:exactMatch iso:urd,
+        lang:urd ;
+    skos:inScheme cs: ;
+    skos:notation "ur" ;
+    skos:prefLabel "Urdu"@de,
+        "Urdu"@en,
+        "ourdou"@fr .
+
+:uz a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Usbekisch",
+        "Uzbek",
+        "ouszbek" ;
+    skos:definition "Uzbek"@en ;
+    skos:exactMatch iso:uzb,
+        lang:uzb ;
+    skos:inScheme cs: ;
+    skos:notation "uz" ;
+    skos:prefLabel "Usbekisch"@de,
+        "Uzbek"@en,
+        "ouszbek"@fr .
+
+:ve a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Venda",
+        "Venda-Sprache",
+        "venda" ;
+    skos:definition "Venda"@en ;
+    skos:historyNote "This alpha-2 ISO 639-1 code was approved in 1999 and included in ISO 639-1: 2002. It was mistakenly missing in earlier versions of the tables on the ISO639-2 web site. As of January 2003, it has been included."@en ;
+    skos:inScheme cs: ;
+    skos:notation "ve" ;
+    skos:prefLabel "Venda-Sprache"@de,
+        "Venda"@en,
+        "venda"@fr .
+
+:vi a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Vietnamese",
+        "Vietnamesisch",
+        "vietnamien" ;
+    skos:definition "Vietnamese"@en ;
+    skos:exactMatch iso:vie,
+        lang:vie ;
+    skos:inScheme cs: ;
+    skos:notation "vi" ;
+    skos:prefLabel "Vietnamesisch"@de,
+        "Vietnamese"@en,
+        "vietnamien"@fr .
+
+:vo a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Volapük",
+        "volapük" ;
+    skos:definition "Volapük"@en ;
+    skos:exactMatch iso:vol,
+        lang:vol ;
+    skos:inScheme cs: ;
+    skos:notation "vo" ;
+    skos:prefLabel "Volapük"@de,
+        "Volapük"@en,
+        "volapük"@fr .
+
+:wa a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Wallonisch",
+        "Walloon",
+        "wallon" ;
+    skos:definition "Walloon"@en ;
+    skos:exactMatch iso:wln,
+        lang:wln ;
+    skos:inScheme cs: ;
+    skos:notation "wa" ;
+    skos:prefLabel "Wallonisch"@de,
+        "Walloon"@en,
+        "wallon"@fr .
+
+:wo a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Wolof",
+        "Wolof-Sprache",
+        "wolof" ;
+    skos:definition "Wolof"@en ;
+    skos:exactMatch iso:wol,
+        lang:wol ;
+    skos:inScheme cs: ;
+    skos:notation "wo" ;
+    skos:prefLabel "Wolof-Sprache"@de,
+        "Wolof"@en,
+        "wolof"@fr .
+
+:xh a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Xhosa",
+        "Xhosa-Sprache",
+        "xhosa" ;
+    skos:definition "Xhosa"@en ;
+    skos:exactMatch iso:xho,
+        lang:xho ;
+    skos:inScheme cs: ;
+    skos:notation "xh" ;
+    skos:prefLabel "Xhosa-Sprache"@de,
+        "Xhosa"@en,
+        "xhosa"@fr .
+
+:yi a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Jiddisch",
+        "Yiddish",
+        "yiddish" ;
+    skos:definition "Yiddish"@en ;
+    skos:exactMatch iso:yid,
+        lang:yid ;
+    skos:inScheme cs: ;
+    skos:notation "yi" ;
+    skos:prefLabel "Jiddisch"@de,
+        "Yiddish"@en,
+        "yiddish"@fr .
+
+:yo a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Yoruba",
+        "Yoruba-Sprache",
+        "yoruba" ;
+    skos:definition "Yoruba"@en ;
+    skos:exactMatch iso:yor,
+        lang:yor ;
+    skos:inScheme cs: ;
+    skos:notation "yo" ;
+    skos:prefLabel "Yoruba-Sprache"@de,
+        "Yoruba"@en,
+        "yoruba"@fr .
+
+:za a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Chuang",
+        "Zhuang",
+        "chuang",
+        "zhuang" ;
+    skos:definition "Zhuang | Chuang"@en ;
+    skos:exactMatch iso:zha,
+        lang:zha ;
+    skos:inScheme cs: ;
+    skos:notation "za" ;
+    skos:prefLabel "Zhuang"@de,
+        "Zhuang | Chuang"@en,
+        "zhuang | chuang"@fr .
+
+:zh a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Chinese",
+        "Chinesisch",
+        "chinois" ;
+    skos:definition "Chinese"@en ;
+    skos:exactMatch iso:chi,
+        iso:zho,
+        lang:chi ;
+    skos:inScheme cs: ;
+    skos:notation "zh" ;
+    skos:prefLabel "Chinesisch"@de,
+        "Chinese"@en,
+        "chinois"@fr .
+
+:zu a skos:Concept ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    rdfs:isDefinedBy cs: ;
+    skos:altLabel "Zulu",
+        "Zulu-Sprache",
+        "zoulou" ;
+    skos:definition "Zulu"@en ;
+    skos:exactMatch iso:zul,
+        lang:zul ;
+    skos:inScheme cs: ;
+    skos:notation "zu" ;
+    skos:prefLabel "Zulu-Sprache"@de,
+        "Zulu"@en,
+        "zoulou"@fr .
+
+<https://linked.data.gov.au/org/gsq> a sdo:Organization ;
+    sdo:name "Geological Survey of Queensland"@en ;
+    sdo:url "https://www.business.qld.gov.au/industries/mining-energy-water/resources/geoscience-information/gsq"^^xsd:anyURI .
+
+cs: a owl:Ontology,
+        skos:ConceptScheme ;
+    dcterms:created "2020-12-08"^^xsd:date ;
+    dcterms:creator "The US Library of Congress" ;
+    dcterms:modified "2023-03-10"^^xsd:date ;
+    dcterms:publisher <https://linked.data.gov.au/org/gsq> ;
+    dcterms:source "https://id.loc.gov/vocabulary/iso639-1.html"^^xsd:anyURI ;
+    skos:definition "ISO 639-1 is the first part of the ISO 639 international-standard language-code family. ISO 639-1 provides two-character lowercase alphabetic strings that serve as identifiers of languages. All ISO 639-1 languages also have ISO 639-2 three-character code representations. These codes are linked to codes for the same languages in ISO 639-2 and the MARC Language Codes."@en ;
+    skos:hasTopConcept :aa,
+        :ab,
+        :ae,
+        :af,
+        :ak,
+        :am,
+        :an,
+        :ar,
+        :as,
+        :aus,
+        :av,
+        :ay,
+        :az,
+        :ba,
+        :be,
+        :bg,
+        :bh,
+        :bi,
+        :bm,
+        :bn,
+        :bo,
+        :br,
+        :bs,
+        :ca,
+        :ce,
+        :ch,
+        :co,
+        :cr,
+        :cs,
+        :cu,
+        :cv,
+        :cy,
+        :da,
+        :de,
+        :dv,
+        :dz,
+        :ee,
+        :el,
+        :en,
+        :eo,
+        :es,
+        :et,
+        :eu,
+        :fa,
+        :ff,
+        :fi,
+        :fj,
+        :fo,
+        :fr,
+        :fy,
+        :ga,
+        :gd,
+        :gl,
+        :gn,
+        :gu,
+        :gv,
+        :ha,
+        :he,
+        :hi,
+        :ho,
+        :hr,
+        :ht,
+        :hu,
+        :hy,
+        :hz,
+        :ia,
+        :id,
+        :ie,
+        :ig,
+        :ii,
+        :ik,
+        :io,
+        :is,
+        :it,
+        :iu,
+        :ja,
+        :jv,
+        :ka,
+        :kg,
+        :ki,
+        :kj,
+        :kk,
+        :kl,
+        :km,
+        :kn,
+        :ko,
+        :kr,
+        :ks,
+        :ku,
+        :kv,
+        :kw,
+        :ky,
+        :la,
+        :lb,
+        :lg,
+        :li,
+        :ln,
+        :lo,
+        :lt,
+        :lu,
+        :lv,
+        :mg,
+        :mh,
+        :mi,
+        :mk,
+        :ml,
+        :mn,
+        :mr,
+        :ms,
+        :mt,
+        :my,
+        :na,
+        :nb,
+        :nd,
+        :ne,
+        :ng,
+        :nl,
+        :nn,
+        :no,
+        :nr,
+        :nv,
+        :ny,
+        :oc,
+        :oj,
+        :om,
+        :or,
+        :os,
+        :pa,
+        :pi,
+        :pl,
+        :ps,
+        :pt,
+        :qu,
+        :rm,
+        :rn,
+        :ro,
+        :ru,
+        :rw,
+        :sa,
+        :sc,
+        :sd,
+        :se,
+        :sg,
+        :si,
+        :sk,
+        :sl,
+        :sm,
+        :sn,
+        :so,
+        :sq,
+        :sr,
+        :ss,
+        :st,
+        :su,
+        :sv,
+        :sw,
+        :ta,
+        :te,
+        :tg,
+        :th,
+        :ti,
+        :tk,
+        :tl,
+        :tn,
+        :to,
+        :tr,
+        :ts,
+        :tt,
+        :tw,
+        :ty,
+        :ug,
+        :uk,
+        :ur,
+        :uz,
+        :ve,
+        :vi,
+        :vo,
+        :wa,
+        :wo,
+        :xh,
+        :yi,
+        :yo,
+        :za,
+        :zh,
+        :zu ;
+    skos:prefLabel "ISO639-1: Codes for the Representation of Names of Languages"@en .

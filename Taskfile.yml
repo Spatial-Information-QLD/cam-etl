@@ -4,75 +4,207 @@ version: "3"
 
 tasks:
   postgres:driver:download:
-    desc: Download Postgres JDBC driver.
+    desc: Download Postgres JDBC driver. No longer needed as we're not using pyspark anymore.
     cmds:
       - curl -o postgresql.jar https://jdbc.postgresql.org/download/postgresql-42.6.0.jar
 
   postgres:up:
     desc: Start Postgres Docker service.
     cmds:
-      - docker-compose --profile postgres up -d
+      - docker compose --profile postgres up -d
 
   postgres:down:
     desc: Stop Postgres Docker service.
     cmds:
-      - docker-compose --profile postgres down
+      - docker compose --profile postgres down
+
+  postgres:backup:
+    desc: Back up the LALFDB database.
+    cmds:
+      - docker exec -i cam-etl-postgres-1 pg_dump -U postgres -d lalfdb | gzip > backup.sql.gz
+
+  postgres:restore:
+    desc: Restore the LALFDB database.
+    cmds:
+      - gunzip < backup.sql.gz | docker exec -i cam-etl-postgres-1 psql -U postgres -d lalfdb
 
   graphdb:up:
     desc: Start GraphDB Docker service.
     cmds:
-      - docker-compose --profile graphdb up -d
+      - docker compose --profile graphdb up -d
 
   graphdb:preload:
     desc: Preload data into GraphDB Docker service. Warning, this overwrites existing data.
     cmds:
       - task: graphdb:down
-      - docker-compose --profile graphdb:preload up
-      - docker-compose --profile graphdb:preload down
+      - docker compose --profile graphdb:preload up
+      - docker compose --profile graphdb:preload down
+      - task: graphdb:up
+      - sleep 60
+      - task: graphdb:qali:vocabs
+
+  graphdb:qali:vocabs:
+    cmd: |
+      for f in vocabs-import/*.ttl; do
+        echo "Uploading $f"
+        curl -X POST -H "Content-Type: text/turtle" --data-binary @$f 'http://localhost:7200/repositories/addressing/rdf-graphs/service?graph=urn:qali:graph:vocabs'
+      done
 
   graphdb:down:
     desc: Stop GraphDB Docker service.
     cmds:
-      - docker-compose --profile graphdb down
+      - docker compose --profile graphdb down
 
+  fuseki:qali:vocabs:
+    cmd: |
+      for f in vocabs-import/*.ttl; do
+        echo "Uploading $f"
+        curl -X POST -H "Content-Type: text/turtle" --data-binary @$f 'http://localhost:3030/qali?graph=urn:qali:graph:vocabs'
+      done
+
+  fuseki:up:
+    desc: Start Fuseki Docker service.
+    cmds:
+      - docker compose --profile fuseki up -d
+
+  fuseki:build:
+    desc: Build the Fuseki Docker service.
+    cmds:
+      - docker compose --profile fuseki build
+
+  fuseki:qali:create:
+    desc: Create the Fuseki database.
+    cmds:
+      - kurra db create http://localhost:3030 --config fuseki/config.ttl
+
+  fuseki:qali:offline:
+    desc: Take the qali dataset offline. This does not delete the tdb2 database.
+    cmds:
+      - kurra db delete http://localhost:3030 qali
+
+  fuseki:bash:
+    cmd: docker compose run --rm fuseki /bin/bash
+
+  fuseki:qali:download:vocabs:
+    cmds:
+      - mkdir -p vocabs-import
+      - curl -o vocabs-import/road-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/TransportNetworks/road-types.ttl
+      - curl -o vocabs-import/go-categories.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/GeographicalNames/go-categories.ttl
+      - curl -o vocabs-import/subaddress-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/subaddress-types.ttl
+      - curl -o vocabs-import/addr-part-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-part-types.ttl
+      - curl -o vocabs-import/lifecycle-stage-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/lifeycle-stage-types.ttl
+      - curl -o vocabs-import/gn-part-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/GeographicalNames/gn-part-types.ttl
+      - curl -o vocabs-import/gn-affixes.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/GeographicalNames/gn-affix.ttl
+      - curl -o vocabs-import/addr-classes.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-classes.ttl
+      - curl -o vocabs-import/addr-status-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/addr-status-types.ttl
+      - curl -o vocabs-import/geocode-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/geocode-types.ttl
+      - curl -o vocabs-import/building-level-types.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/building-level-types.ttl
+      - curl -o vocabs-import/naming-authority.ttl https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/naming-authority.ttl
+
+  fuseki:qali:import:vocabs:
+    cmds:
+      - kurra db upload vocabs-import/ http://localhost:3030/qali
+
+  fuseki:qali:gzip:
+    cmds:
+      - mkdir -p fuseki-import
+      - mv pndb-rdf/*.nq fuseki-import
+      - mv qrt-rdf/*.nq fuseki-import
+      - mv lalf-rdf/*.nq fuseki-import
+      - cat fuseki-import/*.nq | gzip > fuseki-import/data.nq.gz
+
+  fuseki:qali:load:
+    desc: Load the qali dataset into Fuseki.
+    cmds:
+      - task: fuseki:qali:offline
+      # restart fuseki to get bind mount to refresh data
+      - task: fuseki:down
+      - task: fuseki:up
+      # - docker compose exec fuseki /bin/bash -c 'tdb2.tdbloader --loader=parallel --loc /fuseki/databases/qali /tmp/fuseki-import/data.nq.gz'
+      - docker compose exec fuseki /bin/bash -c 'tdb2.xloader --threads 10 --loc /fuseki/databases/qali /tmp/fuseki-import/data.nq.gz'
+      - task: fuseki:qali:create
+      - task: fuseki:qali:index
+
+  fuseki:qali:index:
+    desc: Text index the qali dataset.
+    cmds:
+      - task: fuseki:down
+      - docker compose run --rm fuseki /bin/bash -c 'rm -rf -f /fuseki/databases/qali/lucene'
+      - docker compose run --rm fuseki /bin/bash -c 'java -cp $FUSEKI_HOME/fuseki-server.jar jena.textindexer --desc=/fuseki/configuration/qali.ttl'
+      - task: fuseki:up
+
+  fuseki:down:
+    desc: Stop Fuseki Docker service.
+    cmds:
+      - docker compose --profile fuseki down
+
+  fuseki:clean:
+    desc: Clean the Fuseki database.
+    cmds:
+      - docker compose --profile fuseki down -v
+
+  nginx:up:
+    desc: Start Nginx Docker service.
+    cmds:
+      - docker compose --profile nginx up -d
+
+  nginx:down:
+    desc: Stop Nginx Docker service.
+    cmds:
+      - docker compose --profile nginx down
+
+  etl:db:qrt:
+    desc: Run the ETL for QRT.
+    cmds:
+      - uv run python etl_qrt.py
+
+  etl:db:pndb:
+    desc: Run the ETL for PNDB.
+    cmds:
+      - uv run python etl_pndb_pre_validate.py
+      - uv run python etl_pndb.py
+      - uv run python etl_pndb_localities.py
+
+  etl:db:lalf:
+    desc: Run the ETL for LALF.
+    cmds:
+      - uv run python etl_lalf_parcel.py
+      # Geocodes no longer converted over as RDF. They are stored as the source of truth in SIR RTE.
+      # - uv run python etl_lalf_geocode.py
+      - uv run python etl_lalf_address.py
+      - uv run python etl_lalf_property_name.py
+      - uv run python etl_lalf_property_name_on_address.py
+      - uv run python etl_lalf_road_missing_qrt.py
   etl:
     desc: Run the ETL.
     cmds:
-      - OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES venv/bin/python main.py
+      - task: etl:db:qrt
+      - task: etl:db:pndb
+      - task: etl:db:lalf
 
   etl:clean:
     desc: Delete the files in output/ directory.
     cmds:
-      - cmd: rm output/*.nq
+      - cmd: rm qrt-rdf/*.nq
+        ignore_error: true
+      - cmd: rm pndb-rdf/*.nq
+        ignore_error: true
+      - cmd: rm lalf-rdf/*.nq
+        ignore_error: true
+      - cmd: rm fuseki-import/*.nq
+        ignore_error: true
+      - cmd: rm fuseki-import/*.nq.gz
         ignore_error: true
 
   ontodia:
     desc: Run ontodia server.
     cmds:
-      - venv/bin/python -m http.server -d ontodia/
-
-  dev:load-db:
-    desc: Clear the locally produced data, recreate data, spin down GraphDB, load data, spin back up GraphDB.
-    cmds:
-      - task: etl:clean
-      - task: etl
-      - task: graphdb:preload
-      - task: graphdb:up
-
-  dev:clean:
-    cmds:
-      - task: etl:clean
-      - task: etl
-
-  dev:
-    desc: Alias for etl task.
-    cmds:
-      - task: etl
+      - .venv/bin/python -m http.server -d ontodia/
 
   web:up:
     cmds:
-      - docker-compose --profile web up -d
+      - docker compose --profile web up -d
 
   web:down:
     cmds:
-      - docker-compose --profile web down
+      - docker compose --profile web down
