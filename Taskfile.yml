@@ -3,11 +3,6 @@
 version: "3"
 
 tasks:
-  postgres:driver:download:
-    desc: Download Postgres JDBC driver. No longer needed as we're not using pyspark anymore.
-    cmds:
-      - curl -o postgresql.jar https://jdbc.postgresql.org/download/postgresql-42.6.0.jar
-
   postgres:up:
     desc: Start Postgres Docker service.
     cmds:
@@ -143,16 +138,6 @@ tasks:
     cmds:
       - docker compose --profile fuseki down -v
 
-  nginx:up:
-    desc: Start Nginx Docker service.
-    cmds:
-      - docker compose --profile nginx up -d
-
-  nginx:down:
-    desc: Stop Nginx Docker service.
-    cmds:
-      - docker compose --profile nginx down
-
   etl:db:qrt:
     desc: Run the ETL for QRT.
     cmds:
@@ -169,8 +154,6 @@ tasks:
     desc: Run the ETL for LALF.
     cmds:
       - uv run python etl_lalf_parcel.py
-      # Geocodes no longer converted over as RDF. They are stored as the source of truth in SIR RTE.
-      # - uv run python etl_lalf_geocode.py
       - uv run python etl_lalf_address.py
       - uv run python etl_lalf_property_name.py
       - uv run python etl_lalf_property_name_on_address.py
@@ -195,16 +178,3 @@ tasks:
         ignore_error: true
       - cmd: rm fuseki-import/*.nq.gz
         ignore_error: true
-
-  ontodia:
-    desc: Run ontodia server.
-    cmds:
-      - .venv/bin/python -m http.server -d ontodia/
-
-  web:up:
-    cmds:
-      - docker compose --profile web up -d
-
-  web:down:
-    cmds:
-      - docker compose --profile web down
