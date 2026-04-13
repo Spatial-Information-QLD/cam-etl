@@ -319,108 +319,6 @@ The following files contain null terminator characters, which are not supported 
 
 Use a postgres client to load the CSV files into the `lalfdb` database. Map all columns to the `text` data type.
 
-### Create a point geometry for the geocodes
-
-This will aide us in developing the ETL so we can make a spatial query and convert only a subset of the dataset.
-
-This step is entirely optional and unecessary if you want to run the entire ETL.
-
-Update the `lalfpdba.sp_survey_point` table.
-
-```sql
-ALTER TABLE "lalfpdba.sp_survey_point"
-ADD COLUMN geom geometry(Point, 4326);
-```
-
-Populate the new `geom` column.
-
-```sql
-UPDATE "lalfpdba.sp_survey_point"
-SET geom = ST_SetSRID(ST_MakePoint(CAST(centroid_lon as float), CAST(centroid_lat as float)), 4326);
-```
-
-Create a spatial index on `geom`.
-
-```sql
-CREATE INDEX sp_survey_point_geom_idx
-ON "lalfpdba.sp_survey_point" USING GIST (geom);
-```
-
-Size of `lf_parcel` and `sp_survey_point` tables.
-
-```sql
--- size of lf_parcel
-select count(*) -- 3,289,378
-from "lalfpdba.lf_parcel" p
-where p.parcel_status_code != 'D';
-
--- size of sp_survey_point
-select count(*) -- 2,832,,215
-from "lalfpdba.sp_survey_point";
-
--- check that all lf_parcel parcels have a geocode in sp survey point
-select count(*) -- 691,384
-from "lalfpdba.lf_parcel" p
-left join "lalfpdba.sp_survey_point" sp on p.plan_no = sp.plan_no and p.lot_no = sp.lot_no
-where p.parcel_status_code != 'D' and sp.plan_no is null and sp.lot_no is null;
-```
-
-Get the address' parcels grouped by parcel status code
-
-```sql
--- get the address' parcels grouped by parcel status code
-select p.parcel_status_code, count(*)
-from
-    "lalfpdba.lf_address" a
-left join "lalfpdba.lf_site" s on a.site_id = s.site_id
-left join "lalfpdba.lf_parcel" p  on s.parcel_id = p.parcel_id
-where a.addr_status_code != 'H'
-group by p.parcel_status_code;
-```
-
-| parcel_status_code | count   |
-| ------------------ | ------- |
-| C                  | 2795207 |
-| D                  | 1       |
-
-Addresses that do not have a geocode.
-
-```sql
--- addresses that don't have a geocode
-select distinct p.plan_no, p.lot_no, p.parcel_status_code, l."pndb.place_name", r.road_name, r.road_name_type_code, a.*
-from
-    "lalfpdba.lf_address" a
-left join "lalfpdba.lf_site" s on a.site_id = s.site_id
-left join "lalfpdba.lf_parcel" p  on s.parcel_id = p.parcel_id
-left join "lalfpdba.sp_survey_point" sp on p.plan_no = sp.plan_no and p.lot_no = sp.lot_no
-left join "lalfpdba.lf_road" r on a.road_id = r.road_id
-left join lalf_pndb_localities_joined l on r.locality_code = l."lalf.locality_code"
-left join qrt q on r.qrt_road_name_basic = q.road_name_basic_1 and
-             l."pndb.place_name" = q.locality_left
-where a.addr_status_code != 'H' and sp.plan_no is null and sp.lot_no is null
-;
-```
-
-Parcel types that do not have a survey point.
-
-```sql
--- parcel types that do not have a survey point
-select p.parcel_status_code, count(*)
-from "lalfpdba.lf_parcel" p
-left join "lalfpdba.sp_survey_point" sp on p.plan_no = sp.plan_no and p.lot_no = sp.lot_no
-where sp.plan_no is null and sp.lot_no is null
-group by p.parcel_status_code;
-```
-
-| parcel_status_code | count  |
-| ------------------ | ------ |
-|                    | 20     |
-| C                  | 358593 |
-| D                  | 870747 |
-| N                  | 91562  |
-| T                  | 86     |
-| U                  | 241123 |
-
 ### Names and Addresses for Places
 
 We currently do not have a 'property' spatial object that represents the aggregate parcel boundaries of a property (likely rural). The solution for now is to have the property name point to multiple spatial objects (the individual parcels) to not lose that information. In the future, this will be reconciled with a new spatial dataset that can represent the property. This is not a concern with addressing because the individual parcels should have their own addresses.
@@ -528,7 +426,7 @@ Create another table to map the site_id to the new place name id.
 | 19d296b7-2c55-4466-95f5-e9a4f8738474 | 1000229 |
 | 19d296b7-2c55-4466-95f5-e9a4f8738474 | 1000231 |
 
-Each place name in LALF maps to the geographical object of the property parcel. Sub-addresses with the same place name as its parent will point to the same geographical name in its address component `apt:geographicalNameObject`. We do not try to infer the sub-address' geographical name by looking at the parent address' geographical name as this is not always a valid case.
+Each place name in LALF maps to the geographical object of the property parcel. Sub-addresses with the same place name as its parent will point to the same geographical name in its address component `apt:geographicalNameObject`. We do not infer the sub-address' geographical name from the parent address because that is not always a valid case.
 
 ### Parcel
 
@@ -549,8 +447,8 @@ Note: Rural properties - may need to work on the valuations dataset to get disco
 
 TODO: do addressable objects need to have a soft type? E.g., property, parcel, sub-site within a parcel, etc.
 
-- if it's a parcel, look up spatial system to pull info with the plan and lot number
-- if it's a sub-site, we just work with the geocodes within Quali.
+- if it's a parcel, look up the spatial system to pull info with the plan and lot number
+- if it's a sub-site, we just work with the spatial objects within Quali.
 - likely a follow-up exercise.
 
 TODO: why lot 1-4 plan SP337524 not exist in LALF?
@@ -878,8 +776,6 @@ A bunch of tables were loaded in to a PostgreSQL database and a schema was creat
 ##### lalfpdba_lf_address
 
 The empty strings in the columns `level_type_code` and `unit_type_code` were converted to `NULL`.
-
-The column `geocode_id` was added as a foreign key to the `lalfpdba_lf_geocode` table.
 
 ##### lalfpdba_sp_survey_point
 
