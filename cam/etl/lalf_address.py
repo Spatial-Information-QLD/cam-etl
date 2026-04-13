@@ -3,7 +3,7 @@ import uuid
 from rdflib import URIRef
 
 qld_addr_namespace = uuid.uuid5(
-    uuid.NAMESPACE_URL, "https://linked.data.gov.au/dataset/qld-addr/address/"
+    uuid.NAMESPACE_URL, "https://linked.data.gov.au/dataset/qld-addr/addr/"
 )
 
 addr_status_vocab_mapping = {
@@ -24,4 +24,4 @@ def get_address_uuid(addr_id: str) -> str:
 
 def get_address_iri(addr_id: str) -> URIRef:
     addr_uuid = get_address_uuid(addr_id)
-    return URIRef(f"https://linked.data.gov.au/dataset/qld-addr/address/{addr_uuid}")
+    return URIRef(f"https://linked.data.gov.au/dataset/qld-addr/addr/{addr_uuid}")
