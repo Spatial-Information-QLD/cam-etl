@@ -19,8 +19,8 @@ task postgres:up
 Create the `lalfdb` database via `psql` by running the following commands in the postgres container.
 
 ```sh
-docker exec -i cam-etl-postgres-1 psql -d postgres -c "CREATE DATABASE lalfdb;" -U postgres -w
-docker exec -i cam-etl-postgres-1 psql -d lalfdb -c "CREATE EXTENSION postgis;" -U postgres -w
+docker compose exec -T postgres psql -U postgres -d postgres -c "CREATE DATABASE lalfdb;"
+docker compose exec -T postgres psql -U postgres -d lalfdb -c "CREATE EXTENSION postgis;"
 ```
 
 ## QRT - Queensland Roads and Tracks
@@ -34,12 +34,12 @@ Download the QRT Shapefile from [QLD Spatial Catalogue](https://qldspatial.infor
 Unzip the downloaded zipped file.
 
 ```sh
-unzip QSC_Extracted_Data_20250314_144132175583-7180.zip
+unzip QSC_Extracted_Data_20260409_085327345773-8968.zip
 ```
 
 Update the [docker-compose.yml](./docker-compose.yml) file to mount the QRT Shapefile into the container.
 
-- `- ./QSC_Extracted_Data_20250314_144132175583-7180:/tmp/postgres-data/qrt`
+- `- ./QSC_Extracted_Data_20260409_085327345773-8968:/tmp/postgres-data/qrt`
 
 Start the postgres database service.
 
@@ -61,6 +61,82 @@ To run the ETL, run the following command.
 
 ```sh
 task etl:db:qrt
+```
+
+### Load the Minimum LALF Tables Required by the ETL
+
+Before proceeding with the LALF to QRT mapping, load the minimum set of LALF tables that the current ETL reads from PostgreSQL.
+
+Create a folder named `LALF/` in the root of this repository and copy the required base LALF CSV files into it.
+
+```sh
+mkdir -p LALF
+```
+
+Required base LALF CSV files to copy into `LALF/`:
+
+- `lalfpdba.lf_parcel.csv`
+- `lalfpdba.lf_site.csv`
+- `lalfpdba.lf_address.csv`
+- `lalfpdba.lf_road.csv`
+- `lalfpdba.lf_road_name_type.csv`
+- `lalfpdba.lf_road_name_suffix.csv`
+- `lalfpdba.lf_geocode.csv`
+- `lalfpdba.sp_survey_point.csv`
+
+Additional CSV files required by the ETL, provided separately from the base LALF database tables, should also be copied into `LALF/` so the null terminator cleanup task can run against them:
+
+- `lalf_place_names_joined_to_lalf_addr_id.csv`
+- `lalf-pndb_localities_joined.csv`
+
+Before importing, run the null terminator cleanup task over the files in `LALF/`.
+
+```sh
+task lalf:clean:null-terminators
+```
+
+Use a Postgres client to import the CSV files from `LALF/` into the `lalfdb` database in the `public` schema. Create the table names exactly as the ETL expects them, including the dot in the quoted table name, and map all CSV columns to the `text` data type unless otherwise noted.
+
+Required base LALF tables:
+
+- `"lalfpdba.lf_parcel"`
+- `"lalfpdba.lf_site"`
+- `"lalfpdba.lf_address"`
+- `"lalfpdba.lf_road"`
+- `"lalfpdba.lf_road_name_type"`
+- `"lalfpdba.lf_road_name_suffix"`
+- `"lalfpdba.lf_geocode"`
+- `"lalfpdba.sp_survey_point"`
+
+Additional tables required by the ETL:
+
+- `lalf_place_names_joined_to_lalf_addr_id.csv` -> `lalf_place_names_joined_to_lalf_addr_id`
+- `lalf-pndb_localities_joined.csv` -> `lalf_pndb_localities_joined`
+
+These tables are the minimum needed by the current ETL scripts:
+
+- `etl_lalf_parcel.py`
+- `etl_lalf_address.py`
+- `etl_lalf_property_name.py`
+- `etl_lalf_property_name_on_address.py`
+- `etl_lalf_road_missing_qrt.py`
+- `etl_lalf_road_qrt_spatial_match.py`
+
+Notes:
+
+- The task `lalf:clean:null-terminators` runs `uv run python addressdb/remove_null_terminator_char.py` against every `*.csv` file in `LALF/`.
+- Keep the source table names exactly aligned with the CSV filenames, excluding `.csv`. For example, import `lalfpdba.lf_address.csv` into the table `"lalfpdba.lf_address"`.
+- The two additional CSV files above are not part of the base LALF dump, but they are still required before running the full LALF ETL.
+
+Recommended sanity check after import:
+
+```sql
+SELECT count(*) FROM "lalfpdba.lf_parcel";
+SELECT count(*) FROM "lalfpdba.lf_site";
+SELECT count(*) FROM "lalfpdba.lf_address";
+SELECT count(*) FROM "lalfpdba.lf_road";
+SELECT count(*) FROM "lalfpdba.lf_geocode";
+SELECT count(*) FROM "lalfpdba.sp_survey_point";
 ```
 
 ### Mapping between LALF Roads and QRT
@@ -167,18 +243,6 @@ SET
 	lalf_locality = UPPER(q.locality_l);
 ```
 
-With the property names dataset, we need to update the `lot` values from `0` to `9999` to align with the lot and plan identifiers for parcels in LALF.
-
-Note: This is no longer required. The updated file (`LALF place name de-duplication.csv`) provided by Michael has the correct 9999 values.
-
-```sql
-UPDATE "lalf_property_address_joined" p
-SET
-	lot = '9999'
-WHERE
-	p.lot = '0';
-```
-
 ### Mapping unjoined LALF roads to QRT
 
 Alter the `lf_road` table to add a new column named `qrt_road_id`.
@@ -237,11 +301,13 @@ where qrt_road_id is not null;
 
 Run the `etl_lalf_road_qrt_spatial_match.py` script to spatially match the remaining roads to QRT.
 
+Note: this may take around an hour to run.
+
 ```
 uv run etl_lalf_road_qrt_spatial_match.py
 ```
 
-Note that some QRT roads have two road names:
+Some QRT road IDs map to more than one road name. The following query is a diagnostic check to identify addresses that duplicate because of that join:
 
 ```sql
 WITH qrt_road AS (
@@ -284,6 +350,52 @@ LEFT JOIN qrt_road q ON q.road_id_1 = r.qrt_road_id
 WHERE a.addr_status_code != 'H'
 ```
 
+If the above two queries return the same count, it means all addresses match to a QRT road. If the second query returns a higher count, run the following query to see which addresses have duplicate QRT matches.
+
+```sql
+-- Check for duplicate rows for an addr_id. This query usually surfaces the different variations of qrt road_name_full_1 values.
+WITH qrt_road AS (
+    SELECT DISTINCT road_id AS road_id_1, road_name_ AS road_name_full_1, road_name1
+    FROM qrt_spatial
+),
+joined AS (
+    SELECT
+        a.addr_id,
+        a.site_id,
+        p.parcel_id,
+        r.road_id,
+        r.qrt_road_id,
+        r.qrt_road_name_basic,
+        r.locality_code,
+        l."lalf.locality_code" AS joined_locality_code,
+        l."pndb.place_name" AS pndb_place_name,
+        q.road_id_1,
+        q.road_name1,
+        q.road_name_full_1,
+        count(*) OVER (PARTITION BY a.addr_id) AS row_count
+    FROM "lalfpdba.lf_address" a
+    JOIN "lalfpdba.lf_site" s ON a.site_id = s.site_id
+    JOIN "lalfpdba.lf_parcel" p ON s.parcel_id = p.parcel_id
+    LEFT JOIN "lalfpdba.lf_road" r ON r.road_id = a.road_id
+    LEFT JOIN lalf_pndb_localities_joined l ON r.locality_code = l."lalf.locality_code"
+    LEFT JOIN qrt_road q ON q.road_id_1 = r.qrt_road_id
+        AND q.road_name1 = r.qrt_road_name_basic
+    WHERE a.addr_status_code != 'H'
+)
+SELECT *
+FROM joined
+WHERE row_count > 1
+ORDER BY addr_id, road_id_1, road_name1;
+```
+
+This is the end of the data loading for the ETL 2026. The next steps are to run the ETL and then load them into Fuseki.
+
+This is the end of running the ETL 2026. The next steps are to load the generated RDF files into Fuseki. See [etl-notes-data-loading.md](./etl-notes-data-loading.md) for the loading steps and validation queries.
+
+**Note: The text below is the original loading instructions before the ETL was run. Some of the steps may no longer be relevant, but they are left here for reference.**
+
+---
+
 ## Place Names Database
 
 The Place Names Database contains both gazetted and non-gazetted place names.
@@ -311,13 +423,7 @@ The LALF is the Ingress Queensland addressing database. It contains tables that 
 
 Download the LALF from [R-SI CAM Project Board > General > Stage 3 - Location Addressing Rollout > Legacy DB exports](https://itpqld.sharepoint.com.mcas.ms/sites/R-SICAMProjectBoard/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FR%2DSICAMProjectBoard%2FShared%20Documents%2FGeneral%2FStage%203%20%2D%20Location%20Addressing%20Rollout%2FLegacy%20DB%20exports&viewid=d8225c45%2D5e3a%2D4dda%2Db296%2Db01e4ae1eb77).
 
-The following files contain null terminator characters, which are not supported in PostgreSQL. Run the `addressdb/remove_null_terminator_char.py` script to remove the null terminator characters from the files.
-
-- `lalfpdba.lf_incremental_action.csv`
-- `lalfpdba.lf_address.csv`
-- `lalfpdba.lf_address_history.csv`
-
-Use a postgres client to load the CSV files into the `lalfdb` database. Map all columns to the `text` data type.
+Use a postgres client to load the required CSV files into the `lalfdb` database. Map all columns to the `text` data type.
 
 ### Names and Addresses for Places
 
@@ -350,9 +456,7 @@ The `lalfpdba.lf_place_name` table contains the place names, but the same name f
 
 #### Place Name De-duplication
 
-**Note that the below is outdated**. We have a new file now called `LALF place name de-duplication.csv`. Load this file into the `lalf_property_address_joined` table.
-
-The place names for large complexes are duplicated with multiple identifiers in the `lf_place_name` table. Ashlee and Michael have provided a de-duplicated dataset called `lalf_property_address_joined.csv`. We load this data in as `lalf_property_address_joined` table.
+The current ETL consumes the separately supplied CSV `lalf_place_names_joined_to_lalf_addr_id.csv`, which should be loaded into the table `lalf_place_names_joined_to_lalf_addr_id`.
 
 An example query where the place is named 'FIRE STATION' over different localities.
 
@@ -671,12 +775,11 @@ The above Windsor code `LGA_0313` is problematic. It is not a code in the PNDB. 
 
 Note: there may be some localities that don't map to the PNDB. For example, K'gari.
 
-Michael has sent two files over. `lalf-pndb_localities_joined.csv` and `lalf_localities_unjoined.csv`. I have uploaded them to the project's SharePoint.
+Michael has sent the file `lalf-pndb_localities_joined.csv`. I have uploaded it to the project's SharePoint.
 
 Load them into the database.
 
 - `lalf-pndb_localities_joined.csv` - `lalf_pndb_localities_joined`
-- `lalf_localities_unjoined.csv` - `lalf_localities_unjoined` (not used)
 
 ### Parcel, Site, Address cardinality
 

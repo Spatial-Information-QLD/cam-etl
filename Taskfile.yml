@@ -23,6 +23,14 @@ tasks:
     cmds:
       - gunzip < backup.sql.gz | docker exec -i cam-etl-postgres-1 psql -U postgres -d lalfdb
 
+  lalf:clean:null-terminators:
+    desc: Remove null terminator characters from CSV files in LALF/.
+    cmd: |
+      for f in LALF/*.csv; do
+        [ -e "$f" ] || continue
+        uv run python addressdb/remove_null_terminator_char.py "$f"
+      done
+
   graphdb:up:
     desc: Start GraphDB Docker service.
     cmds:
