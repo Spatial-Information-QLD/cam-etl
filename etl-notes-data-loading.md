@@ -2,51 +2,50 @@
 
 ## Create the TDB2 Database
 
-Copy the RDF data to the Fuseki VM.
+The raw n-quads should be present in `fuseki-import/`.
+
+Create the standalone TDB2 export locally.
+
+It takes roughly 45 minutes to create the TDB2 database from the n-quads.
 
 ```sh
-scp 2025-05-29.data.zip cam-itp-dev-fuseki:/data
+task fuseki:qali:tdb2:create
 ```
 
-Unzip the zipped file.
-
-```sh
-unzip 2025-05-29.data.zip
-```
-
-Create the TDB2 database using xloader. The unzipped folder on the host should be named `graphdb-import`. The target TDB2 database folder is named `new-fuseki-data` on the host. We mount both these folders into the container.
-
-```sh
-sudo podman run --rm -it -v ./graphdb-import:/home/graphdb-import -v ./new-fuseki-data:/home/fuseki-data ghcr.io/kurrawong/fuseki:5.2.0-0 /bin/bash -c 'tdb2.xloader --threads 2 --loc /home/fuseki-data/qali /home/graphdb-import/*.nq'
-```
+This creates the database in `new-fuseki-data/databases/ds`.
 
 ## QALI Data
 
-In the `/data` directory, stop the database.
+Install the generated TDB2 database into `./fuseki-data` for local testing and rebuild the text index.
+
+It takes around 10 minutes to install the TDB2 database and rebuild the text index.
 
 ```sh
-sudo systemctl stop container-fuseki.service
+task fuseki:qali:tdb2:install-local
 ```
 
-Mount the volumes into the new container and create the TDB2 database using xloader on the n-quads files.
+Start Fuseki locally.
 
 ```sh
-sudo podman run --rm -it -v ./graphdb-import:/home/graphdb-import -v ./new-fuseki-data:/home/fuseki-data ghcr.io/kurrawong/fuseki:5.2.0-0 /bin/bash -c 'tdb2.xloader --threads 2 --loc /home/fuseki-data/qali /home/graphdb-import/*.nq'
+task fuseki:up
 ```
 
-Running it with docker instead.
+The local dataset is served at `http://localhost:3030/ds`.
+
+You can test that Fuseki is running with:
 
 ```sh
-time docker run --rm -it -v ./graphdb-import:/home/graphdb-import -v ./new-fuseki-data:/home/fuseki-data ghcr.io/kurrawong/fuseki:5.2.0-0 /bin/bash -c 'tdb2.xloader --threads 10 --loc /home/fuseki-data/qali /home/graphdb-import/*.nq'
+curl http://localhost:3030/$/ping
 ```
 
 ## Transfer
 
-Use `zip` to create a single compressed file for network transfer.
+Package the standalone TDB2 export for transfer.
+
+This takes around 13 minutes and results in a `new-fuseki-data.zip` file of around 36GB.
 
 ```sh
-# ~15 minutes
-time zip -r new-fuseki-data.zip new-fuseki-data/
+task fuseki:qali:tdb2:zip
 ```
 
 Transfer to the remote server using rsync.
@@ -76,16 +75,18 @@ Delete the old database.
 sudo rm -rf /data/fuseki-data/databases/ds
 ```
 
-Move the unzipped data to the fuseki data directory.
+Move the unzipped data to the Fuseki data directory.
 
 ```sh
-mv new-fuseki-data/qali /data/fuseki-data/databases/ds
+mv new-fuseki-data/databases/ds /data/fuseki-data/databases/ds
 ```
 
-Run the full-text indexer.
+Run the full-text indexer using the Fuseki image and the dataset config in `/data/fuseki-data/configuration/ds.ttl`.
+
+Note: this is not necessary if you ran task `fuseki:qali:tdb2:install-local` before zipping the data, as the text index is included in the TDB2 export. However, if you want to be sure the text index is up to date, you can run this command to rebuild it on the remote server after transferring the data.
 
 ```sh
-sudo podman run --rm -v /data/fuseki-data:/fuseki -v /etc/fuseki/config.ttl:/opt/rdf-delta/config.ttl ghcr.io/kurrawong/rdf-delta:0.1.12 /bin/bash -c 'java -cp rdf-delta-fuseki-server.jar:compoundnaming.jar jena.textindexer --desc=config.ttl'
+sudo podman run --rm -v /data/fuseki-data:/fuseki ghcr.io/kurrawong/fuseki:5.6.0-0 /bin/bash -c 'rm -rf /fuseki/run/databases/ds_lucene_index && java -cp $FUSEKI_HOME/fuseki-server.jar:$FUSEKI_HOME/lib/* jena.textindexer --desc=/fuseki/configuration/ds.ttl'
 ```
 
 Start the database.
@@ -105,6 +106,8 @@ curl -X POST http://localhost:3030/ds -H "Content-Type: application/sparql-query
 ### Loading Vocab Data
 
 In the cam-etl repo, run the following with curl to load the vocabs into a named graph.
+
+Note: this is not necessary if the vocabs were included in the TDB2 export, but if you want to be sure the vocabs are up to date, you can run this command to load them after transferring the data.
 
 ```sh
 for f in vocabs-import/*.ttl; do

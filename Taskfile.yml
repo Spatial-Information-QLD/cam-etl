@@ -62,7 +62,7 @@ tasks:
     cmd: |
       for f in vocabs-import/*.ttl; do
         echo "Uploading $f"
-        curl -X POST -H "Content-Type: text/turtle" --data-binary @$f 'http://localhost:3030/qali?graph=urn:qali:graph:vocabs'
+        curl -X POST -H "Content-Type: text/turtle" --data-binary @$f 'http://localhost:3030/ds?graph=urn:qali:graph:vocabs'
       done
 
   fuseki:up:
@@ -74,16 +74,6 @@ tasks:
     desc: Build the Fuseki Docker service.
     cmds:
       - docker compose --profile fuseki build
-
-  fuseki:qali:create:
-    desc: Create the Fuseki database.
-    cmds:
-      - kurra db create http://localhost:3030 --config fuseki/config.ttl
-
-  fuseki:qali:offline:
-    desc: Take the qali dataset offline. This does not delete the tdb2 database.
-    cmds:
-      - kurra db delete http://localhost:3030 qali
 
   fuseki:bash:
     cmd: docker compose run --rm fuseki /bin/bash
@@ -106,35 +96,47 @@ tasks:
 
   fuseki:qali:import:vocabs:
     cmds:
-      - kurra db upload vocabs-import/ http://localhost:3030/qali
+      - kurra db upload vocabs-import/ http://localhost:3030/ds
 
-  fuseki:qali:gzip:
-    cmds:
-      - mkdir -p fuseki-import
-      # - mv pndb-rdf/*.nq fuseki-import
-      - mv qrt-rdf/*.nq fuseki-import
-      - mv lalf-rdf/*.nq fuseki-import
-      - cat fuseki-import/*.nq | gzip > fuseki-import/data.nq.gz
+  fuseki:qali:tdb2:create:
+    desc: Create a standalone TDB2 export for QALI in new-fuseki-data/.
+    cmd: |
+      set -euo pipefail
+      if ! find fuseki-import -maxdepth 1 -name '*.nq' -print -quit | grep -q .; then
+        echo "No .nq files found in fuseki-import/" >&2
+        exit 1
+      fi
+      mkdir -p new-fuseki-data/databases
+      rm -rf new-fuseki-data/databases/ds
+      docker run --rm \
+        -v "{{.TASKFILE_DIR}}/fuseki-import:/home/fuseki-import:ro" \
+        -v "{{.TASKFILE_DIR}}/new-fuseki-data:/home/fuseki-data" \
+        ghcr.io/kurrawong/fuseki:5.6.0-0 \
+        /bin/bash -c 'tdb2.xloader --threads 10 --loc /home/fuseki-data/databases/ds /home/fuseki-import/*.nq'
 
-  fuseki:qali:load:
-    desc: Load the qali dataset into Fuseki.
+  fuseki:qali:tdb2:zip:
+    desc: Package the standalone TDB2 export for transfer.
+    cmd: |
+      set -euo pipefail
+      test -d new-fuseki-data/databases/ds
+      rm -f new-fuseki-data.zip
+      zip -r new-fuseki-data.zip new-fuseki-data/
+
+  fuseki:qali:tdb2:install-local:
+    desc: Replace local Fuseki data with the standalone TDB2 export and rebuild the text index.
     cmds:
-      - task: fuseki:qali:offline
-      # restart fuseki to get bind mount to refresh data
       - task: fuseki:down
-      - task: fuseki:up
-      # - docker compose exec fuseki /bin/bash -c 'tdb2.tdbloader --loader=parallel --loc /fuseki/databases/qali /tmp/fuseki-import/data.nq.gz'
-      - docker compose exec fuseki /bin/bash -c 'tdb2.xloader --threads 10 --loc /fuseki/databases/qali /tmp/fuseki-import/data.nq.gz'
-      - task: fuseki:qali:create
-      - task: fuseki:qali:index
-
-  fuseki:qali:index:
-    desc: Text index the qali dataset.
-    cmds:
-      - task: fuseki:down
-      - docker compose run --rm fuseki /bin/bash -c 'rm -rf -f /fuseki/databases/qali/lucene'
-      - docker compose run --rm fuseki /bin/bash -c 'java -cp $FUSEKI_HOME/fuseki-server.jar jena.textindexer --desc=/fuseki/configuration/qali.ttl'
-      - task: fuseki:up
+      - task: fuseki:build
+      - cmd: |
+          set -euo pipefail
+          test -d new-fuseki-data/databases/ds
+          rm -rf fuseki-data
+          mkdir -p fuseki-data/configuration fuseki-data/databases fuseki-data/run/databases
+          printf '## Licensed under the terms of http://www.apache.org/licenses/LICENSE-2.0\n## Empty file\n' > fuseki-data/config.ttl
+          cp fuseki/shiro.ini fuseki-data/shiro.ini
+          cp fuseki/config.ttl fuseki-data/configuration/ds.ttl
+          cp -R new-fuseki-data/databases/ds fuseki-data/databases/ds
+      - docker compose run --rm fuseki /bin/bash -c 'rm -rf /fuseki/run/databases/ds_lucene_index && java -cp $FUSEKI_HOME/fuseki-server.jar:$FUSEKI_HOME/lib/* jena.textindexer --desc=/fuseki/configuration/ds.ttl'
 
   fuseki:down:
     desc: Stop Fuseki Docker service.
@@ -185,5 +187,7 @@ tasks:
         ignore_error: true
       - cmd: rm fuseki-import/*.nq
         ignore_error: true
-      - cmd: rm fuseki-import/*.nq.gz
+      - cmd: rm -rf new-fuseki-data
+        ignore_error: true
+      - cmd: rm -f new-fuseki-data.zip
         ignore_error: true

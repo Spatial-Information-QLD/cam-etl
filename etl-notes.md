@@ -390,6 +390,12 @@ ORDER BY addr_id, road_id_1, road_name1;
 
 This is the end of the data loading for the ETL 2026. The next steps are to run the ETL and then load them into Fuseki.
 
+Running the ETL:
+
+- `task etl` - takes about 5-10 minutes to run.
+- 
+
+
 This is the end of running the ETL 2026. The next steps are to load the generated RDF files into Fuseki. See [etl-notes-data-loading.md](./etl-notes-data-loading.md) for the loading steps and validation queries.
 
 **Note: The text below is the original loading instructions before the ETL was run. Some of the steps may no longer be relevant, but they are left here for reference.**
