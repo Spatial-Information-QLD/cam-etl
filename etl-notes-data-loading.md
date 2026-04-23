@@ -83,10 +83,16 @@ mv new-fuseki-data/databases/ds /data/fuseki-data/databases/ds
 
 Run the full-text indexer using the Fuseki image and the dataset config in `/data/fuseki-data/configuration/ds.ttl`.
 
-Note: this is not necessary if you ran task `fuseki:qali:tdb2:install-local` before zipping the data, as the text index is included in the TDB2 export. However, if you want to be sure the text index is up to date, you can run this command to rebuild it on the remote server after transferring the data.
-
 ```sh
 sudo podman run --rm -v /data/fuseki-data:/fuseki ghcr.io/kurrawong/fuseki:5.6.0-0 /bin/bash -c 'rm -rf /fuseki/run/databases/ds_lucene_index && java -cp $FUSEKI_HOME/fuseki-server.jar:$FUSEKI_HOME/lib/* jena.textindexer --desc=/fuseki/configuration/ds.ttl'
+```
+
+Use the local image on the remote server built with the compound naming function, to run the full-text indexer. This is necessary because the compound naming function is used in the dataset config, and the text indexer needs to be able to load the function in order to build the index.
+
+This takes around 10 minutes.
+
+```sh
+sudo podman run --rm -v /data/fuseki-data:/fuseki localhost/qali-fuseki:5.6.0-0-compoundnaming-1.0.0 /bin/bash -c 'rm -rf /fuseki/run/databases/ds_lucene_index && java -cp $FUSEKI_HOME/fuseki-server.jar:$FUSEKI_HOME/lib/* jena.textindexer --desc=/fuseki/configuration/ds.ttl'
 ```
 
 Start the database.
