@@ -3,7 +3,6 @@ import concurrent.futures
 from textwrap import dedent
 from pathlib import Path
 
-from psycopg import Cursor
 from rdflib import (
     BNode,
     Dataset,
@@ -23,7 +22,6 @@ from cam.etl import (
     worker_wrap,
     serialize,
     add_additional_property,
-    get_concept_from_vocab,
 )
 from cam.etl.lalf_address import (
     get_address_iri,
@@ -36,28 +34,22 @@ from cam.etl.namespaces import (
     ADDR,
     CN,
     LC,
-    address_pid_datatype,
     lifecycle_stage_current,
     ADDR_PT,
     aus_country,
     qld_state,
-    ROADS,
-    RNPT,
 )
 from cam.etl.pndb import get_geographical_name_iri
-from cam.etl.qrt import get_road_name_iri, get_road_object_iri
+from cam.etl.qrt import get_road_name_iri
 from cam.etl.types import Row
 from cam.etl.settings import settings
 
 dataset_name = "lalf_address"
 output_dir_name = "lalf-rdf"
 graph_name = URIRef("urn:qali:graph:addresses")
-road_graph_name = URIRef("urn:qali:graph:roads")
 
 SUB_ADDRESS_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/subaddress-types.ttl"
 LEVEL_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/building-level-types.ttl"
-ROAD_NAME_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/TransportNetworks/road-types.ttl"
-ROAD_NAME_SUFFIXES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/GeographicalNames/gn-affix.ttl"
 
 address_class_non_standard_iri = URIRef(
     "https://linked.data.gov.au/def/addr-classes/non-standard"
@@ -97,168 +89,12 @@ LEVEL_NO = "level_no"
 LEVEL_TYPE_CODE = "level_type_code"
 
 
-def transform_road(
-    road_id: str,
-    road_iri: URIRef,
-    ds: Dataset,
-    cursor: Cursor,
-    road_name_types_graph: Graph,
-    road_name_suffixes_graph: Graph,
-):
-    road_type_concept_scheme = URIRef("https://linked.data.gov.au/def/road-types")
-    road_suffix_concept_scheme = URIRef("https://linked.data.gov.au/def/gn-affix")
-
-    # Get road data from LALF road
-    cursor.execute(
-        dedent(
-            """\
-            select r.road_name, r.road_name_type_code, r.road_name_suffix_code, r.qrt_road_name_basic as road_name_full
-            from "lalfpdba.lf_road" r
-            WHERE r.road_id = %s
-            """
-        ),
-        (road_id,),
-    )
-    road_row = cursor.fetchone()
-    if road_row is None:
-        raise Exception(f"Road {road_id} not found")
-
-    ROAD_NAME = "road_name"
-    ROAD_NAME_TYPE_CODE = "road_name_type_code"
-    ROAD_NAME_SUFFIX_CODE = "road_name_suffix_code"
-    ROAD_NAME_FULL = "road_name_full"
-    # Road object
-    road_object_iri = get_road_object_iri(road_id)
-    ds.add((road_object_iri, RDF.type, ROADS.RoadObject, road_graph_name))
-    ds.add(
-        (
-            road_object_iri,
-            SDO.identifier,
-            Literal(road_id, datatype=address_pid_datatype),
-            road_graph_name,
-        )
-    )
-    ds.add((road_object_iri, CN.hasName, road_iri, road_graph_name))
-
-    # Additional property - missing QRT road
-    add_additional_property(
-        road_iri,
-        "missing_qrt_road",
-        True,
-        ds,
-        road_graph_name,
-    )
-    add_additional_property(
-        road_object_iri,
-        "missing_qrt_road",
-        True,
-        ds,
-        road_graph_name,
-    )
-
-    # Road name lifecycle stage
-    bnode = BNode(f"{road_id}-lifecycle-stage")
-    ds.add((road_iri, LC.hasLifecycleStage, bnode, road_graph_name))
-    ds.add((bnode, SDO.additionalType, lifecycle_stage_current, road_graph_name))
-
-    # Name template
-    ds.add(
-        (
-            road_iri,
-            CN.nameTemplate,
-            Literal(f"{{RNPT.roadGivenName}} {{RNPT.roadType}} {{RNPT.roadSuffix}}"),
-            road_graph_name,
-        )
-    )
-
-    # Road given name
-    road_name_value = road_row[ROAD_NAME]
-    if road_name_value:
-        bnode = BNode(f"{road_id}-road-name")
-        ds.add((road_iri, SDO.hasPart, bnode, road_graph_name))
-        ds.add(
-            (
-                bnode,
-                SDO.additionalType,
-                RNPT.roadGivenName,
-                road_graph_name,
-            )
-        )
-        ds.add((bnode, SDO.value, Literal(road_name_value), road_graph_name))
-
-    # Road type
-    road_type_value = road_row[ROAD_NAME_TYPE_CODE]
-    if road_type_value and road_type_value != "XXX":
-        bnode = BNode(f"{road_id}-road-type")
-        ds.add((road_iri, SDO.hasPart, bnode, road_graph_name))
-        ds.add(
-            (
-                bnode,
-                SDO.additionalType,
-                RNPT.roadType,
-                road_graph_name,
-            )
-        )
-
-        concept = get_concept_from_vocab(
-            SKOS.altLabel,
-            Literal(road_type_value, lang="en"),
-            road_type_concept_scheme,
-            road_name_types_graph,
-        )
-        if concept is None:
-            concept = get_concept_from_vocab(
-                SKOS.altLabel,
-                Literal(road_type_value, lang="en-AU"),
-                road_type_concept_scheme,
-                road_name_types_graph,
-            )
-        if not concept:
-            raise Exception(
-                f"Concept IRI not found for road type value '{road_type_value}'"
-            )
-        ds.add((bnode, SDO.value, concept, road_graph_name))
-
-    # Road suffix
-    road_suffix_value = road_row[ROAD_NAME_SUFFIX_CODE]
-    if road_suffix_value:
-        bnode = BNode(f"{road_id}-road-suffix")
-        ds.add((road_iri, SDO.hasPart, bnode, road_graph_name))
-        ds.add(
-            (
-                bnode,
-                SDO.additionalType,
-                RNPT.roadSuffix,
-                road_graph_name,
-            )
-        )
-        concept = get_concept_from_vocab(
-            SKOS.altLabel,
-            Literal(road_suffix_value, lang="en"),
-            road_suffix_concept_scheme,
-            road_name_suffixes_graph,
-        )
-        if not concept:
-            raise Exception(
-                f"Concept IRI not found for road suffix value '{road_suffix_value}'"
-            )
-        ds.add((bnode, SDO.value, concept, road_graph_name))
-
-    # Road name
-    ds.add((road_iri, RDF.type, ROADS.RoadName, road_graph_name))
-    ds.add((road_iri, RDF.type, CN.CompoundName, road_graph_name))
-    ds.add((road_iri, CN.isNameFor, road_object_iri, road_graph_name))
-    ds.add((road_iri, SDO.name, Literal(road_row[ROAD_NAME_FULL]), road_graph_name))
-
-
 @worker_wrap
 def worker(
     rows: list[Row],
     job_id: int,
     sub_address_types_graph: Graph,
     level_types_graph: Graph,
-    road_name_types_graph: Graph,
-    road_name_suffixes_graph: Graph,
 ):
     ds = Dataset(store="Oxigraph")
 
@@ -278,14 +114,6 @@ def worker(
                 addr_iri = get_address_iri(row[ADDR_ID])
                 ds.add((addr_iri, RDF.type, ADDR.Address, graph_name))
                 ds.add((addr_iri, RDF.type, CN.CompoundName, graph_name))
-                ds.add(
-                    (
-                        addr_iri,
-                        SDO.identifier,
-                        Literal(row[ADDR_ID], datatype=address_pid_datatype),
-                        graph_name,
-                    )
-                )
 
                 # link to parcel
                 lot_no = row[LOT_NO]
@@ -695,18 +523,10 @@ def main():
 
     sub_address_types_graph = get_vocab_graph([SUB_ADDRESS_TYPES_VOCAB_URL])
     level_types_graph = get_vocab_graph([LEVEL_TYPES_VOCAB_URL])
-    road_name_types_graph = get_vocab_graph([ROAD_NAME_TYPES_VOCAB_URL])
-    road_name_suffixes_graph = get_vocab_graph([ROAD_NAME_SUFFIXES_VOCAB_URL])
     print(
         f"Remotely fetched {len(sub_address_types_graph)} statements for sub_address_types_graph"
     )
     print(f"Remotely fetched {len(level_types_graph)} statements for level_types_graph")
-    print(
-        f"Remotely fetched {len(road_name_types_graph)} statements for road_name_types_graph"
-    )
-    print(
-        f"Remotely fetched {len(road_name_suffixes_graph)} statements for road_name_suffixes_graph"
-    )
 
     with get_db_connection(
         host=settings.etl.db.host,
@@ -753,8 +573,6 @@ def main():
                             job_id,
                             sub_address_types_graph,
                             level_types_graph,
-                            road_name_types_graph,
-                            road_name_suffixes_graph,
                         )
                     )
 
