@@ -78,16 +78,6 @@ def transform_row(
     ds.add((label_iri, LC.hasLifecycleStage, bnode, graph_name))
     ds.add((bnode, SDO.additionalType, lifecycle_stage_current, graph_name))
 
-    # Name template
-    ds.add(
-        (
-            label_iri,
-            CN.nameTemplate,
-            Literal(f"{{RNPT.roadGivenName}} {{RNPT.roadType}} {{RNPT.roadSuffix}}"),
-            graph_name,
-        )
-    )
-
     # Road Given Name
     road_name_value = row[road_name]
     if road_name_value:

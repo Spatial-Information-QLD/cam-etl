@@ -221,18 +221,6 @@ def add_geographical_name(row: Row, ds: Dataset, vocab_graph: Graph) -> None:
         vocab_graph,
     )
 
-    # Name template
-    ds.add(
-        (
-            label_iri,
-            CN.nameTemplate,
-            Literal(
-                f"{{GNPT.geographicalPrefix}} {{GNPT.geographicalGivenName}} {{GNPT.geographicalSuffix}}"
-            ),
-            graph_name,
-        )
-    )
-
     # Given Name Part
     bnode_given_name = BNode(f"gn-given-name-{row[REFERENCE_NUMBER]}")
     ds.add((label_iri, SDO.hasPart, bnode_given_name, graph_name))

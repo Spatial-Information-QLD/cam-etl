@@ -98,18 +98,6 @@ def worker(
         ds.add((road_iri, LC.hasLifecycleStage, bnode, road_graph_name))
         ds.add((bnode, SDO.additionalType, lifecycle_stage_current, road_graph_name))
 
-        # Name template
-        ds.add(
-            (
-                road_iri,
-                CN.nameTemplate,
-                Literal(
-                    f"{{RNPT.roadGivenName}} {{RNPT.roadType}} {{RNPT.roadSuffix}}"
-                ),
-                road_graph_name,
-            )
-        )
-
         # Road given name
         road_name_value = road_row[ROAD_NAME]
         if road_name_value:
