@@ -47,14 +47,6 @@ def worker(rows: list[Row], job_id: int, vocab_graph: Graph):
         ds.add(
             (
                 parcel_iri,
-                SDO.name,
-                Literal(f"{row[LOT_NO]}{row[PLAN_NO]}"),
-                graph_name,
-            )
-        )
-        ds.add(
-            (
-                parcel_iri,
                 SDO.identifier,
                 Literal(f"{row[LOT_NO]}{row[PLAN_NO]}", datatype=lotplan_datatype),
                 graph_name,
