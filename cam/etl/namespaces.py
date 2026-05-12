@@ -12,7 +12,9 @@ lotplan_datatype = URIRef(
 )
 lot_datatype = URIRef("https://linked.data.gov.au/dataset/qld-addr/datatype/lot")
 plan_datatype = URIRef("https://linked.data.gov.au/dataset/qld-addr/datatype/plan")
-qld_state = URIRef("https://sws.geonames.org/2152274/")
+qld_state = URIRef(
+    "https://linked.data.gov.au/dataset/qld-addr/geographic-name/3136e196-b37f-4a19-b9f2-1fa4c83d1c62"
+)
 aus_country = URIRef("https://sws.geonames.org/2077456/")
 lifecycle_stage_current = URIRef(
     "https://linked.data.gov.au/def/lifecycle-stage-types/current"

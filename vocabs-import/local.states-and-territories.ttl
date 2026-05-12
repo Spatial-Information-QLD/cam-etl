@@ -20,9 +20,9 @@ cs: a skos:ConceptScheme, owl:Ontology ;
     skos:prefLabel "Australian States and Territories" ;
     skos:definition "A SKOS vocabulary of Australian states and territories from GeoNames." ;
     skos:historyNote "Sourced from GeoNames." ;
-    skos:hasTopConcept <https://sws.geonames.org/2152274/> .
+    skos:hasTopConcept <https://linked.data.gov.au/dataset/qld-addr/geographic-name/3136e196-b37f-4a19-b9f2-1fa4c83d1c62> .
 
-<https://sws.geonames.org/2152274/> a skos:Concept ;
+<https://linked.data.gov.au/dataset/qld-addr/geographic-name/3136e196-b37f-4a19-b9f2-1fa4c83d1c62> a skos:Concept ;
     skos:inScheme cs: ;
     skos:prefLabel "Queensland" ;
     skos:definition "State of Queensland." ;
