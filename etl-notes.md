@@ -283,9 +283,21 @@ WHERE r.road_id = result.lf_road_id;
 Add indexes.
 
 ```sql
-CREATE INDEX idx_addr_id ON "lalfpdba.lf_address" (addr_id);
-CREATE INDEX idx_road_id ON "lalfpdba.lf_road" (road_id);
-CREATE INDEX idx_qrt_road_id ON "lalfpdba.lf_road" (qrt_road_id);
+CREATE INDEX IF NOT EXISTS idx_addr_id ON "lalfpdba.lf_address" (addr_id);
+CREATE INDEX IF NOT EXISTS idx_road_id ON "lalfpdba.lf_road" (road_id);
+CREATE INDEX IF NOT EXISTS idx_qrt_road_id ON "lalfpdba.lf_road" (qrt_road_id);
+CREATE INDEX IF NOT EXISTS idx_qrt_spatial_road_name1 ON qrt_spatial (road_name1);
+CREATE INDEX IF NOT EXISTS idx_qrt_spatial_road_id_road_name1 ON qrt_spatial (road_id, road_name1);
+CREATE INDEX IF NOT EXISTS idx_qrt_spatial_alias_1__1 ON qrt_spatial (alias_1__1);
+CREATE INDEX IF NOT EXISTS idx_qrt_spatial_alias_2__1 ON qrt_spatial (alias_2__1);
+CREATE INDEX IF NOT EXISTS idx_qrt_spatial_locality_l_road_name1 ON qrt_spatial (locality_l, road_name1);
+CREATE INDEX IF NOT EXISTS idx_qrt_spatial_locality_r_road_name1 ON qrt_spatial (locality_r, road_name1);
+CREATE INDEX IF NOT EXISTS idx_lf_address_non_historical_road_id
+    ON "lalfpdba.lf_address" (road_id)
+    WHERE addr_status_code <> 'H';
+CREATE INDEX IF NOT EXISTS idx_lf_road_unmatched_qrt
+    ON "lalfpdba.lf_road" (qrt_found, road_id)
+    WHERE qrt_found IS DISTINCT FROM true;
 ```
 
 Processing metadata for `etl_lalf_road_qrt_spatial_match.py`.
@@ -299,11 +311,13 @@ set qrt_found = true
 where qrt_road_id is not null;
 ```
 
+The `etl_lalf_road_qrt_spatial_match.py` script updates `"lalfpdba.lf_road"` directly and marks roads as `qrt_found = false` when an address-level lookup fails. It should not be run as the review step. As of 2026-05-12, the missing-match check below returned 33,958 non-historical address rows across 5,723 LALF roads. Of these, 33,881 address rows were on roads already marked `qrt_found = false`, so rerunning the script without resetting state would skip almost all current misses.
+
 Run the `etl_lalf_road_qrt_spatial_match.py` script to spatially match the remaining roads to QRT.
 
 Note: this may take around an hour to run.
 
-```
+```bash
 uv run etl_lalf_road_qrt_spatial_match.py
 ```
 
@@ -326,7 +340,7 @@ group by a.addr_id
 having count(r.road_id) > 1
 ```
 
-Once everything has been applied, running the following query should return the same count as what's in the `lf_address` table where status is not 'H'.
+Once everything has been applied, running the following query should return the same count as what's in the `lf_address` table where status is not 'H'. This confirms that the joins preserve the non-historical address row count. It does not confirm that every address-linked `lf_road` has a matching QRT road, because the QRT join is a `LEFT JOIN`.
 
 ```sql
 select count(*)
@@ -350,7 +364,40 @@ LEFT JOIN qrt_road q ON q.road_id_1 = r.qrt_road_id
 WHERE a.addr_status_code != 'H'
 ```
 
-If the above two queries return the same count, it means all addresses match to a QRT road. If the second query returns a higher count, run the following query to see which addresses have duplicate QRT matches.
+To check whether any `lf_road` records referenced by non-historical addresses are missing a QRT match, run the following query.
+
+```sql
+WITH qrt_road AS (
+    SELECT DISTINCT
+        road_id AS road_id_1,
+        road_name1
+    FROM qrt_spatial
+)
+SELECT
+    r.road_id,
+    r.qrt_road_id,
+    r.qrt_road_name_basic,
+    r.locality_code,
+    count(DISTINCT a.addr_id) AS non_historical_address_count
+FROM "lalfpdba.lf_address" a
+JOIN "lalfpdba.lf_site" s ON a.site_id = s.site_id
+JOIN "lalfpdba.lf_parcel" p ON s.parcel_id = p.parcel_id
+LEFT JOIN "lalfpdba.lf_road" r ON r.road_id = a.road_id
+LEFT JOIN qrt_road q
+    ON q.road_id_1 = r.qrt_road_id
+   AND q.road_name1 = r.qrt_road_name_basic
+WHERE a.addr_status_code != 'H'
+  AND r.road_id IS NOT NULL
+  AND q.road_id_1 IS NULL
+GROUP BY
+    r.road_id,
+    r.qrt_road_id,
+    r.qrt_road_name_basic,
+    r.locality_code
+ORDER BY non_historical_address_count DESC, r.road_id;
+```
+
+If the row-count query returns a higher count than the base `lf_address` count, run the following query to see which addresses have duplicate QRT matches.
 
 ```sql
 -- Check for duplicate rows for an addr_id. This query usually surfaces the different variations of qrt road_name_full_1 values.
