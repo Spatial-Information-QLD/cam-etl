@@ -76,8 +76,8 @@ If the transfer is interrupted, you can resume it using the `-P` flag.
 Unzip the file into a staging directory on the remote server.
 
 ```sh
-mkdir -p /data/fuseki-data-transfer
-cd /data/fuseki-data-transfer
+mkdir -p /data/transfer
+cd /data/transfer
 unzip /data/fuseki-data.zip
 ```
 
@@ -99,8 +99,8 @@ Copy the generated database and generated full-text index into the Fuseki data d
 ```sh
 sudo mkdir -p /data/fuseki-data/databases
 sudo mkdir -p /data/fuseki-data/run/databases
-sudo cp -R /data/fuseki-data-transfer/fuseki-data/databases/ds /data/fuseki-data/databases/ds
-sudo cp -R /data/fuseki-data-transfer/fuseki-data/run/databases/ds_lucene_index /data/fuseki-data/run/databases/ds_lucene_index
+sudo cp -R /data/transfer/fuseki-data/databases/ds /data/fuseki-data/databases/ds
+sudo cp -R /data/transfer/fuseki-data/run/databases/ds_lucene_index /data/fuseki-data/run/databases/ds_lucene_index
 ```
 
 This copies the data generated locally while leaving the remote `fuseki-data/configuration`, `shiro.ini`, logs, backups, templates, and system files unchanged.
@@ -111,6 +111,12 @@ If the Fuseki service expects a specific owner or group for `/data/fuseki-data`,
 ls -ld /data/fuseki-data
 ls -ld /data/fuseki-data/databases/ds
 ls -ld /data/fuseki-data/run/databases/ds_lucene_index
+```
+
+In most cases, just do:
+
+```sh
+sudo chown -R ubuntu:ubuntu /data/fuseki-data
 ```
 
 Start the database.
