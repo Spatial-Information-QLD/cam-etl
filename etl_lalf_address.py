@@ -8,8 +8,8 @@ from rdflib import (
     Dataset,
     Graph,
     URIRef,
-    RDF,
     Literal,
+    RDF,
     SDO,
     TIME,
     XSD,
@@ -39,7 +39,6 @@ from cam.etl.namespaces import (
     aus_country,
     qld_state,
 )
-from cam.etl.pndb import get_geographical_name_iri
 from cam.etl.qrt import get_road_name_iri
 from cam.etl.types import Row
 from cam.etl.settings import settings
@@ -48,8 +47,8 @@ dataset_name = "lalf_address"
 output_dir_name = "lalf-rdf"
 graph_name = URIRef("urn:qali:graph:addresses")
 
-SUB_ADDRESS_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/subaddress-types.ttl"
-LEVEL_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@main/vocabs/Addresses/building-level-types.ttl"
+SUB_ADDRESS_TYPES_VOCAB_URL = "https://raw.githubusercontent.com/icsm-au/icsm-vocabs/main/vocabs/Addresses/subaddress-types.ttl"
+LEVEL_TYPES_VOCAB_URL = "https://raw.githubusercontent.com/icsm-au/icsm-vocabs/main/vocabs/Addresses/building-level-types.ttl"
 
 address_class_non_standard_iri = URIRef(
     "https://linked.data.gov.au/def/addr-classes/non-standard"
@@ -64,6 +63,22 @@ address_class_unknown_iri = URIRef(
     "https://linked.data.gov.au/def/addr-classes/unknown"
 )
 address_class_water_iri = URIRef("https://linked.data.gov.au/def/addr-classes/water")
+informal_locality_name_iris = {
+    "LGA_3034": URIRef(
+        "https://linked.data.gov.au/dataset/qld-addr/geographic-name/13565322-ec74-594f-95cb-1eb6c34d3772"
+    ),
+    "LGA_3128": URIRef(
+        "https://linked.data.gov.au/dataset/qld-addr/geographic-name/dc717f7a-73f8-5d41-8918-8627401ff10c"
+    ),
+    "LGA_4008": URIRef(
+        "https://linked.data.gov.au/dataset/qld-addr/geographic-name/125f4533-46d1-5ebc-9603-7e027b6ab538"
+    ),
+}
+informal_locality_labels = {
+    "LGA_3034": "CORAL SEA",
+    "LGA_3128": "CORAL SEA",
+    "LGA_4008": "CORAL SEA",
+}
 
 ADDR_ID = "addr_id"
 ADDR_STANDARD_CODE = "addr_standard_code"
@@ -71,8 +86,9 @@ LOT_NO = "lot_no"
 PLAN_NO = "plan_no"
 ADDR_STATUS_CODE = "addr_status_code"
 ADDR_CREATE_DATE = "addr_create_date"
-LOCALITY_REF_NO = "locality_ref_no"
+LOCALITY_IRI = "locality_iri"
 LOCALITY_NAME = "locality_name"
+LOCALITY_CODE = "locality_code"
 ROAD_ID = "road_id_1"
 LALF_ROAD_ID = "road_id"
 ROAD_NAME_FULL_1 = "road_name_full_1"
@@ -239,7 +255,15 @@ def worker(
         # TODO:
 
         # locality
-        locality_iri = get_geographical_name_iri(row[LOCALITY_REF_NO])
+        if row[LOCALITY_IRI]:
+            locality_iri = URIRef(row[LOCALITY_IRI])
+        elif row[LOCALITY_CODE] in informal_locality_name_iris:
+            locality_iri = informal_locality_name_iris[row[LOCALITY_CODE]]
+        else:
+            raise Exception(
+                f"No PNDB locality IRI matched for address {row[ADDR_ID]} "
+                f"and road locality code {row[LOCALITY_CODE]}."
+            )
         locality_node = BNode(f"{addr_id_uuid}-locality")
         ds.add((addr_iri, SDO.hasPart, locality_node, graph_name))
         ds.add((locality_node, SDO.additionalType, ADDR_PT.locality, graph_name))
@@ -254,7 +278,7 @@ def worker(
             add_additional_property(
                 addr_iri,
                 "missing_qrt_road",
-                True,
+                "true",
                 ds,
                 graph_name,
             )
@@ -477,7 +501,12 @@ def worker(
 
         # rdfs:label
         road_name = row[ROAD_NAME_FULL_1] or row[LALF_ROAD_NAME]
-        label = f"{level_type_label if level_type_code else ''} {level_no}{level_suffix} {unit_type_label + ' ' if unit_type_code else ''}{unit_no}{unit_suffix}{'/' if unit_no else ''}{street_no_first}{'-' + street_no_last if street_no_last else ''}{street_no_last_suffix} {road_name}, {row[LOCALITY_NAME]}, Queensland, Australia".strip()
+        locality_name = (
+            row[LOCALITY_NAME]
+            if row[LOCALITY_IRI]
+            else informal_locality_labels.get(row[LOCALITY_CODE], row[LOCALITY_CODE])
+        )
+        label = f"{level_type_label if level_type_code else ''} {level_no}{level_suffix} {unit_type_label + ' ' if unit_type_code else ''}{unit_no}{unit_suffix}{'/' if unit_no else ''}{street_no_first}{'-' + street_no_last if street_no_last else ''}{street_no_last_suffix} {road_name}, {locality_name}, Queensland, Australia".strip()
         ds.add(
             (
                 addr_iri,
@@ -518,12 +547,26 @@ def main():
                         SELECT DISTINCT road_id as road_id_1, road_name_ as road_name_full_1, road_name1
                         FROM qrt_spatial
                     )
-                    SELECT p.lot_no, l."pndb.ref_no" as locality_ref_no, l."pndb.place_name" as locality_name, l."pndb.lga_name" as lga_name, r.road_id, r.road_name as lalf_road_name, r.qrt_road_name_basic, r.qrt_road_id as road_id_1, r.qrt_road_name_basic as road_name_basic_1, q.road_name_full_1, p.plan_no, a.*
+                    SELECT
+                        p.lot_no,
+                        qli."geoNameObj" as locality_iri,
+                        COALESCE(qli."geoNameClean", r.locality_code) as locality_name,
+                        qli."lgaName" as lga_name,
+                        r.locality_code,
+                        r.road_id,
+                        r.road_name as lalf_road_name,
+                        r.qrt_road_name_basic,
+                        r.qrt_road_id as road_id_1,
+                        r.qrt_road_name_basic as road_name_basic_1,
+                        q.road_name_full_1,
+                        p.plan_no,
+                        a.*
                     FROM "lalfpdba.lf_address" a
                     JOIN "lalfpdba.lf_site" s ON a.site_id = s.site_id
                     JOIN "lalfpdba.lf_parcel" p ON s.parcel_id = p.parcel_id
                     LEFT JOIN "lalfpdba.lf_road" r ON r.road_id = a.road_id
                     LEFT JOIN lalf_pndb_localities_joined l ON r.locality_code = l."lalf.locality_code"
+                    LEFT JOIN qali_locality_iris qli ON l."pndb.ref_no" = qli.ref_no
                     LEFT JOIN qrt_road q ON q.road_id_1 = r.qrt_road_id 
                         AND q.road_name1 = r.qrt_road_name_basic
                     WHERE a.addr_status_code != 'H'

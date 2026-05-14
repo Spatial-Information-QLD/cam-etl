@@ -38,8 +38,8 @@ dataset_name = "lalf_road_missing_qrt"
 output_dir_name = "lalf-rdf"
 road_graph_name = URIRef("urn:qali:graph:roads")
 
-ROAD_NAME_TYPES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@c0b59a51f09d1ae4b0a337f0a10747c45b1d44d3/vocabs/TransportNetworks/road-types.ttl"
-ROAD_NAME_SUFFIXES_VOCAB_URL = "https://cdn.jsdelivr.net/gh/icsm-au/icsm-vocabs@f5650d07288b4879620be924042c73b6dae881e3/vocabs/GeographicalNames/gn-affix.ttl"
+ROAD_NAME_TYPES_VOCAB_URL = "https://raw.githubusercontent.com/icsm-au/icsm-vocabs/c0b59a51f09d1ae4b0a337f0a10747c45b1d44d3/vocabs/TransportNetworks/road-types.ttl"
+ROAD_NAME_SUFFIXES_VOCAB_URL = "https://raw.githubusercontent.com/icsm-au/icsm-vocabs/f5650d07288b4879620be924042c73b6dae881e3/vocabs/GeographicalNames/gn-affix.ttl"
 
 ROAD_ID = "road_id"
 ROAD_NAME = "road_name"
@@ -81,14 +81,14 @@ def worker(
         add_additional_property(
             road_iri,
             "missing_qrt_road",
-            True,
+            "true",
             ds,
             road_graph_name,
         )
         add_additional_property(
             road_object_iri,
             "missing_qrt_road",
-            True,
+            "true",
             ds,
             road_graph_name,
         )

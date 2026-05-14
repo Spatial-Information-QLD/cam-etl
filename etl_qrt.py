@@ -29,8 +29,8 @@ dataset_name = "qrt"
 output_dir_name = "qrt-rdf"
 graph_name = URIRef("urn:qali:graph:roads")
 
-ROAD_TYPES_URL = "https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@9fa34d76fc0a27d711d8030b934c2c83dd378156/vocabularies-qsi/road-types.ttl"
-GN_AFFIX_URL = "https://cdn.jsdelivr.net/gh/geological-survey-of-queensland/vocabularies@b07763c87f2f872133197e6fb0eb911de85879c6/vocabularies-qsi/gn-affix.ttl"
+ROAD_TYPES_URL = "https://raw.githubusercontent.com/geological-survey-of-queensland/vocabularies/9fa34d76fc0a27d711d8030b934c2c83dd378156/vocabularies-qsi/road-types.ttl"
+GN_AFFIX_URL = "https://raw.githubusercontent.com/geological-survey-of-queensland/vocabularies/b07763c87f2f872133197e6fb0eb911de85879c6/vocabularies-qsi/gn-affix.ttl"
 
 
 def get_locality_iri(value: str):

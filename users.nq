@@ -1,0 +1,89 @@
+<urn:qali:usergroup:system-admin> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/UserGroup> <urn:qali:graph:users> .
+<urn:qali:usergroup:system-admin> <https://schema.org/name> "System Admin User Group" <urn:qali:graph:users> .
+<urn:qali:usergroup:system-admin> <https://schema.org/description> "Members of this group have read & write permissions on the whole system" <urn:qali:graph:users> .
+<urn:qali:usergroup:admin> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/UserGroup> <urn:qali:graph:users> .
+<urn:qali:usergroup:admin> <https://schema.org/name> "Admin User Group" <urn:qali:graph:users> .
+<urn:qali:usergroup:admin> <https://schema.org/description> "Members of this group have read & write permissions on all resource types" <urn:qali:graph:users> .
+<urn:qali:usergroup:address-reader> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/UserGroup> <urn:qali:graph:users> .
+<urn:qali:usergroup:address-reader> <https://schema.org/name> "Address Reader User Group" <urn:qali:graph:users> .
+<urn:qali:usergroup:address-reader> <https://schema.org/description> "Members of this group have read permissions on addresses" <urn:qali:graph:users> .
+<urn:qali:usergroup:address-editor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/UserGroup> <urn:qali:graph:users> .
+<urn:qali:usergroup:address-editor> <https://schema.org/name> "Address Editor User Group" <urn:qali:graph:users> .
+<urn:qali:usergroup:address-editor> <https://schema.org/description> "Members of this group have read & write permissions on addresses" <urn:qali:graph:users> .
+<urn:qali:usergroup:road-reader> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/UserGroup> <urn:qali:graph:users> .
+<urn:qali:usergroup:road-reader> <https://schema.org/name> "Road Reader User Group" <urn:qali:graph:users> .
+<urn:qali:usergroup:road-reader> <https://schema.org/description> "Members of this group have read permissions on roads" <urn:qali:graph:users> .
+<urn:qali:usergroup:road-editor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/UserGroup> <urn:qali:graph:users> .
+<urn:qali:usergroup:road-editor> <https://schema.org/name> "Road Editor User Group" <urn:qali:graph:users> .
+<urn:qali:usergroup:road-editor> <https://schema.org/description> "Members of this group have read & write permissions on roads" <urn:qali:graph:users> .
+<urn:qali:usergroup:geographical-names-editor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/UserGroup> <urn:qali:graph:users> .
+<urn:qali:usergroup:geographical-names-editor> <https://schema.org/name> "Geographical Name Editor User Group" <urn:qali:graph:users> .
+<urn:qali:usergroup:geographical-names-editor> <https://schema.org/description> "Members of this group have read & write permissions on geographical names" <urn:qali:graph:users> .
+<urn:qali:usergroup:geographical-names-reader> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/UserGroup> <urn:qali:graph:users> .
+<urn:qali:usergroup:geographical-names-reader> <https://schema.org/name> "Geographical Name Reader User Group" <urn:qali:graph:users> .
+<urn:qali:usergroup:geographical-names-reader> <https://schema.org/description> "Members of this group have read permissions on geographical names" <urn:qali:graph:users> .
+<urn:qali:usergroup:tags-editor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/UserGroup> <urn:qali:graph:users> .
+<urn:qali:usergroup:tags-editor> <https://schema.org/name> "Tags Editor User Group" <urn:qali:graph:users> .
+<urn:qali:usergroup:tags-editor> <https://schema.org/description> "Members of this group have read & write permissions on tags" <urn:qali:graph:users> .
+<urn:qali:usergroup:tags> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/UserGroup> <urn:qali:graph:users> .
+<urn:qali:usergroup:tags> <https://schema.org/name> "Tags User Group" <urn:qali:graph:users> .
+<urn:qali:usergroup:tags> <https://schema.org/description> "Members of this group have read & write permissions on tags" <urn:qali:graph:users> .
+<urn:qali:user:d3e2d033-898f-4a07-bd34-a504b3bf4a05> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/User> <urn:qali:graph:users> .
+<urn:qali:user:d3e2d033-898f-4a07-bd34-a504b3bf4a05> <https://schema.org/name> "Admin User" <urn:qali:graph:users> .
+<urn:qali:user:d3e2d033-898f-4a07-bd34-a504b3bf4a05> <https://schema.org/email> "admin@example.com" <urn:qali:graph:users> .
+<urn:qali:user:d3e2d033-898f-4a07-bd34-a504b3bf4a05> <https://olis.dev/hashedPassword> "$argon2id$v=19$m=65536,t=3,p=4$+WRoo4oaAZhX57VSxPStZQ$oq+w3LNRAslxdsq4fru6KVOW+EtBb2kf8VcON9CXhGA" <urn:qali:graph:users> .
+<urn:qali:user:d3e2d033-898f-4a07-bd34-a504b3bf4a05> <https://olis.dev/changePasswordOnNextLogin> "false"^^<http://www.w3.org/2001/XMLSchema#boolean> <urn:qali:graph:users> .
+<urn:qali:user:d3e2d033-898f-4a07-bd34-a504b3bf4a05> <https://schema.org/memberOf> <urn:qali:usergroup:admin> <urn:qali:graph:users> .
+<urn:qali:user:d3e2d033-898f-4a07-bd34-a504b3bf4a05> <https://schema.org/memberOf> <urn:qali:usergroup:sparql> <urn:qali:graph:users> .
+<urn:qali:usergroup:sparql> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/UserGroup> <urn:qali:graph:users> .
+<urn:qali:usergroup:sparql> <https://schema.org/name> "SPARQL read User Group" <urn:qali:graph:users> .
+<urn:qali:usergroup:sparql> <https://schema.org/description> "Members of this group can read from the SPARQL endpoint" <urn:qali:graph:users> .
+<urn:qali:usergroup:sparql-update> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/UserGroup> <urn:qali:graph:users> .
+<urn:qali:usergroup:sparql-update> <https://schema.org/name> "SPARQL update User Group" <urn:qali:graph:users> .
+<urn:qali:usergroup:sparql-update> <https://schema.org/description> "Members of this group can submit SPARQL update requests" <urn:qali:graph:users> .
+<urn:qali:user:b5e43665-bd0f-4e45-8e55-8e9d89898b55> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/User> <urn:qali:graph:users> .
+<urn:qali:user:b5e43665-bd0f-4e45-8e55-8e9d89898b55> <https://schema.org/name> "Ashlee Poeppmann" <urn:qali:graph:users> .
+<urn:qali:user:b5e43665-bd0f-4e45-8e55-8e9d89898b55> <https://schema.org/email> "ashlee.poeppmann@nrmmrrd.qld.gov.au" <urn:qali:graph:users> .
+<urn:qali:user:b5e43665-bd0f-4e45-8e55-8e9d89898b55> <https://olis.dev/hashedPassword> "$argon2id$v=19$m=65536,t=3,p=4$5Hxcf6UNTA2EA0TBLaJ0FQ$+fU2Q6m3yp4MZm/pJhI4p45DtJp9/FDnbuAB0QWvS3M" <urn:qali:graph:users> .
+<urn:qali:user:b5e43665-bd0f-4e45-8e55-8e9d89898b55> <https://olis.dev/changePasswordOnNextLogin> "false"^^<http://www.w3.org/2001/XMLSchema#boolean> <urn:qali:graph:users> .
+<urn:qali:user:b5e43665-bd0f-4e45-8e55-8e9d89898b55> <https://schema.org/memberOf> <urn:qali:usergroup:admin> <urn:qali:graph:users> .
+<urn:qali:user:b5e43665-bd0f-4e45-8e55-8e9d89898b55> <https://schema.org/memberOf> <urn:qali:usergroup:sparql> <urn:qali:graph:users> .
+<urn:qali:user:d874dd64-60fe-4327-b143-ce7c455c16fb> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/User> <urn:qali:graph:users> .
+<urn:qali:user:d874dd64-60fe-4327-b143-ce7c455c16fb> <https://schema.org/name> "Bryan Johnstone" <urn:qali:graph:users> .
+<urn:qali:user:d874dd64-60fe-4327-b143-ce7c455c16fb> <https://schema.org/email> "Bryan.Johnstone@nrmmrrd.qld.gov.au" <urn:qali:graph:users> .
+<urn:qali:user:d874dd64-60fe-4327-b143-ce7c455c16fb> <https://olis.dev/hashedPassword> "$argon2id$v=19$m=65536,t=3,p=4$du1qRBMnxOm2VpdyKaKIQw$kYkl2VnxeDJTp1XeGUkl9dUonGgeBVvN2+TQF52k8mE" <urn:qali:graph:users> .
+<urn:qali:user:d874dd64-60fe-4327-b143-ce7c455c16fb> <https://olis.dev/changePasswordOnNextLogin> "false"^^<http://www.w3.org/2001/XMLSchema#boolean> <urn:qali:graph:users> .
+<urn:qali:user:d874dd64-60fe-4327-b143-ce7c455c16fb> <https://schema.org/memberOf> <urn:qali:usergroup:admin> <urn:qali:graph:users> .
+<urn:qali:user:d874dd64-60fe-4327-b143-ce7c455c16fb> <https://schema.org/memberOf> <urn:qali:usergroup:address-reader> <urn:qali:graph:users> .
+<urn:qali:user:d874dd64-60fe-4327-b143-ce7c455c16fb> <https://schema.org/memberOf> <urn:qali:usergroup:address-editor> <urn:qali:graph:users> .
+<urn:qali:user:d874dd64-60fe-4327-b143-ce7c455c16fb> <https://schema.org/memberOf> <urn:qali:usergroup:road-reader> <urn:qali:graph:users> .
+<urn:qali:user:d874dd64-60fe-4327-b143-ce7c455c16fb> <https://schema.org/memberOf> <urn:qali:usergroup:road-editor> <urn:qali:graph:users> .
+<urn:qali:user:d874dd64-60fe-4327-b143-ce7c455c16fb> <https://schema.org/memberOf> <urn:qali:usergroup:geographical-names-editor> <urn:qali:graph:users> .
+<urn:qali:user:d874dd64-60fe-4327-b143-ce7c455c16fb> <https://schema.org/memberOf> <urn:qali:usergroup:geographical-names-reader> <urn:qali:graph:users> .
+<urn:qali:user:d874dd64-60fe-4327-b143-ce7c455c16fb> <https://schema.org/memberOf> <urn:qali:usergroup:sparql> <urn:qali:graph:users> .
+<urn:qali:user:3bc16493-0afb-4f84-ac5d-4f9111f56df2> <https://olis.dev/hashedPassword> "$argon2id$v=19$m=65536,t=3,p=4$XrHnLeQHi8m8+3CzjZbcPg$5xFp0x5j1kSgigXYw14+EeHrdK6Tm7k/r1cQ+eaizkE" <urn:qali:graph:users> .
+<urn:qali:user:8dfc2dd5-7c6c-4917-9cd3-a30ddb75117b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/User> <urn:qali:graph:users> .
+<urn:qali:user:8dfc2dd5-7c6c-4917-9cd3-a30ddb75117b> <https://schema.org/name> "Michael Elliott-Smith" <urn:qali:graph:users> .
+<urn:qali:user:8dfc2dd5-7c6c-4917-9cd3-a30ddb75117b> <https://schema.org/email> "Michael.Elliott-Smith@nrmmrrd.qld.gov.au" <urn:qali:graph:users> .
+<urn:qali:user:8dfc2dd5-7c6c-4917-9cd3-a30ddb75117b> <https://olis.dev/hashedPassword> "$argon2id$v=19$m=65536,t=3,p=4$BNj7L+bqA31VFTggDaKfUQ$RPjIVY12NFO0IdXoaDe1usxzAyyLv1CKX7bPvUmdLvU" <urn:qali:graph:users> .
+<urn:qali:user:8dfc2dd5-7c6c-4917-9cd3-a30ddb75117b> <https://olis.dev/changePasswordOnNextLogin> "false"^^<http://www.w3.org/2001/XMLSchema#boolean> <urn:qali:graph:users> .
+<urn:qali:user:8dfc2dd5-7c6c-4917-9cd3-a30ddb75117b> <https://schema.org/memberOf> <urn:qali:usergroup:admin> <urn:qali:graph:users> .
+<urn:qali:user:8dfc2dd5-7c6c-4917-9cd3-a30ddb75117b> <https://schema.org/memberOf> <urn:qali:usergroup:address-editor> <urn:qali:graph:users> .
+<urn:qali:user:8dfc2dd5-7c6c-4917-9cd3-a30ddb75117b> <https://schema.org/memberOf> <urn:qali:usergroup:road-editor> <urn:qali:graph:users> .
+<urn:qali:user:8dfc2dd5-7c6c-4917-9cd3-a30ddb75117b> <https://schema.org/memberOf> <urn:qali:usergroup:geographical-names-editor> <urn:qali:graph:users> .
+<urn:qali:user:8dfc2dd5-7c6c-4917-9cd3-a30ddb75117b> <https://schema.org/memberOf> <urn:qali:usergroup:tags-editor> <urn:qali:graph:users> .
+<urn:qali:user:8dfc2dd5-7c6c-4917-9cd3-a30ddb75117b> <https://schema.org/memberOf> <urn:qali:usergroup:sparql> <urn:qali:graph:users> .
+<urn:qali:user:5f10ec25-dcaa-4d22-bf71-9996b85e09f2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/User> <urn:qali:graph:users> .
+<urn:qali:user:5f10ec25-dcaa-4d22-bf71-9996b85e09f2> <https://schema.org/name> "Alexander Harlow" <urn:qali:graph:users> .
+<urn:qali:user:5f10ec25-dcaa-4d22-bf71-9996b85e09f2> <https://schema.org/email> "alexander.harlow@nrmmrrd.qld.gov.au" <urn:qali:graph:users> .
+<urn:qali:user:5f10ec25-dcaa-4d22-bf71-9996b85e09f2> <https://olis.dev/hashedPassword> "$argon2id$v=19$m=65536,t=3,p=4$B70b4bSqhqHDRnTN87Dbew$6lQ5NYgbi+gfvvHe/PleO2bEmScbmqnJqVd96TbdCJE" <urn:qali:graph:users> .
+<urn:qali:user:5f10ec25-dcaa-4d22-bf71-9996b85e09f2> <https://olis.dev/changePasswordOnNextLogin> "false"^^<http://www.w3.org/2001/XMLSchema#boolean> <urn:qali:graph:users> .
+<urn:qali:user:5f10ec25-dcaa-4d22-bf71-9996b85e09f2> <https://schema.org/memberOf> <urn:qali:usergroup:admin> <urn:qali:graph:users> .
+<urn:qali:user:5f10ec25-dcaa-4d22-bf71-9996b85e09f2> <https://schema.org/memberOf> <urn:qali:usergroup:sparql> <urn:qali:graph:users> .
+<urn:qali:user:0ace2494-9831-408f-959a-7214e3db55d9> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://olis.dev/User> <urn:qali:graph:users> .
+<urn:qali:user:0ace2494-9831-408f-959a-7214e3db55d9> <https://schema.org/name> "QALI Admin Account" <urn:qali:graph:users> .
+<urn:qali:user:0ace2494-9831-408f-959a-7214e3db55d9> <https://schema.org/email> "AddressQueensland@nrmmrrd.qld.gov.au" <urn:qali:graph:users> .
+<urn:qali:user:0ace2494-9831-408f-959a-7214e3db55d9> <https://olis.dev/hashedPassword> "$argon2id$v=19$m=65536,t=3,p=4$Ozi7A26kDv3dzUMaC72AAg$s7lahBqcSOtBJfpOADnPFEWE9yb1zejHop3CNHqquQ0" <urn:qali:graph:users> .
+<urn:qali:user:0ace2494-9831-408f-959a-7214e3db55d9> <https://olis.dev/changePasswordOnNextLogin> "false"^^<http://www.w3.org/2001/XMLSchema#boolean> <urn:qali:graph:users> .
+<urn:qali:user:0ace2494-9831-408f-959a-7214e3db55d9> <https://schema.org/memberOf> <urn:qali:usergroup:admin> <urn:qali:graph:users> .
+<urn:qali:user:0ace2494-9831-408f-959a-7214e3db55d9> <https://schema.org/memberOf> <urn:qali:usergroup:sparql> <urn:qali:graph:users> .

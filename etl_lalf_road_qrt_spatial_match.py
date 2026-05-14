@@ -36,7 +36,7 @@ def get_addresses(cursor: Cursor) -> list[Row]:
         select a.addr_id, r.road_id, r.qrt_road_name_basic, r.qrt_road_id, l."lalf.locality_name"
         from "lalfpdba.lf_address" a
         join "lalfpdba.lf_road" r on a.road_id = r.road_id
-        JOIN lalf_pndb_localities_joined l ON r.locality_code = l."lalf.locality_code"
+        LEFT JOIN lalf_pndb_localities_joined l ON r.locality_code = l."lalf.locality_code"
         where
             a.addr_status_code != 'H'
             and r.qrt_found is null

@@ -1,6 +1,7 @@
 from pathlib import Path
 from functools import wraps
 from contextlib import contextmanager
+from datetime import date
 from typing import Iterator
 
 import psycopg
@@ -74,7 +75,7 @@ def get_concept_from_vocab(
 def add_additional_property(
     focus_node: URIRef | BNode,
     property_key: str,
-    property_value: str,
+    property_value: object,
     graph: Dataset,
     graph_name: URIRef,
 ):
@@ -86,5 +87,7 @@ def add_additional_property(
     safe_id = f"_bnode{hash(str(focus_node) + property_key)}"
     bnode = BNode(safe_id)
     graph.add((focus_node, SDO.additionalProperty, bnode, graph_name))
-    graph.add((bnode, SDO.propertyID, Literal(property_key), graph_name))
-    graph.add((bnode, SDO.value, Literal(property_value), graph_name))
+    graph.add((bnode, SDO.propertyID, Literal(str(property_key)), graph_name))
+    if isinstance(property_value, date):
+        property_value = property_value.isoformat()
+    graph.add((bnode, SDO.value, Literal(str(property_value)), graph_name))

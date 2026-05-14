@@ -23,6 +23,65 @@ docker compose exec -T postgres psql -U postgres -d postgres -c "CREATE DATABASE
 docker compose exec -T postgres psql -U postgres -d lalfdb -c "CREATE EXTENSION postgis;"
 ```
 
+### Mapping LALF Addresses to PNDB Localities
+
+The PNDB geographical names and objects are loaded in a separate process. We no longer convert those PNDB records here.
+
+After the PNDB geographical names and objects have been loaded, run the following SPARQL query to fetch gazetted locality records. Load the results into Postgres as the `qali_locality_iris` table, then use this table to join `locality_ref_no` with `ref_no` in `qali_locality_iris`.
+
+```sparql
+# Returns list of locality names (stripped of LGA suffix in brackets), csip locality code, lga name
+PREFIX sdo: <https://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX cn: <https://linked.data.gov.au/def/cn/>
+PREFIX lm: <https://linked.data.gov.au/def/lifecycle/>
+PREFIX gnst: <https://linked.data.gov.au/def/gn-statuses/>
+PREFIX time: <http://www.w3.org/2006/time#>
+PREFIX lc: <https://linked.data.gov.au/def/lifecycle-stage-types/>
+
+SELECT DISTINCT ?geoObj ?geoNameObj ?geoName ?geoNameClean ?cispLocalityCode ?lgaName ?lcstage ?ref_no
+WHERE {
+    GRAPH <urn:qali:graph:geographical-names> {
+    # Identify objects of type GeographicalObject and locality
+    ?geoObj rdf:type <https://linked.data.gov.au/def/gn/GeographicalObject> ;
+            sdo:additionalType <https://linked.data.gov.au/def/go-categories/locality> ;
+            cn:hasName ?geoNameObj ;
+            sdo:identifier ?ref_no .
+
+    # Check if the geoNameObj has a lifecycle stage of "gazetted"
+        # This method executes faster, but doesn't account for the lifecycle
+        # ?geoNameObj lm:hasLifecycleStage ?lifecycleStage .
+        # ?lifecycleStage sdo:additionalType <https://linked.data.gov.au/def/gn-statuses/gazetted> .
+    ?geoNameObj lm:hasLifecycleStage/sdo:additionalType gnst:gazetted . # Ensures only gazetted names are returned
+    ?geoNameObj lm:hasLifecycleStage/sdo:additionalType ?lcstage . # Ensures only gazetted names are returned
+    FILTER NOT EXISTS {
+          #?geoNameObj lm:hasLifecycleStage/time:hasEnd/time:inXSDDate ?endDate . # This would ensure the result does not have an End date in its lifecycle, however the graph data does not contain this property
+          ?geoNameObj lm:hasLifecycleStage/sdo:additionalType lc:retired . # Ensures result does not have a retired stage in its lifecycle
+        }
+
+    # Retrieve the sdo:name assigned to the geoNameObj
+    ?geoNameObj sdo:name ?geoName .
+
+    # Traverse the additionalProperty blank node and directly match propertyID to get the CISP locality code
+    ?geoNameObj sdo:additionalProperty ?additionalPropertyNode .
+    ?additionalPropertyNode sdo:value ?cispLocalityCode ;
+                            sdo:propertyID "lalf.locality_code" .
+
+    # As prior, this time to get the LGA Name.
+    # Optional to account for PNDB points that lie outside of a LGA, thus have no LGA attribute
+    OPTIONAL{
+        ?geoNameObj sdo:additionalProperty ?apn2 .
+            ?apn2 sdo:value ?lgaName ;
+                sdo:propertyID "pndb.lga_name" .
+    } .
+
+    # Clean the geoName attribute to strip LGA names
+    BIND(REPLACE(?geoName, "\\s*\\(.*?\\)", "") AS ?geoNameClean)
+    }
+} ORDER BY ?lgaName
+LIMIT 4000
+```
+
 ## QRT - Queensland Roads and Tracks
 
 ~~Download QRT v2, a new dataset schema created by Anne Goldsack from [R-SI CAM Project Board > General > Stage 3 - Location Addressing Rollout > Legacy DB exports](https://itpqld.sharepoint.com.mcas.ms/sites/R-SICAMProjectBoard/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FR%2DSICAMProjectBoard%2FShared%20Documents%2FGeneral%2FStage%203%20%2D%20Location%20Addressing%20Rollout%2FLegacy%20DB%20exports&viewid=d8225c45%2D5e3a%2D4dda%2Db296%2Db01e4ae1eb77).~~

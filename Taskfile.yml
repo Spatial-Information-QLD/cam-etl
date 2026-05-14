@@ -115,12 +115,15 @@ tasks:
         /bin/bash -c 'tdb2.xloader --threads 10 --loc /home/fuseki-data/databases/ds /home/fuseki-import/*.nq'
 
   fuseki:qali:tdb2:zip:
-    desc: Package the standalone TDB2 export for transfer.
-    cmd: |
-      set -euo pipefail
-      test -d new-fuseki-data/databases/ds
-      rm -f new-fuseki-data.zip
-      zip -r new-fuseki-data.zip new-fuseki-data/
+    desc: Stop local Fuseki and package the generated Fuseki data for transfer.
+    cmds:
+      - task: fuseki:down
+      - cmd: |
+          set -euo pipefail
+          test -d fuseki-data/databases/ds
+          test -d fuseki-data/run/databases/ds_lucene_index
+          rm -f fuseki-data.zip
+          zip -r fuseki-data.zip fuseki-data/
 
   fuseki:qali:tdb2:install-local:
     desc: Replace local Fuseki data with the standalone TDB2 export and rebuild the text index.
@@ -164,6 +167,7 @@ tasks:
     desc: Run the ETL for LALF.
     cmds:
       - uv run python etl_lalf_parcel.py
+      - uv run python etl_lalf_informal_locality.py
       - uv run python etl_lalf_address.py
       - uv run python etl_lalf_property_name.py
       - uv run python etl_lalf_property_name_on_address.py
@@ -190,4 +194,6 @@ tasks:
       - cmd: rm -rf new-fuseki-data
         ignore_error: true
       - cmd: rm -f new-fuseki-data.zip
+        ignore_error: true
+      - cmd: rm -f fuseki-data.zip
         ignore_error: true

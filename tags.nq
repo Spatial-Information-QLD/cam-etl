@@ -1,0 +1,33 @@
+<https://linked.data.gov.au/dataset/qld-addr/address/4f2733c5-9c8a-44ab-b3d6-1462c7c4f77a> <https://schema.org/keywords> <urn:qali:tag:waiting-on-confirmation> <urn:qali:graph:tags> .
+<https://linked.data.gov.au/dataset/qld-addr/address/acfe59bc-3bac-4d7d-8f82-5f1921d72a44> <https://schema.org/keywords> <urn:qali:tag:waiting-on-confirmation> <urn:qali:graph:tags> .
+<https://linked.data.gov.au/dataset/qld-addr/address/d412c0c9-aded-4c52-bc4e-66a71ef005a4> <https://schema.org/keywords> <urn:qali:tag:waiting-on-confirmation> <urn:qali:graph:tags> .
+<urn:qali:tag:waiting-on-confirmation> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://linked.data.gov.au/def/location-addressing/Tag> <urn:qali:graph:tags> .
+<urn:qali:tag:waiting-on-confirmation> <http://www.w3.org/2004/02/skos/core#definition> "Clarification has been requested from supplier." <urn:qali:graph:tags> .
+<urn:qali:tag:waiting-on-confirmation> <http://www.w3.org/2004/02/skos/core#prefLabel> "Waiting on confirmation" <urn:qali:graph:tags> .
+<urn:qali:tag:water-feature> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://linked.data.gov.au/def/location-addressing/Tag> <urn:qali:graph:tags> .
+<urn:qali:tag:water-feature> <http://www.w3.org/2004/02/skos/core#definition> "Water feature lease. NOT to be included in Open Data Product." <urn:qali:graph:tags> .
+<urn:qali:tag:water-feature> <http://www.w3.org/2004/02/skos/core#prefLabel> "Water Feature" <urn:qali:graph:tags> .
+<urn:qali:tag:invalid-or-incomplete> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://linked.data.gov.au/def/location-addressing/Tag> <urn:qali:graph:tags> .
+<urn:qali:tag:invalid-or-incomplete> <http://www.w3.org/2004/02/skos/core#definition> "Invalid or Incomplete address. NOT to be included in Open Data Product." <urn:qali:graph:tags> .
+<urn:qali:tag:invalid-or-incomplete> <http://www.w3.org/2004/02/skos/core#prefLabel> "Invalid or Incomplete" <urn:qali:graph:tags> .
+<urn:qali:tag:not-in-cadastre> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://linked.data.gov.au/def/location-addressing/Tag> <urn:qali:graph:tags> .
+<urn:qali:tag:not-in-cadastre> <http://www.w3.org/2004/02/skos/core#definition> "Lease not yet in Cadastre. NOT to be included in Open Data Product." <urn:qali:graph:tags> .
+<urn:qali:tag:not-in-cadastre> <http://www.w3.org/2004/02/skos/core#prefLabel> "Not in Cadastre" <urn:qali:graph:tags> .
+<urn:qali:tag:drainage/channel> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://linked.data.gov.au/def/location-addressing/Tag> <urn:qali:graph:tags> .
+<urn:qali:tag:drainage/channel> <http://www.w3.org/2004/02/skos/core#definition> "Drainage or Channel. NOT to be included in Open Data Product." <urn:qali:graph:tags> .
+<urn:qali:tag:drainage/channel> <http://www.w3.org/2004/02/skos/core#prefLabel> "Drainage/Channel" <urn:qali:graph:tags> .
+<urn:qali:tag:easement> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://linked.data.gov.au/def/location-addressing/Tag> <urn:qali:graph:tags> .
+<urn:qali:tag:easement> <http://www.w3.org/2004/02/skos/core#definition> "Easement. NOT to be included in Open Data Product." <urn:qali:graph:tags> .
+<urn:qali:tag:easement> <http://www.w3.org/2004/02/skos/core#prefLabel> "Easement" <urn:qali:graph:tags> .
+<urn:qali:tag:access-prevention-strip> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://linked.data.gov.au/def/location-addressing/Tag> <urn:qali:graph:tags> .
+<urn:qali:tag:access-prevention-strip> <http://www.w3.org/2004/02/skos/core#definition> "Access prevention strip. NOT to be included in Open Data Product." <urn:qali:graph:tags> .
+<urn:qali:tag:access-prevention-strip> <http://www.w3.org/2004/02/skos/core#prefLabel> "Access prevention strip" <urn:qali:graph:tags> .
+<urn:qali:tag:requires-clarification> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://linked.data.gov.au/def/location-addressing/Tag> <urn:qali:graph:tags> .
+<urn:qali:tag:requires-clarification> <http://www.w3.org/2004/02/skos/core#definition> "Requires clarification from supplier." <urn:qali:graph:tags> .
+<urn:qali:tag:requires-clarification> <http://www.w3.org/2004/02/skos/core#prefLabel> "Requires Clarification" <urn:qali:graph:tags> .
+<urn:qali:tag:non-compliant-address> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://linked.data.gov.au/def/location-addressing/Tag> <urn:qali:graph:tags> .
+<urn:qali:tag:non-compliant-address> <http://www.w3.org/2004/02/skos/core#definition> "Supplier has been contacted about this address, but will keep this address as a Non-Compliant Address." <urn:qali:graph:tags> .
+<urn:qali:tag:non-compliant-address> <http://www.w3.org/2004/02/skos/core#prefLabel> "Non-Compliant Address" <urn:qali:graph:tags> .
+<urn:qali:tag:lotplan-made-historic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://linked.data.gov.au/def/location-addressing/Tag> <urn:qali:graph:tags> .
+<urn:qali:tag:lotplan-made-historic> <http://www.w3.org/2004/02/skos/core#definition> "This lot plan has been made historic and its addresses need clarification." <urn:qali:graph:tags> .
+<urn:qali:tag:lotplan-made-historic> <http://www.w3.org/2004/02/skos/core#prefLabel> "LotPlan Made Historic" <urn:qali:graph:tags> .

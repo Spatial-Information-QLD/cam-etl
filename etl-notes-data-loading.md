@@ -38,11 +38,27 @@ You can test that Fuseki is running with:
 curl http://localhost:3030/$/ping
 ```
 
+Load the vocab data that's been tested and used in QALI UAT.
+
+```sh
+curl -X POST \
+    -H "Content-Type: application/rdf-patch" \
+    --data-binary @vocabs.rdfp \
+    http://localhost:3030/ds/patch
+```
+
 ## Transfer
 
-Package the standalone TDB2 export for transfer.
+Stop local Fuseki and package the generated local Fuseki data for transfer.
 
-This takes around 13 minutes and results in a `new-fuseki-data.zip` file of around 36GB.
+This zips `fuseki-data/`, including:
+
+- `fuseki-data/databases/ds`
+- `fuseki-data/run/databases/ds_lucene_index`
+
+The zip also contains local config and runtime directories, but the remote copy steps below only install the generated TDB2 database and generated Lucene index. That preserves the remote Fuseki configuration and security files.
+
+This results in a `fuseki-data.zip` file.
 
 ```sh
 task fuseki:qali:tdb2:zip
@@ -52,15 +68,17 @@ Transfer to the remote server using rsync.
 
 ```sh
 # ~1 hour 15 minutes
-time rsync -avz --progress new-fuseki-data.zip cam-itp-dev-fuseki:/data
+time rsync -avz --progress fuseki-data.zip cam-itp-dev-fuseki:/data
 ```
 
 If the transfer is interrupted, you can resume it using the `-P` flag.
 
-Unzip the file on the remote server.
+Unzip the file into a staging directory on the remote server.
 
 ```sh
-unzip new-fuseki-data.zip
+mkdir -p /data/fuseki-data-transfer
+cd /data/fuseki-data-transfer
+unzip /data/fuseki-data.zip
 ```
 
 Stop the database.
@@ -69,30 +87,30 @@ Stop the database.
 sudo systemctl stop container-fuseki.service
 ```
 
-Delete the old database.
+Delete the old generated database and generated full-text index.
 
 ```sh
 sudo rm -rf /data/fuseki-data/databases/ds
+sudo rm -rf /data/fuseki-data/run/databases/ds_lucene_index
 ```
 
-Move the unzipped data to the Fuseki data directory.
+Copy the generated database and generated full-text index into the Fuseki data directory.
 
 ```sh
-mv new-fuseki-data/databases/ds /data/fuseki-data/databases/ds
+sudo mkdir -p /data/fuseki-data/databases
+sudo mkdir -p /data/fuseki-data/run/databases
+sudo cp -R /data/fuseki-data-transfer/fuseki-data/databases/ds /data/fuseki-data/databases/ds
+sudo cp -R /data/fuseki-data-transfer/fuseki-data/run/databases/ds_lucene_index /data/fuseki-data/run/databases/ds_lucene_index
 ```
 
-Run the full-text indexer using the Fuseki image and the dataset config in `/data/fuseki-data/configuration/ds.ttl`.
+This copies the data generated locally while leaving the remote `fuseki-data/configuration`, `shiro.ini`, logs, backups, templates, and system files unchanged.
+
+If the Fuseki service expects a specific owner or group for `/data/fuseki-data`, set ownership to match the existing directory before starting Fuseki.
 
 ```sh
-sudo podman run --rm -v /data/fuseki-data:/fuseki ghcr.io/kurrawong/fuseki:5.6.0-0 /bin/bash -c 'rm -rf /fuseki/run/databases/ds_lucene_index && java -cp $FUSEKI_HOME/fuseki-server.jar:$FUSEKI_HOME/lib/* jena.textindexer --desc=/fuseki/configuration/ds.ttl'
-```
-
-Use the local image on the remote server built with the compound naming function, to run the full-text indexer. This is necessary because the compound naming function is used in the dataset config, and the text indexer needs to be able to load the function in order to build the index.
-
-This takes around 10 minutes.
-
-```sh
-sudo podman run --rm -v /data/fuseki-data:/fuseki localhost/qali-fuseki:5.6.0-0-compoundnaming-1.0.0 /bin/bash -c 'rm -rf /fuseki/run/databases/ds_lucene_index && java -cp $FUSEKI_HOME/fuseki-server.jar:$FUSEKI_HOME/lib/* jena.textindexer --desc=/fuseki/configuration/ds.ttl'
+ls -ld /data/fuseki-data
+ls -ld /data/fuseki-data/databases/ds
+ls -ld /data/fuseki-data/run/databases/ds_lucene_index
 ```
 
 Start the database.
